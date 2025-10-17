@@ -5,10 +5,26 @@ import AdvantagesSection from '@/components/sections/AdvantagesSection'
 import MonstersSection from '@/components/sections/MonstersSection'
 import ActionsSection from '@/components/sections/ActionsSection'
 import NewsletterSection from '@/components/sections/NewsletterSection'
+import { Metadata } from 'next'
 
-export default function Home () {
+export const metadata: Readonly<Metadata> = {
+  title: 'Tamagotcho - Adopte et prends soin de ton compagnon virtuel',
+  description: 'Tamagotcho est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !',
+  keywords: 'Tamagotcho, monstre virtuel, adoption, jeu, aventure',
+  openGraph: {
+    title: 'Tamagotcho - Adopte et prends soin de ton compagnon virtuel',
+    description: 'Tamagotcho est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !'
+  },
+  twitter: {
+    title: 'Tamagotcho - Adopte et prends soin de ton compagnon virtuel',
+    description: 'Tamagotcho est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !'
+  }
+}
+
+// Single Responsibility: Home page orchestrates the layout of sections
+export default function Home (): React.ReactNode {
   return (
-    <main className='min-h-screen bg-gradient-to-b from-lochinvar-50 to-white'>
+    <div className='font-sans'>
       <Header />
       <HeroSection />
       <AdvantagesSection />
@@ -16,6 +32,6 @@ export default function Home () {
       <ActionsSection />
       <NewsletterSection />
       <Footer />
-    </main>
+    </div>
   )
 }
