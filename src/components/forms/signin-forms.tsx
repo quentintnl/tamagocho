@@ -1,7 +1,10 @@
+'use client'
+
 import React, {useState} from 'react'
 import InputField from '@/components/input'
 import Button from '@/components/button'
 import {authClient} from '@/lib/auth-client'
+import {useRouter} from 'next/navigation'
 
 interface Credentials {
     email: string
@@ -9,6 +12,7 @@ interface Credentials {
 }
 
 function SignInForm(): React.ReactNode {
+    const router = useRouter()
     const [credentials, setCredentials] = useState<Credentials>({
         email: 'toctocCmoi@ui.fr',
         password: 'LAsecuriteESTla'
@@ -23,13 +27,14 @@ function SignInForm(): React.ReactNode {
         await authClient.signIn.email({
             email: credentials.email,
             password: credentials.password,
-            callbackURL: '/'
+            callbackURL: '/dashboard'
         }, {
             onRequest: () => {
                 console.log('Connexion en cours...')
             },
             onSuccess: () => {
                 console.log('Connexion réussie !')
+                router.push('/dashboard')
             },
             onError: (ctx) => {
                 console.error('Erreur de connexion', ctx)
@@ -47,36 +52,37 @@ function SignInForm(): React.ReactNode {
     }
 
     return (
-        <div className="space-y-6 w-full max-w-sm mx-auto">
+        <div className='space-y-6 w-full max-w-sm mx-auto'>
             {error && (
                 <div
-                    className="p-4 rounded-xl bg-moccaccino-100/80 backdrop-blur-sm border-2 border-moccaccino-500 text-moccaccino-700 animate-shake">
-                    <p className="text-sm font-medium">{error}</p>
+                    className='p-4 rounded-xl bg-moccaccino-100/80 backdrop-blur-sm border-2 border-moccaccino-500 text-moccaccino-700 animate-shake'
+                >
+                    <p className='text-sm font-medium'>{error}</p>
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className='space-y-5'>
                 <InputField
-                    label="Email"
-                    type="email"
-                    name="email"
+                    label='Email'
+                    type='email'
+                    name='email'
                     value={credentials.email}
                     onChange={handleInputChange}
-                    placeholder="votre@email.com"
+                    placeholder='votre@email.com'
                 />
                 <InputField
-                    label="Mot de passe"
-                    type="password"
-                    name="password"
+                    label='Mot de passe'
+                    type='password'
+                    name='password'
                     value={credentials.password}
                     onChange={handleInputChange}
-                    placeholder="••••••••"
+                    placeholder='••••••••'
                 />
-                <div className="pt-2">
+                <div className='pt-2'>
                     <Button
-                        type="submit"
-                        variant="primary"
-                        className="w-full bg-gradient-to-r from-fuchsia-blue-500 to-lochinvar-500 hover:from-lochinvar-500 hover:to-fuchsia-blue-500 text-white font-semibold py-3 px-4 rounded-xl transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-lg"
+                        type='submit'
+                        variant='primary'
+                        className='w-full bg-gradient-to-r from-fuchsia-blue-500 to-lochinvar-500 hover:from-lochinvar-500 hover:to-fuchsia-blue-500 text-white font-semibold py-3 px-4 rounded-xl transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-lg'
                     >
                         Se connecter
                     </Button>
