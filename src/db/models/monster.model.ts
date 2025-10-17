@@ -4,7 +4,7 @@ const {Schema} = mongoose
 
 const monsterSchema = new Schema({
     name: {
-        type: String,
+        type: String, // = 'string'
         required: true
     },
     level: {
@@ -19,7 +19,7 @@ const monsterSchema = new Schema({
     state: {
         type: String,
         required: true,
-        enum: ['happy', 'sad', 'angry', 'hungry', 'neutral'],
+        enum: ['happy', 'sad', 'angry', 'hungry', 'sleepy'],
         default: 'happy'
     },
     ownerId: {
@@ -27,6 +27,9 @@ const monsterSchema = new Schema({
         ref: 'user',
         required: true
     }
+}, {
+    bufferCommands: false,
+    timestamps: true
 })
 
-export default mongoose.model('Monster', monsterSchema) ?? mongoose.models.Monster
+export default mongoose.models.Monster ?? mongoose.model('Monster', monsterSchema)

@@ -1,12 +1,15 @@
 'use client'
+import {useState} from 'react'
 import Button from '../button'
+import CreateMonsterModal from './create-monster-modal'
+import type {CreateMonsterFormValues} from '@/types/forms/create-monster-form'
 import {authClient} from '@/lib/auth-client'
-import {useState} from "react"
-import CreateMonsterModal from '@/components/modals/create-monster-modal'
+import {createMonster} from '@/actions/monsters.actions'
+import MonstersList from '../monsters/monsters-list'
 
 type Session = typeof authClient.$Infer.Session
 
-function DashboardContent({session}: { session: Session }): React.ReactNode {
+function DashboardContent({session, monsters}: { session: Session, monsters: Monster[] }): React.ReactNode {
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const handleLogout = (): void => {
@@ -14,43 +17,34 @@ function DashboardContent({session}: { session: Session }): React.ReactNode {
         window.location.href = '/sign-in'
     }
 
-    const handleCreateMonster = async (monsterData: { name: string, draw: string }) => {
-        try {
-            const response = await fetch('/api/monsters', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(monsterData)
-            })
+    const handleCreateMonster = (): void => {
+        setIsModalOpen(true)
+    }
 
-            if (!response.ok) {
-                throw new Error('Erreur lors de la création du monstre')
-            }
+    const handleCloseModal = (): void => {
+        setIsModalOpen(false)
+    }
 
-            // Recharger la page pour voir le nouveau monstre
-            window.location.reload()
-        } catch (error) {
-            console.error('Erreur:', error)
-            // Ici vous pourriez ajouter une notification d'erreur
-        }
+    const handleMonsterSubmit = async (values: CreateMonsterFormValues): Promise<void> => {
+        void values
+        await createMonster(values)
     }
 
     return (
         <div className='flex flex-col items-center justify-center min-h-screen py-2'>
             <h1 className='text-4xl font-bold mb-4'>Bienvenue {session.user.email} sur votre tableau de bord</h1>
-            <Button onClick={() => setIsModalOpen(true)}>
-                Créer une nouvelle créature
+            <Button onClick={handleCreateMonster}>
+                Créer une créature
             </Button>
+            <MonstersList monsters={monsters}/>
             <p className='text-lg text-gray-600'>Ici, vous pouvez gérer vos créatures et suivre votre progression.</p>
             <Button onClick={handleLogout}>
                 Se déconnecter
             </Button>
-
             <CreateMonsterModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSubmit={handleCreateMonster}
+                onClose={handleCloseModal}
+                onSubmit={handleMonsterSubmit}
             />
         </div>
     )
