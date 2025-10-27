@@ -35,7 +35,7 @@ export async function performMonsterAction(monsterId: string, action: MonsterAct
     }
 
     await mongoose.connection.collection('monsters').updateOne(
-        {_id: monsterId},
+        {id: monsterId},
         {$set: {state: newState}}
     )
 
