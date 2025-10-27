@@ -1,82 +1,76 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '../button'
 import InputField from '../input'
-import Image from 'next/image'
-import { CreateMonsterFormValues, MonsterFormErrors, MonsterFormState } from '@/types/monster.types'
-import { validateMonsterForm } from '@/utils/validation/monster-form.validation'
-import { generateMonsterDesign } from '@/services/monsters/monster-generator'
+import { PixelMonster } from '../monsters'
+import {
+  createInitialFormState,
+  validateCreateMonsterForm,
+  type CreateMonsterFormDraft,
+  type CreateMonsterFormErrors
+} from './create-monster-form.validation'
+import { generateRandomTraits } from '../../services/monsters/monster-generator'
+import {
+  DEFAULT_MONSTER_STATE,
+  MONSTER_STATES,
+  type MonsterTraits,
+  type MonsterState
+} from '@/types/monster'
+import type { CreateMonsterFormProps } from '@/types/forms/create-monster-form'
 
-interface CreateMonsterFormProps {
-  onSubmit: (values: CreateMonsterFormValues) => void
-  onCancel: () => void
+const MONSTER_STATE_LABELS: Record<MonsterState, string> = {
+  happy: 'Heureux 😊',
+  sad: 'Triste 😢',
+  angry: 'Fâché 😡',
+  hungry: 'Affamé 😋',
+  sleepy: 'Somnolent 😴'
 }
 
-const createDefaultFormState = (): MonsterFormState => ({
-  name: '',
-  draw: '/fox.svg',
-  state: 'happy',
-  showPreview: false
-})
-
 function CreateMonsterForm ({ onSubmit, onCancel }: CreateMonsterFormProps): React.ReactNode {
-  const [formState, setFormState] = useState<MonsterFormState>(createDefaultFormState)
-  const [errors, setErrors] = useState<MonsterFormErrors>({})
+  const [formState, setFormState] = useState<CreateMonsterFormDraft>(() => createInitialFormState())
+  const [errors, setErrors] = useState<CreateMonsterFormErrors>({})
+  const [traits, setTraits] = useState<MonsterTraits | null>(null)
+  const [previewState, setPreviewState] = useState<MonsterState>(DEFAULT_MONSTER_STATE)
 
-  const hasActiveErrors = Object.values(errors).some((value) => Boolean(value))
+  useEffect(() => {
+    if (traits === null) {
+      setTraits(generateRandomTraits())
+    }
+  }, [traits])
+
+  const hasActiveErrors = traits === null || Object.values(errors).some((value) => Boolean(value))
 
   const handleGenerateMonster = (): void => {
-    const newMonster = generateMonsterDesign({
-      style: 'illustrated',
-      seed: Date.now().toString()
-    })
-
-    setFormState(prev => ({
-      ...prev,
-      draw: '/fox.svg',
-      state: newMonster.state || 'happy',
-      showPreview: true
-    }))
+    const nextTraits = generateRandomTraits()
+    setTraits(nextTraits)
+    setPreviewState(DEFAULT_MONSTER_STATE)
+    setErrors((previous) => ({ ...previous, design: undefined }))
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault()
 
-    const validationErrors = validateMonsterForm(formState)
+    const validationResult = validateCreateMonsterForm(formState, traits)
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors)
+    if (Object.keys(validationResult.errors).length > 0 || validationResult.values === undefined) {
+      setErrors(validationResult.errors)
       return
     }
 
-    const payload: CreateMonsterFormValues = {
-      name: formState.name.trim(),
-      draw: formState.draw,
-      state: formState.state
-    }
-
-    onSubmit(payload)
-    setFormState(createDefaultFormState())
+    onSubmit(validationResult.values)
+    setFormState(createInitialFormState())
+    setTraits(null)
+    setPreviewState(DEFAULT_MONSTER_STATE)
     setErrors({})
   }
 
   const handleCancel = (): void => {
-    setFormState(createDefaultFormState())
+    setFormState(createInitialFormState())
+    setTraits(null)
+    setPreviewState(DEFAULT_MONSTER_STATE)
     setErrors({})
     onCancel()
-  }
-
-  const getStateStyles = (state: string): string => {
-    const baseStyle = 'object-contain transition-all duration-300 '
-    const stateStyles = {
-      happy: 'brightness-100 saturate-100',
-      sad: 'brightness-75 saturate-75 hue-rotate-180',
-      angry: 'brightness-100 saturate-150 hue-rotate-[330deg]',
-      hungry: 'brightness-90 saturate-125 hue-rotate-[45deg]',
-      neutral: 'brightness-90 saturate-50'
-    }
-    return baseStyle + (stateStyles[state] || stateStyles.neutral)
   }
 
   return (
@@ -85,47 +79,57 @@ function CreateMonsterForm ({ onSubmit, onCancel }: CreateMonsterFormProps): Rea
         label='Nom'
         name='name'
         value={formState.name}
-        onChangeText={(value) => {
+        onChangeText={(value: string) => {
           setFormState((previous) => ({ ...previous, name: value }))
-          if (errors.name !== undefined) setErrors((previous) => ({ ...previous, name: undefined }))
+          if (errors.name !== undefined) {
+            setErrors((previous) => ({ ...previous, name: undefined }))
+          }
         }}
         error={errors.name}
       />
 
-      {formState.showPreview && (
-        <div className='flex justify-center p-4 bg-gray-50 rounded-xl'>
-          <div className='relative w-48 h-48'>
-            <Image
-              src={formState.draw}
-              alt='Aperçu du monstre'
-              fill
-              className={getStateStyles(formState.state)}
-            />
-          </div>
+      <section className='space-y-4 rounded-3xl border border-moccaccino-100 bg-white/60 p-4 shadow-inner'>
+        <div className='flex items-center justify-between gap-3'>
+          <h3 className='text-lg font-semibold text-gray-800'>Votre créature</h3>
+          <Button onClick={handleGenerateMonster} type='button' variant='outline'>
+            Générer mon monstre
+          </Button>
         </div>
-      )}
 
-      <div className='flex flex-col gap-4'>
-        <Button
-          onClick={handleGenerateMonster}
-          type='button'
-          className='bg-gradient-to-r from-fuchsia-blue-500 to-lochinvar-500 hover:from-lochinvar-500 hover:to-fuchsia-blue-500'
-        >
-          {formState.showPreview ? 'Régénérer un monstre' : 'Générer un monstre'}
+        <div className='flex items-center justify-center rounded-3xl bg-slate-50/70 p-4'>
+          {traits !== null && (
+            <PixelMonster traits={traits} state={previewState} level={1} />
+          )}
+        </div>
+
+        <div className='flex flex-wrap items-center justify-center gap-2'>
+          {MONSTER_STATES.map((state) => (
+            <Button
+              key={state}
+              type='button'
+              size='sm'
+              variant={state === previewState ? 'primary' : 'ghost'}
+              onClick={() => setPreviewState(state)}
+            >
+              {MONSTER_STATE_LABELS[state]}
+            </Button>
+          ))}
+        </div>
+
+        {errors.design !== undefined && (
+          <span className='text-sm text-red-500'>
+            {errors.design}
+          </span>
+        )}
+      </section>
+
+      <div className='flex justify-end gap-3'>
+        <Button onClick={handleCancel} type='button' variant='ghost'>
+          Annuler
         </Button>
-
-        <div className='flex justify-end gap-3'>
-          <Button onClick={handleCancel} type='button' variant='ghost'>
-            Annuler
-          </Button>
-          <Button
-            disabled={hasActiveErrors || !formState.showPreview}
-            type='submit'
-            className='bg-gradient-to-r from-fuchsia-blue-500 to-lochinvar-500 hover:from-lochinvar-500 hover:to-fuchsia-blue-500'
-          >
-            Créer
-          </Button>
-        </div>
+        <Button disabled={hasActiveErrors} type='submit'>
+          Créer
+        </Button>
       </div>
     </form>
   )

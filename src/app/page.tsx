@@ -1,10 +1,11 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import HeroSection from '@/components/sections/HeroSection'
-import AdvantagesSection from '@/components/sections/AdvantagesSection'
-import MonstersSection from '@/components/sections/MonstersSection'
-import ActionsSection from '@/components/sections/ActionsSection'
-import NewsletterSection from '@/components/sections/NewsletterSection'
+// Clean Architecture: Presentation layer imports application components
+import Header from '@/components/header'
+import HeroSection from '@/components/hero-section'
+import BenefitsSection from '@/components/benefits-section'
+import MonstersSection from '@/components/monsters-section'
+import ActionsSection from '@/components/actions-section'
+import NewsletterSection from '@/components/newsletter-section'
+import Footer from '@/components/footer'
 import { Metadata } from 'next'
 
 export const metadata: Readonly<Metadata> = {
@@ -27,7 +28,7 @@ export default function Home (): React.ReactNode {
     <div className='font-sans'>
       <Header />
       <HeroSection />
-      <AdvantagesSection />
+      <BenefitsSection />
       <MonstersSection />
       <ActionsSection />
       <NewsletterSection />

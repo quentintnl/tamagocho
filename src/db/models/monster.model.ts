@@ -4,7 +4,7 @@ const { Schema } = mongoose
 
 const monsterSchema = new Schema({
   name: {
-    type: String, // = 'string'
+    type: String,
     required: true
   },
   level: {
@@ -12,8 +12,8 @@ const monsterSchema = new Schema({
     required: false,
     default: 1
   },
-  draw: {
-    type: String,
+  traits: {
+    type: String, // JSON stringified MonsterDesign
     required: true
   },
   state: {
@@ -28,7 +28,6 @@ const monsterSchema = new Schema({
     required: true
   }
 }, {
-  bufferCommands: false,
   timestamps: true
 })
 

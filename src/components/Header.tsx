@@ -1,61 +1,67 @@
 'use client'
 
-import React from 'react'
+import Image from 'next/image'
 import Button from '@/components/button'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import type { NavigationItem } from '@/types/components'
 
-const Header: React.FC = () => {
-  const router = useRouter()
+// Single Responsibility: Header handles only navigation and branding
+export default function Header (): React.ReactNode {
+  const navigationItems: NavigationItem[] = [
+    { href: '#hero', label: 'Accueil' },
+    { href: '#benefits', label: 'Avantages' },
+    { href: '#monsters', label: 'Créatures' },
+    { href: '#actions', label: 'Actions' },
+    { href: '#newsletter', label: 'Newsletter' }
+  ]
 
-  const handleCreateMonster = () => {
-    router.push('/sign-in')
+  const handleSignin = (): void => {
+    window.location.href = '/sign-in'
   }
 
   return (
-    <header
-      className='fixed w-full bg-gradient-to-r from-fuchsia-blue-100 via-lochinvar-50 to-fuchsia-blue-100 backdrop-blur-sm z-50 border-b border-fuchsia-blue-200'
-    >
-      <div className='container mx-auto px-4 py-4 flex items-center justify-between'>
-        <div className='flex items-center'>
-          <Link
-            href='/'
-            className='text-2xl font-bold bg-gradient-to-r from-lochinvar-600 to-fuchsia-blue-600 bg-clip-text text-transparent hover:from-fuchsia-blue-600 hover:to-lochinvar-600 transition-all duration-300'
-          >
-            Tamagocho
-          </Link>
-        </div>
+    <header className='bg-white shadow-sm sticky top-0 z-50'>
+      <nav className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='flex justify-between items-center h-16'>
+          {/* Logo */}
+          <div className='flex-shrink-0'>
+            <div className='flex items-center space-x-2'>
+              <Image
+                src='/logo_comp.webp'
+                alt='Tamagotcho Logo'
+                width={40}
+                height={40}
+                className='w-10 h-10'
+                priority
+              />
+              <span className='text-2xl font-bold text-moccaccino-600'>
+                Tamagotcho
+              </span>
+            </div>
+          </div>
 
-        <nav className='hidden md:flex items-center gap-8'>
-          {[
-            { href: '#avantages', label: 'Avantages', color: 'from-lochinvar-600 to-lochinvar-500' },
-            { href: '#monstres', label: 'Nos Monstres', color: 'from-fuchsia-blue-600 to-fuchsia-blue-500' },
-            { href: '#actions', label: 'Interactions', color: 'from-moccaccino-500 to-moccaccino-400' },
-            { href: '#newsletter', label: 'Newsletter', color: 'from-fuchsia-blue-500 to-lochinvar-500' }
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`text-transparent bg-gradient-to-r ${item.color} bg-clip-text hover:scale-105 transition-transform`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+          {/* Navigation Menu */}
+          <div className='hidden md:block'>
+            <div className='ml-10 flex items-baseline space-x-8'>
+              {navigationItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className='text-gray-700 hover:text-moccaccino-600 px-3 py-2 text-sm font-medium transition-colors'
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
 
-        <div className='flex items-center gap-4'>
-          <Button
-            variant='primary'
-            size='md'
-            className='bg-gradient-to-r from-fuchsia-blue-500 to-lochinvar-500 hover:from-lochinvar-500 hover:to-fuchsia-blue-500 transition-all duration-300 animate-pulse'
-            onClick={handleCreateMonster}
-          >
-            Créer mon monstre
-          </Button>
+          {/* CTA Button */}
+          <div className='flex items-center'>
+            <Button variant='primary' size='md' onClick={handleSignin}>
+              Créer mon monstre
+            </Button>
+          </div>
         </div>
-      </div>
+      </nav>
     </header>
   )
 }
-
-export default Header

@@ -1,1 +1,2 @@
-export { default as MonsterPreview } from './monster-preview'
+export { PixelMonster } from './pixel-monster'
+export type { MonsterTraits } from '@/types/monster'

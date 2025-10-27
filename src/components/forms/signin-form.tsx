@@ -6,14 +6,12 @@ import { authClient } from '@/lib/auth-client'
 interface Credentials {
   email: string
   password: string
-  name: string
 }
 
-function SignUpForm ({ onError }: { onError: (error: string) => void }): React.ReactNode {
+function SignInForm ({ onError }: { onError: (error: string) => void }): React.ReactNode {
   const [credentials, setCredentials] = useState<Credentials>({
     email: '',
-    password: '',
-    name: ''
+    password: ''
   })
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -22,22 +20,20 @@ function SignUpForm ({ onError }: { onError: (error: string) => void }): React.R
     setIsLoading(true)
     onError('') // Clear previous errors
 
-    void authClient.signUp.email({
+    void authClient.signIn.email({
       email: credentials.email,
       password: credentials.password,
-      name: credentials.name,
       callbackURL: '/dashboard'
     }, {
       onRequest: (ctx) => {
-        console.log('Signing up...', ctx)
+        console.log('Signing in...', ctx)
       },
       onSuccess: (ctx) => {
-        console.log('User signed up:', ctx)
+        console.log('User signed in:', ctx)
         setIsLoading(false)
-        onError('') // Clear error on success
       },
       onError: (ctx) => {
-        console.error('Sign up error:', ctx)
+        console.error('Sign in error:', ctx)
         setIsLoading(false)
         onError(ctx.error.message)
       }
@@ -48,34 +44,27 @@ function SignUpForm ({ onError }: { onError: (error: string) => void }): React.R
     <div className='space-y-6'>
       <div className='text-center'>
         <h2 className='text-2xl font-bold text-gray-800 mb-2'>
-          🆕 Créer un compte
+          🔐 Connexion
         </h2>
         <p className='text-gray-600 text-sm'>
-          Rejoignez l'aventure Tamagotcho ! 🎆
+          Retrouvez vos petits compagnons ! 👾
         </p>
       </div>
 
       <form className='flex flex-col justify-center space-y-4' onSubmit={handleSubmit}>
         <InputField
-          label="Nom d'utilisateur"
-          type='text'
-          name='name'
-          value={credentials.name}
-          onChangeText={(text: string) => setCredentials({ ...credentials, name: text })}
-        />
-        <InputField
           label='Email'
           type='email'
           name='email'
           value={credentials.email}
-          onChangeText={(text) => setCredentials({ ...credentials, email: text })}
+          onChangeText={(text: string) => setCredentials({ ...credentials, email: text })}
         />
         <InputField
           label='Mot de passe'
           type='password'
           name='password'
           value={credentials.password}
-          onChangeText={(text) => setCredentials({ ...credentials, password: text })}
+          onChangeText={(text: string) => setCredentials({ ...credentials, password: text })}
         />
         <Button
           type='submit'
@@ -83,11 +72,11 @@ function SignUpForm ({ onError }: { onError: (error: string) => void }): React.R
           disabled={isLoading}
           variant='primary'
         >
-          {isLoading ? '🔄 Création...' : '🎆 Créer mon compte'}
+          {isLoading ? '🔄 Connexion...' : '🎮 Se connecter'}
         </Button>
       </form>
     </div>
   )
 }
 
-export default SignUpForm
+export default SignInForm

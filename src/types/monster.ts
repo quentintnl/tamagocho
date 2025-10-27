@@ -5,70 +5,33 @@ export type MonsterState = typeof MONSTER_STATES[number]
 export const DEFAULT_MONSTER_LEVEL = 1
 export const DEFAULT_MONSTER_STATE: MonsterState = MONSTER_STATES[0]
 
-export type MonsterVariantId = 'cat' | 'dog' | 'rabbit' | 'panda'
+// Pixel Monster Types (from GitHub v0-tamagotcho-correction)
+export type MonsterStyle = 'round' | 'square' | 'tall' | 'wide'
+export type EyeStyle = 'big' | 'small' | 'star' | 'sleepy'
+export type AntennaStyle = 'single' | 'double' | 'curly' | 'none'
+export type AccessoryStyle = 'horns' | 'ears' | 'tail' | 'none'
 
-export type MonsterBodyShape = 'round' | 'oval' | 'bean' | 'square' | 'pear'
-
-export type MonsterDesignStyle = 'illustrated' | 'pixel'
-
-export interface MonsterPalette {
-    primary: string
-    secondary: string
-    detail: string
-    cheeks: string
-    background: string
-    accent: string
-}
-
-export interface MonsterFeatures {
-    earShape: 'pointy' | 'droopy' | 'long' | 'round'
-    tailShape: 'long' | 'short' | 'puff' | 'none'
-    whiskers: boolean
-    muzzle: 'small' | 'medium' | 'flat'
-    markings: 'plain' | 'mask' | 'patch'
-}
-
-export type MonsterAnimationKey =
-    'happyBounce'
-    | 'sadDroop'
-    | 'angryShake'
-    | 'hungryNibble'
-    | 'sleepyFloat'
-    | 'pixelIdle'
-
-export interface MonsterAnimationSpec {
-    svgClassName: MonsterAnimationKey
-}
-
-export interface MonsterDesign {
-    id: string
-    variant: MonsterVariantId
-    palette: MonsterPalette
-    features: MonsterFeatures
-    bodyShape: MonsterBodyShape
-    style: MonsterDesignStyle
-    animations: Record<MonsterState, MonsterAnimationSpec>
-}
-
-export interface MonsterGenerationOptions {
-    seed?: string
-    paletteOverride?: Partial<MonsterPalette>
-    variantOverride?: MonsterVariantId
-    bodyShapeOverride?: MonsterBodyShape
-    style?: MonsterDesignStyle
+export interface MonsterTraits {
+  bodyColor: string
+  accentColor: string
+  eyeColor: string
+  antennaColor: string
+  bobbleColor: string
+  cheekColor: string
+  bodyStyle: MonsterStyle
+  eyeStyle: EyeStyle
+  antennaStyle: AntennaStyle
+  accessory: AccessoryStyle
 }
 
 // Database Monster type (serialized version)
 export interface DBMonster {
-    _id: string
-    name: string
-    health: number
-    happiness: number
-    level: number
-    state: MonsterState
-    design: MonsterDesign
-    lastInteraction: string
-    createdAt: string
-    updatedAt: string
-    userId: string
+  _id: string
+  name: string
+  level: number
+  traits: string // JSON serialized MonsterTraits
+  state: MonsterState
+  ownerId: string
+  createdAt: Date
+  updatedAt: Date
 }
