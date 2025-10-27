@@ -60,12 +60,15 @@ export interface MonsterGenerationOptions {
 
 // Database Monster type (serialized version)
 export interface DBMonster {
-    _id: string
+    id: string
     name: string
+    health: number
+    happiness: number
     level: number
-    traits: string // JSON serialized MonsterTraits
     state: MonsterState
-    ownerId: string
-    createdAt: Date
-    updatedAt: Date
+    design: MonsterDesign
+    lastInteraction: string
+    createdAt: string
+    updatedAt: string
+    userId: string
 }
