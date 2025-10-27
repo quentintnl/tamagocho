@@ -2,6 +2,7 @@ import type {DBMonster} from '@/types/monster'
 import MonsterActions from '@/components/monster-actions'
 import CreatureHeader from './CreatureHeader'
 import CreatureStats from './CreatureStats'
+import {JSX} from "react";
 
 interface CreatureContentProps {
     monster: DBMonster
