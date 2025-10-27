@@ -34,30 +34,30 @@ import { Types } from 'mongoose'
  * })
  */
 export async function createMonster (monsterData: CreateMonsterFormValues): Promise<void> {
-  // Connexion à la base de données
-  await connectMongooseToDatabase()
+    // Connexion à la base de données
+    await connectMongooseToDatabase()
 
-  // Vérification de l'authentification
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
-  if (session === null || session === undefined) {
-    throw new Error('User not authenticated')
-  }
+    // Vérification de l'authentification
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if (session === null || session === undefined) {
+        throw new Error('User not authenticated')
+    }
 
-  // Création et sauvegarde du monstre
-  const monster = new Monster({
-    ownerId: session.user.id,
-    name: monsterData.name,
-    traits: monsterData.traits,
-    state: monsterData.state,
-    level: monsterData.level
-  })
+    // Création et sauvegarde du monstre
+    const monster = new Monster({
+        ownerId: session.user.id,
+        name: monsterData.name,
+        traits: monsterData.traits,
+        state: monsterData.state,
+        level: monsterData.level
+    })
 
-  await monster.save()
+    await monster.save()
 
-  // Revalidation du cache pour rafraîchir le dashboard
-  revalidatePath('/dashboard')
+    // Revalidation du cache pour rafraîchir le dashboard
+    revalidatePath('/dashboard')
 }
 
 /**
@@ -79,29 +79,29 @@ export async function createMonster (monsterData: CreateMonsterFormValues): Prom
  * // [{ _id: "...", name: "Pikachu", ... }, ...]
  */
 export async function getMonsters (): Promise<DBMonster[]> {
-  try {
-    // Connexion à la base de données
-    await connectMongooseToDatabase()
+    try {
+        // Connexion à la base de données
+        await connectMongooseToDatabase()
 
-    // Vérification de l'authentification
-    const session = await auth.api.getSession({
-      headers: await headers()
-    })
-    if (session === null || session === undefined) {
-      throw new Error('User not authenticated')
+        // Vérification de l'authentification
+        const session = await auth.api.getSession({
+            headers: await headers()
+        })
+        if (session === null || session === undefined) {
+            throw new Error('User not authenticated')
+        }
+
+        const { user } = session
+
+        // Récupération des monstres de l'utilisateur
+        const monsters = await Monster.find({ ownerId: user.id }).exec()
+
+        // Sérialisation JSON pour éviter les problèmes de typage Next.js
+        return JSON.parse(JSON.stringify(monsters))
+    } catch (error) {
+        console.error('Error fetching monsters:', error)
+        return []
     }
-
-    const { user } = session
-
-    // Récupération des monstres de l'utilisateur
-    const monsters = await Monster.find({ ownerId: user.id }).exec()
-
-    // Sérialisation JSON pour éviter les problèmes de typage Next.js
-    return JSON.parse(JSON.stringify(monsters))
-  } catch (error) {
-    console.error('Error fetching monsters:', error)
-    return []
-  }
 }
 
 /**
@@ -129,36 +129,36 @@ export async function getMonsters (): Promise<DBMonster[]> {
  * // null
  */
 export async function getMonsterById (id: string): Promise<DBMonster | null> {
-  try {
-    // Connexion à la base de données
-    await connectMongooseToDatabase()
+    try {
+        // Connexion à la base de données
+        await connectMongooseToDatabase()
 
-    // Vérification de l'authentification
-    const session = await auth.api.getSession({
-      headers: await headers()
-    })
-    if (session === null || session === undefined) {
-      throw new Error('User not authenticated')
+        // Vérification de l'authentification
+        const session = await auth.api.getSession({
+            headers: await headers()
+        })
+        if (session === null || session === undefined) {
+            throw new Error('User not authenticated')
+        }
+
+        const { user } = session
+
+        // Extraction de l'ID depuis le tableau de route dynamique
+        const _id = id
+
+        // Validation du format ObjectId MongoDB
+        if (!Types.ObjectId.isValid(_id)) {
+            console.error('Invalid monster ID format')
+            return null
+        }
+
+        // Récupération du monstre avec vérification de propriété
+        const monster = await Monster.findOne({ ownerId: user.id, _id }).exec()
+
+        // Sérialisation JSON pour éviter les problèmes de typage Next.js
+        return JSON.parse(JSON.stringify(monster))
+    } catch (error) {
+        console.error('Error fetching monster by ID:', error)
+        return null
     }
-
-    const { user } = session
-
-    // Extraction de l'ID depuis le tableau de route dynamique
-    const _id = id[0]
-
-    // Validation du format ObjectId MongoDB
-    if (!Types.ObjectId.isValid(_id)) {
-      console.error('Invalid monster ID format')
-      return null
-    }
-
-    // Récupération du monstre avec vérification de propriété
-    const monster = await Monster.findOne({ ownerId: user.id, _id }).exec()
-
-    // Sérialisation JSON pour éviter les problèmes de typage Next.js
-    return JSON.parse(JSON.stringify(monster))
-  } catch (error) {
-    console.error('Error fetching monster by ID:', error)
-    return null
-  }
 }
