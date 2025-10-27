@@ -59,7 +59,9 @@ export async function getMonsterById(id: string): Promise<DBMonster | null> {
 
         const {user} = session
 
-        if (!Types.ObjectId.isValid(id)) {
+        const _id = id[0]
+
+        if (!Types.ObjectId.isValid(_id)) {
             console.error('Invalid monster ID format')
             return null
         }
