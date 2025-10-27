@@ -20,7 +20,6 @@ export async function createMonster(monsterData: CreateMonsterFormValues): Promi
     const monster = new Monster({
         ownerId: session.user.id,
         name: monsterData.name,
-        traits: monsterData.traits,
         state: monsterData.state,
         level: monsterData.level
     })
