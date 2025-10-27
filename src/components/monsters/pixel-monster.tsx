@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 type MonsterState = 'happy' | 'sad' | 'hungry' | 'sleepy' | 'angry'
+type MonsterAction = 'feed' | 'comfort' | 'hug' | 'wake' | null
 
 export type MonsterStyle = 'round' | 'square' | 'tall' | 'wide'
 export type EyeStyle = 'big' | 'small' | 'star' | 'sleepy'
@@ -26,6 +27,7 @@ interface PixelMonsterProps {
   state: MonsterState
   traits?: MonsterTraits
   level?: number
+  currentAction?: MonsterAction
 }
 
 const defaultTraits: MonsterTraits = {
@@ -41,13 +43,30 @@ const defaultTraits: MonsterTraits = {
   accessory: 'none'
 }
 
+interface Particle {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  life: number
+  maxLife: number
+  emoji: string
+  size: number
+  rotation: number
+  rotationSpeed: number
+}
+
 export function PixelMonster ({
   state,
   traits = defaultTraits,
-  level = 1
+  level = 1,
+  currentAction = null
 }: PixelMonsterProps): React.ReactNode {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const frameRef = useRef(0)
+  const actionFrameRef = useRef(0)
+  const particlesRef = useRef<Particle[]>([])
+  const currentActionRef = useRef<MonsterAction>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -63,7 +82,17 @@ export function PixelMonster ({
 
     const animate = (): void => {
       frameRef.current += 1
-      drawMonster(ctx, state, frameRef.current, traits, level)
+
+      if (currentActionRef.current !== null) {
+        actionFrameRef.current += 1
+        if (actionFrameRef.current > 150) { // ~2.5 secondes à 60fps
+          currentActionRef.current = null
+          actionFrameRef.current = 0
+          particlesRef.current = []
+        }
+      }
+
+      drawMonster(ctx, state, frameRef.current, traits, level, currentActionRef.current, actionFrameRef.current, particlesRef.current)
       animationId = requestAnimationFrame(animate)
     }
 
@@ -76,7 +105,50 @@ export function PixelMonster ({
     }
   }, [state, traits, level])
 
+  useEffect(() => {
+    if (currentAction !== null && currentAction !== currentActionRef.current) {
+      currentActionRef.current = currentAction
+      actionFrameRef.current = 0
+      particlesRef.current = createParticles(currentAction)
+    }
+  }, [currentAction])
+
   return <canvas ref={canvasRef} className='pixel-art w-full h-full mx-auto' style={{ imageRendering: 'pixelated' }} />
+}
+
+function createParticles (action: MonsterAction): Particle[] {
+  const particles: Particle[] = []
+  const centerX = 80
+  const centerY = 80
+
+  const emojis = {
+    feed: ['🍎', '✨', '🍏', '⭐', '🍎', '✨'],
+    comfort: ['💙', '💜', '💚', '🩵', '💛', '💙'],
+    hug: ['💖', '💕', '💗', '💓', '💝', '💞'],
+    wake: ['⭐', '✨', '💫', '🌟', '⚡', '✨']
+  }
+
+  const particleEmojis = action !== null ? emojis[action] : []
+  const count = particleEmojis.length
+
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count
+    const speed = 1.5 + Math.random() * 1
+    particles.push({
+      x: centerX,
+      y: centerY,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 0,
+      maxLife: 100 + Math.random() * 50,
+      emoji: particleEmojis[i],
+      size: 12 + Math.random() * 8,
+      rotation: 0,
+      rotationSpeed: (Math.random() - 0.5) * 0.3
+    })
+  }
+
+  return particles
 }
 
 function drawMonster (
@@ -84,12 +156,62 @@ function drawMonster (
   state: MonsterState,
   frame: number,
   traits: MonsterTraits,
-  level: number
+  level: number,
+  currentAction: MonsterAction,
+  actionFrame: number,
+  particles: Particle[]
 ): void {
   const pixelSize = 6
   const bounce = Math.sin(frame * 0.05) * 3
+  let offsetX = 0
+  let offsetY = 0
+  let rotation = 0
+  let scale = 1
 
   ctx.clearRect(0, 0, 160, 160)
+
+  // Animations selon l'action
+  if (currentAction !== null && actionFrame < 150) {
+    const progress = actionFrame / 150
+
+    switch (currentAction) {
+      case 'feed': {
+        // Sauts joyeux multiples
+        const jumpCycle = (actionFrame % 30) / 30
+        if (jumpCycle < 0.5) {
+          offsetY = -Math.sin(jumpCycle * Math.PI * 2) * 25
+          scale = 1 + Math.sin(jumpCycle * Math.PI * 2) * 0.1
+        }
+        break
+      }
+      case 'comfort': {
+        // Balancement doux
+        offsetX = Math.sin(actionFrame * 0.08) * 10
+        rotation = Math.sin(actionFrame * 0.08) * 0.1
+        break
+      }
+      case 'hug': {
+        // Rotation excitée avec agrandissement
+        rotation = Math.sin(actionFrame * 0.15) * 0.3
+        scale = 1 + Math.sin(actionFrame * 0.1) * 0.15
+        offsetY = Math.sin(actionFrame * 0.2) * 5
+        break
+      }
+      case 'wake': {
+        // Secousses intenses
+        offsetX = Math.sin(actionFrame * 0.5) * (5 - progress * 5)
+        offsetY = Math.cos(actionFrame * 0.7) * (5 - progress * 5)
+        rotation = Math.sin(actionFrame * 0.6) * (0.15 - progress * 0.15)
+        break
+      }
+    }
+  }
+
+  ctx.save()
+  ctx.translate(80, 80)
+  ctx.rotate(rotation)
+  ctx.scale(scale, scale)
+  ctx.translate(-80 + offsetX, -80 + offsetY)
 
   let bodyColor = traits.bodyColor
   let accentColor = traits.accentColor
@@ -140,6 +262,79 @@ function drawMonster (
   drawAccessory(ctx, traits.accessory, traits.accentColor, bodyY, pixelSize, frame)
 
   drawStateEffects(ctx, state, bodyY, pixelSize, frame)
+
+  ctx.restore()
+
+  // Dessiner les particules
+  if (currentAction !== null && particles.length > 0) {
+    drawParticles(ctx, particles, actionFrame)
+  }
+
+  // Dessiner effet de fond lumineux
+  if (currentAction !== null && actionFrame < 150) {
+    drawActionBackground(ctx, currentAction, actionFrame)
+  }
+}
+
+function drawParticles (ctx: CanvasRenderingContext2D, particles: Particle[], actionFrame: number): void {
+  particles.forEach(particle => {
+    particle.life = actionFrame
+    if (particle.life >= particle.maxLife) return
+
+    const progress = particle.life / particle.maxLife
+    const alpha = 1 - progress
+
+    particle.x += particle.vx
+    particle.y += particle.vy
+    particle.rotation += particle.rotationSpeed
+
+    ctx.save()
+    ctx.translate(particle.x, particle.y)
+    ctx.rotate(particle.rotation)
+    ctx.globalAlpha = alpha
+    ctx.font = `${particle.size * (1 + progress * 0.5)}px Arial`
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(particle.emoji, 0, 0)
+    ctx.restore()
+  })
+}
+
+function drawActionBackground (ctx: CanvasRenderingContext2D, action: MonsterAction, actionFrame: number): void {
+  if (action === null) return
+
+  const centerX = 80
+  const centerY = 80
+
+  const colors = {
+    feed: ['rgba(247, 83, 60, 0.3)', 'rgba(247, 83, 60, 0)'],
+    comfort: ['rgba(70, 144, 134, 0.3)', 'rgba(70, 144, 134, 0)'],
+    hug: ['rgba(143, 114, 224, 0.4)', 'rgba(143, 114, 224, 0)'],
+    wake: ['rgba(255, 230, 109, 0.4)', 'rgba(255, 230, 109, 0)']
+  }
+
+  const colorSet = colors[action]
+  const pulseScale = 1 + Math.sin(actionFrame * 0.15) * 0.2
+
+  const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 60 * pulseScale)
+  gradient.addColorStop(0, colorSet[0])
+  gradient.addColorStop(1, colorSet[1])
+
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, 160, 160)
+
+  // Cercle expansif
+  if (actionFrame < 50) {
+    const rippleProgress = actionFrame / 50
+    const rippleRadius = 30 + rippleProgress * 50
+    const rippleAlpha = 0.5 * (1 - rippleProgress)
+
+    ctx.strokeStyle = `rgba(247, 83, 60, ${rippleAlpha})`
+    ctx.lineWidth = 3
+    ctx.beginPath()
+    ctx.arc(centerX, centerY, rippleRadius, 0, Math.PI * 2)
+    ctx.stroke()
+  }
 }
 
 function drawBody (

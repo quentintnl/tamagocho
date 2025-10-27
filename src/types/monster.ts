@@ -5,7 +5,7 @@ export type MonsterState = typeof MONSTER_STATES[number]
 export const DEFAULT_MONSTER_LEVEL = 1
 export const DEFAULT_MONSTER_STATE: MonsterState = MONSTER_STATES[0]
 
-// Pixel Monster Types (from GitHub v0-tamagotcho-correction)
+// Pixel Monster Types (from GitHub v0-tamagotcho)
 export type MonsterStyle = 'round' | 'square' | 'tall' | 'wide'
 export type EyeStyle = 'big' | 'small' | 'star' | 'sleepy'
 export type AntennaStyle = 'single' | 'double' | 'curly' | 'none'

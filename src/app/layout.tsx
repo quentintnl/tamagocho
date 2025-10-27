@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
-import { DynaPuff, Geist_Mono } from 'next/font/google'
+import { Jersey_10, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import { ToastContainer } from 'react-toastify'
 
-const dynaPuff = DynaPuff({
-  variable: '--font-dynapuff',
-  subsets: ['latin']
+const jersey10 = Jersey_10({
+  variable: '--font-jersey10',
+  subsets: ['latin'],
+  weight: '400'
 })
 
 const geistMono = Geist_Mono({
@@ -35,9 +37,10 @@ export default function RootLayout ({
   return (
     <html lang='fr'>
       <body
-        className={`${dynaPuff.variable} ${geistMono.variable} antialiased font-sans`}
+        className={`${jersey10.variable} ${geistMono.variable} antialiased font-sans`}
       >
         {children}
+        <ToastContainer />
       </body>
     </html>
   )

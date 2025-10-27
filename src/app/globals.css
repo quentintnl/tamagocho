@@ -44,7 +44,7 @@
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-dynapuff);
+  --font-sans: var(--font-jersey10);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -58,7 +58,226 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  --font-sans: var(--font-dynapuff);
+  --font-sans: var(--font-jersey10);
   --font-mono: var(--font-geist-mono);
   font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+/* Animations personnalisées pour les actions du monstre */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+}
+
+/* Nouvelles animations améliorées */
+@keyframes happy-jump {
+  0%, 100% { transform: translateY(0) scale(1); }
+  10% { transform: translateY(-20px) scale(1.05); }
+  20% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-15px) scale(1.03); }
+  40% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-25px) scale(1.08) rotate(-3deg); }
+  60% { transform: translateY(0) scale(1) rotate(0deg); }
+  70% { transform: translateY(-10px) scale(1.02); }
+  80% { transform: translateY(0) scale(1); }
+}
+
+@keyframes gentle-sway {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-8px) rotate(-2deg); }
+  50% { transform: translateX(0) rotate(0deg); }
+  75% { transform: translateX(8px) rotate(2deg); }
+}
+
+@keyframes excited-wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  10% { transform: rotate(-8deg) scale(1.05); }
+  20% { transform: rotate(8deg) scale(1.08); }
+  30% { transform: rotate(-8deg) scale(1.05); }
+  40% { transform: rotate(8deg) scale(1.08); }
+  50% { transform: rotate(-6deg) scale(1.1); }
+  60% { transform: rotate(6deg) scale(1.08); }
+  70% { transform: rotate(-4deg) scale(1.05); }
+  80% { transform: rotate(4deg) scale(1.03); }
+  90% { transform: rotate(-2deg) scale(1.01); }
+}
+
+@keyframes energetic-shake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  5% { transform: translate(-5px, -3px) rotate(-2deg); }
+  10% { transform: translate(5px, 3px) rotate(2deg); }
+  15% { transform: translate(-4px, -2px) rotate(-1deg); }
+  20% { transform: translate(4px, 2px) rotate(1deg); }
+  25% { transform: translate(-6px, -4px) rotate(-3deg); }
+  30% { transform: translate(6px, 4px) rotate(3deg); }
+  35% { transform: translate(-5px, -3px) rotate(-2deg); }
+  40% { transform: translate(5px, 3px) rotate(2deg); }
+  45% { transform: translate(-4px, -2px) rotate(-1deg); }
+  50% { transform: translate(4px, 2px) rotate(1deg); }
+  55% { transform: translate(-3px, -1px) rotate(-1deg); }
+  60% { transform: translate(3px, 1px) rotate(1deg); }
+  65% { transform: translate(-2px, -1px) rotate(0deg); }
+  70% { transform: translate(2px, 1px) rotate(0deg); }
+  75% { transform: translate(-1px, 0px) rotate(0deg); }
+  80% { transform: translate(1px, 0px) rotate(0deg); }
+}
+
+@keyframes particle-burst {
+  0% {
+    transform: translate(0, 0) scale(0.5) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: 
+      translate(
+        calc(cos(var(--particle-angle)) * var(--particle-distance)),
+        calc(sin(var(--particle-angle)) * var(--particle-distance))
+      )
+      scale(1.5)
+      rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes ripple-expand {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes feed-glow {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes comfort-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.6;
+  }
+}
+
+@keyframes love-burst {
+  0% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes energy-flash {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  25% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  75% {
+    opacity: 0.6;
+  }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out 3;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out 2;
+}
+
+.animate-float-up {
+  animation: float-up 2s ease-out forwards;
+}
+
+.animate-happy-jump {
+  animation: happy-jump 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-gentle-sway {
+  animation: gentle-sway 2s ease-in-out infinite;
+}
+
+.animate-excited-wiggle {
+  animation: excited-wiggle 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.animate-energetic-shake {
+  animation: energetic-shake 1.5s ease-in-out forwards;
+}
+
+.animate-particle-burst {
+  animation: particle-burst 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-ripple-expand {
+  animation: ripple-expand 1.5s ease-out forwards;
+}
+
+.bg-feed-glow {
+  background: radial-gradient(circle, rgba(247, 83, 60, 0.3), transparent);
+  animation: feed-glow 1.5s ease-in-out infinite;
+}
+
+.bg-comfort-pulse {
+  background: radial-gradient(circle, rgba(70, 144, 134, 0.3), transparent);
+  animation: comfort-pulse 2s ease-in-out infinite;
+}
+
+.bg-love-burst {
+  background: radial-gradient(circle, rgba(143, 114, 224, 0.3), transparent);
+  animation: love-burst 1.2s ease-in-out infinite;
+}
+
+.bg-energy-flash {
+  background: radial-gradient(circle, rgba(255, 230, 109, 0.4), transparent);
+  animation: energy-flash 0.5s ease-in-out 3;
 }

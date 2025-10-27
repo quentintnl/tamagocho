@@ -7,7 +7,7 @@ This is a Next.js 15.5.4 project using the App Router architecture, built for a 
 - **Framework**: Next.js 15.5.4 with App Router and Turbopack
 - **Language**: TypeScript with strict mode enabled
 - **Styling**: Tailwind CSS 4 with custom color themes
-- **Fonts**: Geist Sans & Geist Mono from Google Fonts
+- **Fonts**: Jersey 10 & Geist Mono from Google Fonts
 - **Linting**: ts-standard for TypeScript linting
 
 ## Development Workflow
