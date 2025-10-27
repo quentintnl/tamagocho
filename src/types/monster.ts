@@ -12,42 +12,60 @@ export type MonsterBodyShape = 'round' | 'oval' | 'bean' | 'square' | 'pear'
 export type MonsterDesignStyle = 'illustrated' | 'pixel'
 
 export interface MonsterPalette {
-  primary: string
-  secondary: string
-  detail: string
-  cheeks: string
-  background: string
-  accent: string
+    primary: string
+    secondary: string
+    detail: string
+    cheeks: string
+    background: string
+    accent: string
 }
 
 export interface MonsterFeatures {
-  earShape: 'pointy' | 'droopy' | 'long' | 'round'
-  tailShape: 'long' | 'short' | 'puff' | 'none'
-  whiskers: boolean
-  muzzle: 'small' | 'medium' | 'flat'
-  markings: 'plain' | 'mask' | 'patch'
+    earShape: 'pointy' | 'droopy' | 'long' | 'round'
+    tailShape: 'long' | 'short' | 'puff' | 'none'
+    whiskers: boolean
+    muzzle: 'small' | 'medium' | 'flat'
+    markings: 'plain' | 'mask' | 'patch'
 }
 
-export type MonsterAnimationKey = 'happyBounce' | 'sadDroop' | 'angryShake' | 'hungryNibble' | 'sleepyFloat' | 'pixelIdle'
+export type MonsterAnimationKey =
+    'happyBounce'
+    | 'sadDroop'
+    | 'angryShake'
+    | 'hungryNibble'
+    | 'sleepyFloat'
+    | 'pixelIdle'
 
 export interface MonsterAnimationSpec {
-  svgClassName: MonsterAnimationKey
+    svgClassName: MonsterAnimationKey
 }
 
 export interface MonsterDesign {
-  id: string
-  variant: MonsterVariantId
-  palette: MonsterPalette
-  features: MonsterFeatures
-  bodyShape: MonsterBodyShape
-  style: MonsterDesignStyle
-  animations: Record<MonsterState, MonsterAnimationSpec>
+    id: string
+    variant: MonsterVariantId
+    palette: MonsterPalette
+    features: MonsterFeatures
+    bodyShape: MonsterBodyShape
+    style: MonsterDesignStyle
+    animations: Record<MonsterState, MonsterAnimationSpec>
 }
 
 export interface MonsterGenerationOptions {
-  seed?: string
-  paletteOverride?: Partial<MonsterPalette>
-  variantOverride?: MonsterVariantId
-  bodyShapeOverride?: MonsterBodyShape
-  style?: MonsterDesignStyle
+    seed?: string
+    paletteOverride?: Partial<MonsterPalette>
+    variantOverride?: MonsterVariantId
+    bodyShapeOverride?: MonsterBodyShape
+    style?: MonsterDesignStyle
+}
+
+// Database Monster type (serialized version)
+export interface DBMonster {
+    _id: string
+    name: string
+    level: number
+    traits: string // JSON serialized MonsterTraits
+    state: MonsterState
+    ownerId: string
+    createdAt: Date
+    updatedAt: Date
 }
