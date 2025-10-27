@@ -12,7 +12,7 @@ function MonsterCard({monster}: MonsterCardProps): ReactNode {
     const router = useRouter()
 
     const handleClick = (): void => {
-        router.push(`/creature/${monster.id}`)
+        router.push(`/creature/${monster._id}`)
     }
 
     const getHealthColor = (): string => {
