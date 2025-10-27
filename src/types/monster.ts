@@ -60,7 +60,7 @@ export interface MonsterGenerationOptions {
 
 // Database Monster type (serialized version)
 export interface DBMonster {
-    id: string
+    _id: string
     name: string
     health: number
     happiness: number
