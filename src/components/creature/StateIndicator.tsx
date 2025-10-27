@@ -1,3 +1,5 @@
+import {JSX} from "react";
+
 interface StateIndicatorProps {
     state: string
 }

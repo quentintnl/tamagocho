@@ -1,4 +1,5 @@
 import StateIndicator from './StateIndicator'
+import {JSX} from "react";
 
 interface CreatureStatsProps {
     level: number
