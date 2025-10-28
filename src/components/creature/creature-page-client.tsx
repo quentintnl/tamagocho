@@ -96,6 +96,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                         level={currentMonster.level}
                         currentAction={currentAction}
                         onAction={handleAction}
+                        monsterId={currentMonster._id}
                     />
 
                     {/* Colonne droite : Panneaux d'informations */}

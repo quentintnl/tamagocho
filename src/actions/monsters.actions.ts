@@ -8,6 +8,7 @@ import type { DBMonster } from '@/types/monster'
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 import { Types } from 'mongoose'
+import { MonsterAction } from '@/hooks/monsters'
 
 /**
  * Crée un nouveau monstre pour l'utilisateur authentifié
@@ -160,5 +161,52 @@ export async function getMonsterById (id: string): Promise<DBMonster | null> {
     } catch (error) {
         console.error('Error fetching monster by ID:', error)
         return null
+    }
+}
+
+const actionsStatesMap: Record<Exclude<MonsterAction, null>, string> = {
+    feed: 'hungry',
+    comfort: 'angry',
+    hug: 'sad',
+    wake: 'sleepy'
+}
+
+export async function doActionOnMonster (id: string, action: MonsterAction): Promise<void> {
+    try {
+        // Connexion à la base de données
+        await connectMongooseToDatabase()
+
+        // Vérification de l'authentification
+        const session = await auth.api.getSession({
+            headers: await headers()
+        })
+        if (session === null || session === undefined) {
+            throw new Error('User not authenticated')
+        }
+
+        const { user } = session
+
+        // Validation du format ObjectId MongoDB
+        if (!Types.ObjectId.isValid(id)) {
+            throw new Error('Invalid monster ID format')
+        }
+
+        // Récupération du monstre avec vérification de propriété
+        const monster = await Monster.findOne({ ownerId: user.id, _id: id }).exec()
+
+        if (monster === null || monster === undefined) {
+            throw new Error('Monster not found')
+        }
+
+        // Mise à jour de l'état du monstre en fonction de l'action
+        if (action !== null && action !== undefined && action in actionsStatesMap) {
+            if (monster.state === actionsStatesMap[action]) {
+                monster.state = 'happy'
+                monster.markModified('state')
+                await monster.save()
+            }
+        }
+    } catch (error) {
+        console.error('Error updating monster state:', error)
     }
 }

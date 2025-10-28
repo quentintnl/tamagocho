@@ -25,7 +25,7 @@ const server = app.listen(PORT, () => {
   const worker = async () => {
     /* eslint-disable-next-line no-unmodified-loop-condition */
     while (!stopped) {
-      const delay = Math.floor(Math.random() * 10000) + 1000 // 1000..10000 ms
+      const delay = Math.floor(Math.random() * 60000) + 30000 // 30000..60000 ms
       await new Promise((resolve) => {
         currentTimeout = setTimeout(resolve, delay)
       })
