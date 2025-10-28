@@ -151,6 +151,25 @@ function DashboardContent ({ session, monsters }: { session: Session, monsters: 
                   fullWidth
                 />
               </div>
+
+              {/* Lien vers la page wallet */}
+              <button
+                onClick={() => { window.location.href = '/wallet' }}
+                className='mt-4 w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg border-2 border-yellow-200 hover:border-yellow-300 hover:shadow-md transition-all duration-200 group'
+              >
+                <div className='flex items-center gap-3'>
+                  <div className='flex items-center justify-center w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
+                    <span className='text-xl'>💰</span>
+                  </div>
+                  <div className='text-left'>
+                    <p className='text-sm font-medium text-gray-600'>Mon Wallet</p>
+                    <p className='text-lg font-bold text-gray-800'>Gérer mes pièces</p>
+                  </div>
+                </div>
+                <svg className='w-5 h-5 text-gray-400 group-hover:text-moccaccino-600 group-hover:translate-x-1 transition-all' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+                </svg>
+              </button>
             </div>
           </div>
         </section>
