@@ -1,4 +1,4 @@
-import type { DBMonster } from '@/types/monster'
+import type { PopulatedMonster } from '@/types/monster'
 import { EmptyMonstersState } from './empty-monsters-state'
 import { MonsterCard } from './monster-card'
 
@@ -7,7 +7,7 @@ import { MonsterCard } from './monster-card'
  */
 interface MonstersListProps {
   /** Liste des monstres de l'utilisateur */
-  monsters: DBMonster[]
+  monsters: PopulatedMonster[]
   /** Classe CSS optionnelle */
   className?: string
 }
@@ -54,7 +54,7 @@ function MonstersList ({ monsters, className }: MonstersListProps): React.ReactN
               name={monster.name}
               traits={monster.traits}
               state={monster.state}
-              level={monster.level}
+              level={monster.level_id.level}
               createdAt={String(monster.createdAt)}
               updatedAt={String(monster.updatedAt)}
             />

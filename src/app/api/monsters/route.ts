@@ -1,6 +1,8 @@
 import { connectMongooseToDatabase } from '@/db'
 import Monster from '@/db/models/monster.model'
+import '@/db/models/xp-level.model'
 import { auth } from '@/lib/auth'
+import {headers} from "next/headers";
 
 export async function GET (): Promise<Response> {
   const session = await auth.api.getSession({
@@ -12,7 +14,8 @@ export async function GET (): Promise<Response> {
   }
 
   await connectMongooseToDatabase()
-  const monsters = await Monster.find({ ownerId: session.user.id }).exec()
+
+  const monsters = await Monster.find({ ownerId: session.user.id }).populate('level_id').exec()
 
   // Sérialisation JSON pour éviter les problèmes de typage Next.js
   return Response.json(monsters)

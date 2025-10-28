@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { DBMonster } from '@/types/monster'
+import type { PopulatedMonster } from '@/types/monster'
 
 /**
  * Labels français pour les différentes humeurs des monstres
@@ -34,14 +34,14 @@ export interface MonsterStats {
  * Responsabilité unique : agréger et calculer les statistiques
  * à partir de la liste des monstres de l'utilisateur.
  *
- * @param {DBMonster[]} monsters - Liste des monstres de l'utilisateur
+ * @param {PopulatedMonster[]} monsters - Liste des monstres de l'utilisateur
  * @returns {MonsterStats} Statistiques calculées
  *
  * @example
  * const stats = useMonsterStats(monsters)
  * // { totalMonsters: 5, highestLevel: 8, latestAdoption: Date, ... }
  */
-export function useMonsterStats (monsters: DBMonster[]): MonsterStats {
+export function useMonsterStats (monsters: PopulatedMonster[]): MonsterStats {
   return useMemo(() => {
     if (!Array.isArray(monsters) || monsters.length === 0) {
       return {
@@ -60,7 +60,7 @@ export function useMonsterStats (monsters: DBMonster[]): MonsterStats {
 
     monsters.forEach((monster) => {
       // Calcul du niveau le plus élevé
-      const level = monster.level ?? 1
+      const level = monster.level_id?.level ?? 1
       if (level > highestLevel) {
         highestLevel = level
       }

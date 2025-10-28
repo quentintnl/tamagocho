@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters.actions'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
-import type { DBMonster } from '@/types/monster'
+import type {PopulatedMonster} from '@/types/monster'
 import {
   useUserDisplay,
   useMonsterStats,
@@ -35,15 +35,15 @@ type Session = typeof authClient.$Infer.Session
  *
  * @param {Object} props - Props du composant
  * @param {Session} props.session - Session utilisateur Better Auth
- * @param {DBMonster[]} props.monsters - Liste des monstres de l'utilisateur
+ * @param {PopulatedMonster[]} props.monsters - Liste des monstres de l'utilisateur
  * @returns {React.ReactNode} Contenu complet du dashboard
  *
  * @example
  * <DashboardContent session={session} monsters={monsters} />
  */
-function DashboardContent ({ session, monsters }: { session: Session, monsters: DBMonster[] }): React.ReactNode {
+function DashboardContent ({ session, monsters }: { session: Session, monsters: PopulatedMonster[] }): React.ReactNode {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [monsterList, setMonsterList] = useState<DBMonster[]>(monsters)
+  const [monsterList, setMonsterList] = useState<PopulatedMonster[]>(monsters)
   // Extraction des informations utilisateur
   const userDisplay = useUserDisplay(session)
 
