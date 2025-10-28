@@ -65,9 +65,11 @@ export async function calculateLevelFromXp (
     accumulatedXp += level.xpRequired
   }
 
+    const remainingXp = totalXp - accumulatedXp
+
   return {
     level: currentLevel,
-    remainingXp: totalXp - accumulatedXp
+    remainingXp
   }
 }
 

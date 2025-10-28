@@ -220,9 +220,29 @@ export async function doActionOnMonster (id: string, action: MonsterAction): Pro
         xpGained = XP_GAIN_CORRECT_ACTION
       }
 
-      // Ajout de l'XP au monstre
-      const currentXp = Number(monster.xp ?? 0)
-      const newTotalXp = currentXp + xpGained
+      // Calcul de l'XP total en additionnant l'XP de tous les niveaux précédents
+      const currentLevelNumber = monster.level_id.level
+      const currentXpInLevel = Number(monster.xp ?? 0)
+
+      // Récupérer tous les niveaux pour calculer l'XP total accumulé
+      const { getAllXpLevels } = await import('@/services/xp-level.service')
+      const allLevels = await getAllXpLevels()
+
+
+      // Calculer l'XP total = somme des xpRequired pour ATTEINDRE le niveau actuel + XP actuel du niveau
+      // Note: xpRequired du niveau 1 est 0 (c'est le niveau de départ)
+      // xpRequired du niveau 2 est 50 (il faut 50 XP pour passer de 1 à 2)
+      // Donc pour être au niveau 2 avec 10 XP, on a : 0 + 50 + 10 = 60 XP total
+      let totalXpBeforeCurrentLevel = 0
+      for (const level of allLevels) {
+        if (level.level <= currentLevelNumber) {
+          totalXpBeforeCurrentLevel += level.xpRequired
+          console.log(`  - Niveau ${level.level}: +${level.xpRequired} XP requis`)
+        }
+      }
+
+      const currentTotalXp = totalXpBeforeCurrentLevel + currentXpInLevel
+      const newTotalXp = currentTotalXp + xpGained
 
       // Calcul du nouveau niveau basé sur l'XP total
       const { level: newLevel, remainingXp } = await calculateLevelFromXp(newTotalXp)
@@ -235,10 +255,9 @@ export async function doActionOnMonster (id: string, action: MonsterAction): Pro
         // Level up !
         monster.level_id = newLevel._id as any
         monster.xp = remainingXp
-        console.log(`🎉 Level up! Nouveau niveau: ${newLevel.level}, XP restant: ${remainingXp}`)
       } else {
-        // Même niveau, on ajoute juste l'XP
-        monster.xp = newTotalXp
+        // Même niveau, on ajoute juste l'XP gagné
+        monster.xp = currentXpInLevel + xpGained
       }
 
       monster.markModified('state')
