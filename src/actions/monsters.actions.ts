@@ -2,6 +2,7 @@
 
 import { connectMongooseToDatabase } from '@/db'
 import Monster from '@/db/models/monster.model'
+import '@/db/models/xp-level.model'
 import { auth } from '@/lib/auth'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
 import type { PopulatedMonster } from '@/types/monster'
