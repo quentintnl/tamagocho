@@ -1,16 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters.actions'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
 import type { DBMonster } from '@/types/monster'
 import {
-  useUserDisplay,
-  useMonsterStats,
-  useLatestAdoptionLabel,
-  useFavoriteMoodMessage,
-  useQuests
+    useUserDisplay,
+    useMonsterStats,
+    useLatestAdoptionLabel,
+    useFavoriteMoodMessage,
+    useQuests
 } from '@/hooks/dashboard'
 import CreateMonsterModal from './create-monster-modal'
 import { WelcomeHero } from './welcome-hero'
@@ -42,122 +42,136 @@ type Session = typeof authClient.$Infer.Session
  * <DashboardContent session={session} monsters={monsters} />
  */
 function DashboardContent ({ session, monsters }: { session: Session, monsters: DBMonster[] }): React.ReactNode {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [monsterList, setMonsterList] = useState<DBMonster[]>(monsters)
+    // Extraction des informations utilisateur
+    const userDisplay = useUserDisplay(session)
 
-  // Extraction des informations utilisateur
-  const userDisplay = useUserDisplay(session)
+    // Calcul des statistiques des monstres
+    const stats = useMonsterStats(monsters)
+    const latestAdoptionLabel = useLatestAdoptionLabel(stats.latestAdoption)
+    const favoriteMoodMessage = useFavoriteMoodMessage(stats.favoriteMood, stats.totalMonsters)
 
-  // Calcul des statistiques des monstres
-  const stats = useMonsterStats(monsters)
-  const latestAdoptionLabel = useLatestAdoptionLabel(stats.latestAdoption)
-  const favoriteMoodMessage = useFavoriteMoodMessage(stats.favoriteMood, stats.totalMonsters)
+    // Génération des quêtes
+    const quests = useQuests(stats)
 
-  // Génération des quêtes
-  const quests = useQuests(stats)
+    useEffect(() => {
+        const fetchAndUpdateMonsters = async (): Promise<void> => {
+            const response = await fetch('/api/monsters')
+            const updatedMonsters = await response.json()
+            setMonsterList(updatedMonsters)
+        }
 
-  /**
-   * Déconnecte l'utilisateur et redirige vers la page de connexion
-   */
-  const handleLogout = (): void => {
-    void authClient.signOut()
-    window.location.href = '/sign-in'
-  }
+        const interval = setInterval(() => {
+            void fetchAndUpdateMonsters()
+        }, 1000) // Met à jour toutes les 60 secondes
 
-  /**
-   * Ouvre le modal de création de monstre
-   */
-  const handleCreateMonster = (): void => {
-    setIsModalOpen(true)
-  }
+        return () => clearInterval(interval)
+    }, [])
 
-  /**
-   * Ferme le modal de création de monstre
-   */
-  const handleCloseModal = (): void => {
-    setIsModalOpen(false)
-  }
+    /**
+     * Déconnecte l'utilisateur et redirige vers la page de connexion
+     */
+    const handleLogout = (): void => {
+        void authClient.signOut()
+        window.location.href = '/sign-in'
+    }
 
-  /**
-   * Soumet le formulaire de création de monstre
-   * @param {CreateMonsterFormValues} values - Valeurs du formulaire
-   */
-  const handleMonsterSubmit = (values: CreateMonsterFormValues): void => {
-    void createMonster(values).then(() => {
-      window.location.reload()
-    })
-  }
+    /**
+     * Ouvre le modal de création de monstre
+     */
+    const handleCreateMonster = (): void => {
+        setIsModalOpen(true)
+    }
 
-  return (
-    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-moccaccino-100 via-white to-fuchsia-blue-100'>
-      {/* Bulles décoratives de fond */}
-      <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-fuchsia-blue-200/40 blur-3xl' aria-hidden='true' />
-      <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-lochinvar-200/50 blur-3xl' aria-hidden='true' />
+    /**
+     * Ferme le modal de création de monstre
+     */
+    const handleCloseModal = (): void => {
+        setIsModalOpen(false)
+    }
 
-      <main className='relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 pt-20 sm:px-6 lg:px-8'>
-        {/* Section héro avec bienvenue et profil */}
-        <section className='relative overflow-hidden rounded-3xl bg-white/80 px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.18)] ring-1 ring-white/60 sm:px-10'>
-          {/* Bulles décoratives internes */}
-          <div className='pointer-events-none absolute -right-28 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-moccaccino-200/70 via-fuchsia-blue-200/50 to-white/40 blur-3xl' aria-hidden='true' />
-          <div className='pointer-events-none absolute -left-32 bottom-0 h-64 w-64 translate-y-1/2 rounded-full bg-gradient-to-tr from-lochinvar-200/60 via-white/30 to-fuchsia-blue-100/60 blur-3xl' aria-hidden='true' />
+    /**
+     * Soumet le formulaire de création de monstre
+     * @param {CreateMonsterFormValues} values - Valeurs du formulaire
+     */
+    const handleMonsterSubmit = (values: CreateMonsterFormValues): void => {
+        void createMonster(values).then(() => {
+            window.location.reload()
+        })
+    }
 
-          <div className='relative flex flex-col gap-10 lg:flex-row lg:items-center'>
-            {/* Message de bienvenue et actions principales */}
-            <WelcomeHero
-              userDisplay={userDisplay}
-              onCreateMonster={handleCreateMonster}
-              onLogout={handleLogout}
+    return (
+        <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-moccaccino-100 via-white to-fuchsia-blue-100'>
+            {/* Bulles décoratives de fond */}
+            <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-fuchsia-blue-200/40 blur-3xl' aria-hidden='true' />
+            <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-lochinvar-200/50 blur-3xl' aria-hidden='true' />
+
+            <main className='relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 pt-20 sm:px-6 lg:px-8'>
+                {/* Section héro avec bienvenue et profil */}
+                <section className='relative overflow-hidden rounded-3xl bg-white/80 px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.18)] ring-1 ring-white/60 sm:px-10'>
+                    {/* Bulles décoratives internes */}
+                    <div className='pointer-events-none absolute -right-28 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-moccaccino-200/70 via-fuchsia-blue-200/50 to-white/40 blur-3xl' aria-hidden='true' />
+                    <div className='pointer-events-none absolute -left-32 bottom-0 h-64 w-64 translate-y-1/2 rounded-full bg-gradient-to-tr from-lochinvar-200/60 via-white/30 to-fuchsia-blue-100/60 blur-3xl' aria-hidden='true' />
+
+                    <div className='relative flex flex-col gap-10 lg:flex-row lg:items-center'>
+                        {/* Message de bienvenue et actions principales */}
+                        <WelcomeHero
+                            userDisplay={userDisplay}
+                            onCreateMonster={handleCreateMonster}
+                            onLogout={handleLogout}
+                        />
+
+                        {/* Carte de profil et statistiques */}
+                        <div className='flex flex-1 flex-col gap-4 rounded-3xl bg-gradient-to-br from-lochinvar-100/80 via-white to-fuchsia-blue-100/70 p-6 ring-1 ring-white/70 backdrop-blur'>
+                            <UserProfileCard userDisplay={userDisplay} />
+
+                            <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
+                                <StatsCard
+                                    title='Compagnons'
+                                    value={stats.totalMonsters}
+                                    description="Monstres prêts pour l'aventure"
+                                    color='lochinvar'
+                                />
+                                <StatsCard
+                                    title='Niveau max'
+                                    value={stats.highestLevel}
+                                    description='Ton monstre le plus expérimenté'
+                                    color='fuchsia-blue'
+                                />
+                                <StatsCard
+                                    title='Dernière adoption'
+                                    value={latestAdoptionLabel}
+                                    description={stats.totalMonsters === 0 ? 'Ton prochain compagnon est à un clic !' : 'Continue de créer pour agrandir ta bande.'}
+                                    color='moccaccino'
+                                    fullWidth
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Section grille principale : liste des monstres + sidebar */}
+                <section className='mt-12 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
+                    <div>
+                        <MonstersList monsters={monsterList} className='mt-0' />
+                    </div>
+
+                    <aside className='flex flex-col gap-6'>
+                        <QuestsSection quests={quests} />
+                        <MoodTipSection message={favoriteMoodMessage} />
+                    </aside>
+                </section>
+            </main>
+
+            {/* Modal de création de monstre */}
+            <CreateMonsterModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handleMonsterSubmit}
             />
-
-            {/* Carte de profil et statistiques */}
-            <div className='flex flex-1 flex-col gap-4 rounded-3xl bg-gradient-to-br from-lochinvar-100/80 via-white to-fuchsia-blue-100/70 p-6 ring-1 ring-white/70 backdrop-blur'>
-              <UserProfileCard userDisplay={userDisplay} />
-
-              <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-                <StatsCard
-                  title='Compagnons'
-                  value={stats.totalMonsters}
-                  description="Monstres prêts pour l'aventure"
-                  color='lochinvar'
-                />
-                <StatsCard
-                  title='Niveau max'
-                  value={stats.highestLevel}
-                  description='Ton monstre le plus expérimenté'
-                  color='fuchsia-blue'
-                />
-                <StatsCard
-                  title='Dernière adoption'
-                  value={latestAdoptionLabel}
-                  description={stats.totalMonsters === 0 ? 'Ton prochain compagnon est à un clic !' : 'Continue de créer pour agrandir ta bande.'}
-                  color='moccaccino'
-                  fullWidth
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section grille principale : liste des monstres + sidebar */}
-        <section className='mt-12 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
-          <div>
-            <MonstersList monsters={monsters} className='mt-0' />
-          </div>
-
-          <aside className='flex flex-col gap-6'>
-            <QuestsSection quests={quests} />
-            <MoodTipSection message={favoriteMoodMessage} />
-          </aside>
-        </section>
-      </main>
-
-      {/* Modal de création de monstre */}
-      <CreateMonsterModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSubmit={handleMonsterSubmit}
-      />
-    </div>
-  )
+        </div>
+    )
 }
 
 export default DashboardContent

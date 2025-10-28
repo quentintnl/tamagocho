@@ -153,7 +153,7 @@ src/
 
 ```typescript
 // src/actions/monsters.actions.ts
-'use server'
+'use index'
 
 import { auth } from '@/lib/auth'
 import { MonsterModel } from '@/db/models/monster.model'
@@ -360,7 +360,7 @@ function CreateMonsterForm() {
 }
 
 // 2. Application Layer (Coordination)
-'use server'
+'use index'
 export async function createMonster(name: string) {
   const traits = generateRandomTraits() // Domain Layer
   const monster = await MonsterModel.create({ /* ... */ }) // Infrastructure
@@ -426,4 +426,4 @@ Avant d'ajouter du nouveau code :
 
 - [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [Principes SOLID](./solid-principles)
-- [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
+- [Next.js Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/index-actions-and-mutations)

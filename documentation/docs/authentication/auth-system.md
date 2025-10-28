@@ -412,7 +412,7 @@ interface Session {
 ## Server Actions avec authentification
 
 ```typescript
-'use server'
+'use index'
 
 import { auth } from '@/lib/auth'
 import { MonsterModel } from '@/db/models/monster.model'
