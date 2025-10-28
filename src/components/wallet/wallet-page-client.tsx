@@ -162,7 +162,7 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
               {/* Montants prédéfinis */}
               <div>
                 <label className='block text-sm font-medium text-gray-700 mb-3'>
-                  Montants suggérés
+                  Choisissez un montant
                 </label>
                 <div className='grid grid-cols-3 gap-2'>
                   {presetAmounts.map((amount) => (
@@ -178,27 +178,6 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
                       +{amount}
                     </button>
                   ))}
-                </div>
-              </div>
-
-              {/* Input personnalisé */}
-              <div>
-                <label htmlFor='custom-amount' className='block text-sm font-medium text-gray-700 mb-2'>
-                  Montant personnalisé
-                </label>
-                <div className='relative'>
-                  <input
-                    id='custom-amount'
-                    type='number'
-                    min='1'
-                    value={addAmount}
-                    onChange={(e) => setAddAmount(parseInt(e.target.value) || 0)}
-                    className='w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-moccaccino-500 focus:ring-2 focus:ring-moccaccino-200 transition-all outline-none'
-                    placeholder='Entrez un montant'
-                  />
-                  <span className='absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium'>
-                    pièces
-                  </span>
                 </div>
               </div>
 
@@ -222,38 +201,6 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
           </div>
         </div>
 
-        {/* Section statistiques (optionnelle) */}
-        <div className='mt-8 bg-white rounded-2xl shadow-lg p-8 border border-gray-100'>
-          <h2 className='text-2xl font-bold text-gray-800 mb-6'>
-            Statistiques
-          </h2>
-
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-            <div className='p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg text-center'>
-              <p className='text-3xl mb-2'>🎯</p>
-              <p className='text-sm text-gray-600'>Capacité d'achat</p>
-              <p className='text-2xl font-bold text-gray-800'>
-                {Math.floor((wallet?.coin ?? 0) / 5)} items
-              </p>
-            </div>
-
-            <div className='p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg text-center'>
-              <p className='text-3xl mb-2'>⭐</p>
-              <p className='text-sm text-gray-600'>Statut</p>
-              <p className='text-2xl font-bold text-gray-800'>
-                {(wallet?.coin ?? 0) > 1000 ? 'Riche' : (wallet?.coin ?? 0) > 100 ? 'Aisé' : 'Normal'}
-              </p>
-            </div>
-
-            <div className='p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg text-center'>
-              <p className='text-3xl mb-2'>📊</p>
-              <p className='text-sm text-gray-600'>Rang</p>
-              <p className='text-2xl font-bold text-gray-800'>
-                {(wallet?.coin ?? 0) > 500 ? 'Or' : (wallet?.coin ?? 0) > 100 ? 'Argent' : 'Bronze'}
-              </p>
-            </div>
-          </div>
-        </div>
 
         {/* Bouton retour vers le dashboard */}
         <div className='mt-8 text-center'>
