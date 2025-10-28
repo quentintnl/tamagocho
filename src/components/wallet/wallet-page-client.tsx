@@ -38,6 +38,16 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
   // Montants prédéfinis
   const presetAmounts = [10, 25, 50, 100, 500]
 
+    const handleBuyKoins = async (): Promise<void> => {
+        const response = await fetch('/api/checkout/sessions', {
+            method: 'POST',
+            body: JSON.stringify({ amount: 500 })
+        })
+        const data = await response.json()
+        console.log(data)
+        window.location.href = data.url
+    }
+
   /**
    * Ajoute de la monnaie au wallet
    */
@@ -180,6 +190,9 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
                   ))}
                 </div>
               </div>
+                <Button onClick={handleBuyKoins}>
+                    Acheter 500 GochoCoin
+                </Button>
 
               {/* Bouton d'ajout */}
               <Button
