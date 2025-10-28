@@ -1,4 +1,5 @@
 import { getStateLabel } from '@/lib/utils'
+import { XpProgressBar } from './xp-progress-bar'
 
 /**
  * Props pour le composant StatItem
@@ -37,6 +38,12 @@ export function StatItem ({ label, value }: StatItemProps): React.ReactNode {
 interface CreatureStatsPanelProps {
   /** Niveau du monstre */
   level: number
+  /** XP actuel du monstre */
+  xp: number
+  /** XP nécessaire pour le niveau suivant */
+  xpToNextLevel: number
+  /** Indique si c'est le niveau maximum */
+  isMaxLevel: boolean
   /** État du monstre */
   state: string
   /** Date de création (timestamp ou string) */
@@ -49,9 +56,10 @@ interface CreatureStatsPanelProps {
  * Panneau d'affichage des statistiques du monstre
  *
  * Responsabilité unique : afficher toutes les statistiques
- * du monstre dans un panneau formaté.
+ * du monstre dans un panneau formaté, incluant la barre XP.
  *
- * Applique SRP en déléguant l'affichage de chaque stat à StatItem.
+ * Applique SRP en déléguant l'affichage de chaque stat à StatItem
+ * et la barre XP à XpProgressBar.
  *
  * @param {CreatureStatsPanelProps} props - Props du composant
  * @returns {React.ReactNode} Panneau de statistiques
@@ -59,6 +67,8 @@ interface CreatureStatsPanelProps {
  * @example
  * <CreatureStatsPanel
  *   level={5}
+ *   xp={75}
+ *   xpToNextLevel={100}
  *   state="happy"
  *   createdAt="2025-10-27T10:00:00Z"
  *   updatedAt="2025-10-27T12:00:00Z"
@@ -66,6 +76,9 @@ interface CreatureStatsPanelProps {
  */
 export function CreatureStatsPanel ({
   level,
+  xp,
+  xpToNextLevel,
+  isMaxLevel,
   state,
   createdAt,
   updatedAt
@@ -75,6 +88,17 @@ export function CreatureStatsPanel ({
       <h2 className='text-2xl font-bold text-moccaccino-600 mb-4'>
         Statistiques
       </h2>
+
+      {/* Barre de progression XP */}
+      <div className='mb-6'>
+        <XpProgressBar
+          currentXp={xp}
+          xpToNextLevel={xpToNextLevel}
+          currentLevel={level}
+          isMaxLevel={isMaxLevel}
+        />
+      </div>
+
       <div className='space-y-3'>
         <StatItem label='Niveau' value={level.toString()} />
         <StatItem label='État' value={getStateLabel(state)} />

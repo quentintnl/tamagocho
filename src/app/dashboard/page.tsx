@@ -1,8 +1,8 @@
 import { getMonsters } from '@/actions/monsters.actions'
 import DashboardContent from '@/components/dashboard/dashboard-content'
 import { auth } from '@/lib/auth'
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import {headers} from "next/headers";
 
 /**
  * Page principale du tableau de bord utilisateur

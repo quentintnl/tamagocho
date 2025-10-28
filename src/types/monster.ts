@@ -5,6 +5,11 @@ export type MonsterState = typeof MONSTER_STATES[number]
 export const DEFAULT_MONSTER_LEVEL = 1
 export const DEFAULT_MONSTER_STATE: MonsterState = MONSTER_STATES[0]
 
+// XP System Constants
+export const XP_GAIN_CORRECT_ACTION = 20
+export const XP_GAIN_INCORRECT_ACTION = 5
+export const MAX_LEVEL = 5
+
 // Pixel Monster Types (from GitHub v0-tamagotcho)
 export type MonsterStyle = 'round' | 'square' | 'tall' | 'wide'
 export type EyeStyle = 'big' | 'small' | 'star' | 'sleepy'
@@ -28,10 +33,27 @@ export interface MonsterTraits {
 export interface DBMonster {
   _id: string
   name: string
-  level: number
+  level_id: string
+  xp: number
   traits: string // JSON serialized MonsterTraits
   state: MonsterState
   ownerId: string
   createdAt: Date
   updatedAt: Date
 }
+
+// XP Level type
+export interface XpLevel {
+  _id: string
+  level: number
+  xpRequired: number
+  isMaxLevel: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+// Monster with populated level
+export interface PopulatedMonster extends Omit<DBMonster, 'level_id'> {
+  level_id: XpLevel
+}
+

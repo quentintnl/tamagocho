@@ -7,18 +7,20 @@ import { getStateLabel } from '@/lib/utils'
  * Props pour le composant CreatureMonsterDisplay
  */
 interface CreatureMonsterDisplayProps {
-    /** Traits visuels du monstre */
-    traits: MonsterTraits
-    /** État actuel du monstre */
-    state: MonsterState
-    /** Niveau du monstre */
-    level: number
-    /** Action actuellement en cours */
-    currentAction: MonsterAction
-    /** Callback appelé lors d'une action */
-    onAction: (action: MonsterAction) => void
-    /** ID du monstre */
-    monsterId: string
+  /** Traits visuels du monstre */
+  traits: MonsterTraits
+  /** État actuel du monstre */
+  state: MonsterState
+  /** Niveau du monstre */
+  level: number
+  /** Action actuellement en cours */
+  currentAction: MonsterAction
+  /** Callback appelé lors d'une action */
+  onAction: (action: MonsterAction) => void
+  /** ID du monstre */
+  monsterId: string
+  /** Callback appelé après l'action pour rafraîchir les données */
+  onActionComplete?: () => void
 }
 
 /**
@@ -44,36 +46,37 @@ interface CreatureMonsterDisplayProps {
  * />
  */
 export function CreatureMonsterDisplay ({
-                                            traits,
-                                            state,
-                                            level,
-                                            currentAction,
-                                            onAction,
-                                            monsterId
-                                        }: CreatureMonsterDisplayProps): React.ReactNode {
-    return (
-        <div className='bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border-4 border-lochinvar-200'>
-            {/* Zone d'affichage du monstre animé */}
-            <div className='aspect-square max-w-md mx-auto'>
-                <AnimatedMonster
-                    state={state}
-                    traits={traits}
-                    level={level}
-                    currentAction={currentAction}
-                />
-            </div>
+  traits,
+  state,
+  level,
+  currentAction,
+  onAction,
+  monsterId,
+  onActionComplete
+}: CreatureMonsterDisplayProps): React.ReactNode {
+  return (
+    <div className='bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border-4 border-lochinvar-200'>
+      {/* Zone d'affichage du monstre animé */}
+      <div className='aspect-square max-w-md mx-auto'>
+        <AnimatedMonster
+          state={state}
+          traits={traits}
+          level={level}
+          currentAction={currentAction}
+        />
+      </div>
 
-            {/* Badge d'état du monstre */}
-            <div className='mt-6 text-center'>
-                <div className='inline-block bg-gradient-to-r from-moccaccino-100 to-fuchsia-blue-100 px-6 py-3 rounded-full border-2 border-moccaccino-300'>
-                    <p className='text-sm font-semibold text-moccaccino-700 uppercase tracking-wide'>
-                        État: <span className='text-fuchsia-blue-700'>{getStateLabel(state)}</span>
-                    </p>
-                </div>
-            </div>
-
-            {/* Actions disponibles */}
-            <MonsterActions onAction={onAction} monsterId={monsterId} />
+      {/* Badge d'état du monstre */}
+      <div className='mt-6 text-center'>
+        <div className='inline-block bg-gradient-to-r from-moccaccino-100 to-fuchsia-blue-100 px-6 py-3 rounded-full border-2 border-moccaccino-300'>
+          <p className='text-sm font-semibold text-moccaccino-700 uppercase tracking-wide'>
+            État: <span className='text-fuchsia-blue-700'>{getStateLabel(state)}</span>
+          </p>
         </div>
-    )
+      </div>
+
+      {/* Actions disponibles */}
+      <MonsterActions onAction={onAction} monsterId={monsterId} onActionComplete={onActionComplete} />
+    </div>
+  )
 }

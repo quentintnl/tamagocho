@@ -7,10 +7,15 @@ const monsterSchema = new Schema({
     type: String,
     required: true
   },
-  level: {
+  level_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'XpLevel',
+    required: true
+  },
+  xp: {
     type: Number,
     required: false,
-    default: 1
+    default: 0
   },
   traits: {
     type: String, // JSON stringified MonsterDesign
