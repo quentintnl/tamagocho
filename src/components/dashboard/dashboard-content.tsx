@@ -19,6 +19,7 @@ import { StatsCard } from './stats-card'
 import { QuestsSection } from './quests-section'
 import { MoodTipSection } from './mood-tip-section'
 import MonstersList from '../monsters/monsters-list'
+import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -103,6 +104,9 @@ function DashboardContent ({ session, monsters }: { session: Session, monsters: 
 
   return (
     <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-moccaccino-100 via-white to-fuchsia-blue-100'>
+      {/* Header avec wallet */}
+      <PageHeaderWithWallet title='Dashboard' />
+
       {/* Bulles décoratives de fond */}
       <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-fuchsia-blue-200/40 blur-3xl' aria-hidden='true' />
       <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-lochinvar-200/50 blur-3xl' aria-hidden='true' />

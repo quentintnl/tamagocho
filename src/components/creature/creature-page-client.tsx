@@ -9,6 +9,7 @@ import { CreatureMonsterDisplay } from './creature-monster-display'
 import { CreatureStatsPanel } from './creature-stats-panel'
 import { CreatureTraitsPanel } from './creature-traits-panel'
 import { CreatureColorsPanel } from './creature-colors-panel'
+import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 
 /**
  * Props pour le composant CreaturePageClient
@@ -125,10 +126,17 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
     }
 
     return (
-        <div className='min-h-screen bg-gradient-to-b from-lochinvar-50 to-fuchsia-blue-50 py-12'>
-            <div className='container mx-auto px-4 max-w-4xl'>
-                {/* En-tête avec nom et niveau */}
-                <CreatureHeader name={currentMonster.name} level={currentMonster.level_id.level} />
+        <div className='min-h-screen bg-gradient-to-b from-lochinvar-50 to-fuchsia-blue-50'>
+            {/* Header avec wallet et bouton retour */}
+            <PageHeaderWithWallet
+                showBackButton={true}
+                backUrl='/dashboard'
+            />
+
+            <div className='py-12'>
+                <div className='container mx-auto px-4 max-w-4xl'>
+                    {/* En-tête avec nom et niveau */}
+                    <CreatureHeader name={currentMonster.name} level={currentMonster.level_id.level} />
 
                 {/* Grille principale : monstre + informations */}
                 <div className='grid md:grid-cols-2 gap-8'>
@@ -158,6 +166,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                         <CreatureColorsPanel traits={traits} />
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     )
