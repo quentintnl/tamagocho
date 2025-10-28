@@ -18,15 +18,17 @@ async function connectToDatabase () {
 
 async function updateMonstersStates () {
   try {
-    const monsters = await mongoose.connection.db.collection('monsters').find({}).toArray()
+    // Ne mettre à jour que les monstres qui sont "happy"
+    const monsters = await mongoose.connection.db.collection('monsters').find({ state: 'happy' }).toArray()
     for (const monster of monsters) {
-      // Example update: set all monsters to 'idle' state
+      // Choisir un état mauvais aléatoire uniquement pour les monstres happy
+      const newState = MONSTER_STATES[Math.floor(Math.random() * MONSTER_STATES.length)]
       await mongoose.connection.db.collection('monsters').updateOne(
         { _id: monster._id },
-        { $set: { state: MONSTER_STATES[Math.floor(Math.random() * MONSTER_STATES.length)] } }
+        { $set: { state: newState } }
       )
 
-      console.log(`Updated monster ${monster._id} state to ${monster.state}`)
+      console.log(`Updated monster ${monster._id} state from happy to ${newState}`)
     }
   } catch (error) {
     console.error('Error updating monsters states:', error)
