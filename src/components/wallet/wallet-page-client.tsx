@@ -15,7 +15,6 @@
 
 import { useState } from 'react'
 import { useWallet } from '@/hooks/useWallet'
-import { addCoinsToWallet } from '@/actions/wallet.actions'
 import Button from '@/components/button'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import type { authClient } from '@/lib/auth-client'
@@ -30,64 +29,41 @@ interface WalletPageClientProps {
  * Composant client de la page wallet
  */
 export default function WalletPageClient ({ session }: WalletPageClientProps): React.ReactNode {
-  const { wallet, isLoading, refresh } = useWallet()
-  const [addAmount, setAddAmount] = useState<number>(10)
+  const { wallet, isLoading } = useWallet()
   const [isAdding, setIsAdding] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
   // Montants prédéfinis
   const presetAmounts = [10, 25, 50, 100, 500]
 
-    const handleBuyKoins = async (): Promise<void> => {
-        const response = await fetch('/api/checkout/sessions', {
-            method: 'POST',
-            body: JSON.stringify({ amount: 500 })
-        })
-        const data = await response.json()
-        console.log(data)
-        window.location.href = data.url
-    }
-
   /**
-   * Ajoute de la monnaie au wallet
+   * Redirige vers Stripe pour acheter des koins
    */
-  const handleAddCoins = async (): Promise<void> => {
-    if (addAmount <= 0) {
-      setMessage({ type: 'error', text: 'Le montant doit être positif' })
-      return
-    }
-
+  const handleBuyKoins = async (amount: number): Promise<void> => {
     setIsAdding(true)
     setMessage(null)
 
     try {
-      const result = await addCoinsToWallet(addAmount)
+      const response = await fetch('/api/checkout/sessions', {
+        method: 'POST',
+        body: JSON.stringify({ amount })
+      })
+      const data = await response.json()
 
-      if (result !== null) {
-        setMessage({ type: 'success', text: `${addAmount} pièces ajoutées avec succès !` })
-        await refresh()
-
-        // Effacer le message après 3 secondes
-        setTimeout(() => {
-          setMessage(null)
-        }, 3000)
+      if (data.url !== null && data.url !== undefined) {
+        // Redirection vers Stripe
+        window.location.href = data.url
       } else {
-        setMessage({ type: 'error', text: 'Erreur lors de l\'ajout des pièces' })
+        setMessage({ type: 'error', text: 'Erreur lors de la création de la session de paiement' })
+        setIsAdding(false)
       }
     } catch (error) {
       console.error('Erreur:', error)
-      setMessage({ type: 'error', text: 'Une erreur est survenue' })
-    } finally {
+      setMessage({ type: 'error', text: 'Une erreur est survenue lors de la redirection vers Stripe' })
       setIsAdding(false)
     }
   }
 
-  /**
-   * Sélectionne un montant prédéfini
-   */
-  const handlePresetAmount = (amount: number): void => {
-    setAddAmount(amount)
-  }
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-moccaccino-50 via-white to-lochinvar-50'>
@@ -172,42 +148,27 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
               {/* Montants prédéfinis */}
               <div>
                 <label className='block text-sm font-medium text-gray-700 mb-3'>
-                  Choisissez un montant
+                  Choisissez un montant pour acheter
                 </label>
                 <div className='grid grid-cols-3 gap-2'>
                   {presetAmounts.map((amount) => (
-                    <button
+                    <Button
                       key={amount}
-                      onClick={() => handlePresetAmount(amount)}
-                      className={`px-4 py-3 rounded-lg border-2 font-medium transition-all duration-200 ${
-                        addAmount === amount
-                          ? 'border-moccaccino-500 bg-moccaccino-50 text-moccaccino-700'
-                          : 'border-gray-200 bg-white text-gray-700 hover:border-moccaccino-300 hover:bg-moccaccino-50'
-                      }`}
+                      onClick={async () => { await handleBuyKoins(amount) }}
+                      disabled={isAdding}
+                      variant='outline'
+                      size='md'
                     >
-                      +{amount}
-                    </button>
+                      {isAdding ? '...' : `${amount} 💰`}
+                    </Button>
                   ))}
                 </div>
               </div>
-                <Button onClick={handleBuyKoins}>
-                    Acheter 500 GochoCoin
-                </Button>
-
-              {/* Bouton d'ajout */}
-              <Button
-                onClick={handleAddCoins}
-                disabled={isAdding || addAmount <= 0}
-                variant='primary'
-                size='lg'
-              >
-                {isAdding ? 'Ajout en cours...' : `Ajouter ${addAmount} pièces`}
-              </Button>
 
               {/* Note explicative */}
               <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
                 <p className='text-sm text-blue-800'>
-                  <span className='font-medium'>💡 Astuce :</span> Vous pouvez gagner des pièces en prenant soin de vos monstres !
+                  <span className='font-medium'>💡 Info :</span> Cliquez sur un montant pour être redirigé vers le paiement sécurisé Stripe.
                 </p>
               </div>
             </div>
