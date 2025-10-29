@@ -21,6 +21,7 @@ import { QuestsSection } from './quests-section'
 import { MoodTipSection } from './mood-tip-section'
 import MonstersList from '../monsters/monsters-list'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
+import { MonstersAutoUpdater } from '@/components/monsters/auto-updater'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -95,6 +96,16 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
 
   return (
     <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-moccaccino-100 via-white to-fuchsia-blue-100'>
+      {/* Système de mise à jour automatique des monstres */}
+      <MonstersAutoUpdater
+        userId={session.user.id}
+        minInterval={60000}  // 1 minute
+        maxInterval={180000} // 3 minutes
+        enabled={true}
+        verbose={true}
+        showIndicator={false}
+      />
+
       {/* Header avec wallet */}
       <PageHeaderWithWallet title='Dashboard' />
 
