@@ -5,6 +5,8 @@
  * Pour tester visuellement les cartes d'accessoires
  */
 
+'use client'
+
 import { AccessoriesList } from '@/components/wallet/accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
 
