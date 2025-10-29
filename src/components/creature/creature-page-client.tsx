@@ -12,7 +12,7 @@ import { AccessoryShop } from './accessory-shop'
 import { OwnedAccessoriesManager } from './owned-accessories-manager'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { getAvailableAccessories } from '@/services/accessory.service'
-import { useMonsterData, useMonsterAccessories } from '@/hooks/monsters'
+import { useMonsterData, useMonsterAccessories, useAutoStateChange } from '@/hooks/monsters'
 
 /**
  * Props pour le composant CreaturePageClient
@@ -46,6 +46,9 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
     // Hooks personnalisés pour la gestion de l'état
     const { currentMonster, xpToNextLevel, refreshMonster } = useMonsterData(monster)
     const { equippedAccessories, ownedAccessoryIds, refreshAccessories } = useMonsterAccessories(monster._id)
+
+    // Hook pour le changement automatique d'état toutes les 10 secondes
+    useAutoStateChange(monster._id, refreshMonster)
 
     // Parse des traits depuis le JSON stocké en base
     const traits: MonsterTraits = parseMonsterTraits(monster.traits) ?? {
