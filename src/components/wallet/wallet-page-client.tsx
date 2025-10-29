@@ -13,7 +13,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import Button from '@/components/button'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
@@ -29,9 +29,27 @@ interface WalletPageClientProps {
  * Composant client de la page wallet
  */
 export default function WalletPageClient ({ session }: WalletPageClientProps): React.ReactNode {
-  const { wallet, isLoading } = useWallet()
+  const { wallet, isLoading, refresh } = useWallet()
   const [isAdding, setIsAdding] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
+  // Vérifier si on revient d'un paiement réussi
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('success') === 'true') {
+      setMessage({ type: 'success', text: '✅ Paiement réussi ! Vos coins seront ajoutés dans quelques instants.' })
+      // Rafraîchir le wallet après 2 secondes
+      setTimeout(() => {
+        void refresh()
+      }, 2000)
+      // Nettoyer l'URL
+      window.history.replaceState({}, '', '/wallet')
+    } else if (urlParams.get('canceled') === 'true') {
+      setMessage({ type: 'error', text: '❌ Paiement annulé' })
+      // Nettoyer l'URL
+      window.history.replaceState({}, '', '/wallet')
+    }
+  }, [])
 
   // Montants prédéfinis
   const presetAmounts = [10, 25, 50, 100, 500]

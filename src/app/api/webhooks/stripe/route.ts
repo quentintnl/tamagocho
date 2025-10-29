@@ -2,7 +2,6 @@ import { headers } from 'next/headers'
 import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 import Wallet from '@/db/models/wallet.model'
-import { pricingTable } from '@/config/pricing'
 
 export const runtime = 'nodejs'
 
@@ -18,20 +17,35 @@ export async function POST (req: Request): Promise<Response> {
 
     switch (event.type) {
         case 'checkout.session.completed': {
-            console.log('Checkout session completed')
-            console.log(event.data.object)
+            console.log('✅ Checkout session completed')
+            console.log('Event data:', event.data.object)
 
-            const wallet = await Wallet.findOne({ ownerId: event?.data?.object?.metadata?.userId })
+            const session = event.data.object
+            const userId = session?.metadata?.userId
+            const coinsAmount = session?.metadata?.coinsAmount
+
+            if (userId === null || userId === undefined) {
+                console.error('❌ userId manquant dans les metadata')
+                break
+            }
+
+            if (coinsAmount === null || coinsAmount === undefined) {
+                console.error('❌ coinsAmount manquant dans les metadata')
+                break
+            }
+
+            const wallet = await Wallet.findOne({ ownerId: userId })
+
             if (wallet !== null && wallet !== undefined) {
-                const amountPaid = (event?.data?.object?.amount_total ?? 0) / 100
-                const entry = Object.entries(pricingTable).find(([_, pkg]) => pkg.price === amountPaid)
-
-                if (entry !== undefined) {
-                    const koinsToAdd = Number(entry[0])
-                    wallet.balance = Number(wallet.balance) + koinsToAdd
-                    wallet.markModified('balance')
-                    await wallet.save()
-                }
+                const koinsToAdd = Number(coinsAmount)
+                const previousBalance = wallet.coin
+                wallet.coin = Number(wallet.coin) + koinsToAdd
+                wallet.markModified('coin')
+                await wallet.save()
+                console.log(`✅ ${koinsToAdd} coins ajoutés au wallet de l'utilisateur ${userId}`)
+                console.log(`   Balance avant: ${previousBalance}, Balance après: ${wallet.coin}`)
+            } else {
+                console.error(`❌ Wallet non trouvé pour l'utilisateur ${userId}`)
             }
             break
         }
