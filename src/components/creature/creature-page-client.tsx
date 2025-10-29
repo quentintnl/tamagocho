@@ -56,27 +56,6 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
         antennaStyle: 'single',
         accessory: 'none'
     }
-
-    useEffect(() => {
-        const fetchMonster = async (): Promise<void> => {
-            try {
-                const response = await fetch(`/api/monster?id=${monster._id}`)
-                if (response.ok) {
-                    const updatedMonster: PopulatedMonster = await response.json()
-                    setCurrentMonster(updatedMonster)
-                }
-            } catch (error) {
-                console.error('Erreur lors de la récupération du monstre :', error)
-            }
-        }
-
-        const interval = setInterval(() => {
-            void fetchMonster()
-        }, 1000)
-
-        return () => clearInterval(interval)
-    }, [monster])
-
     // Récupération de l'XP requis pour le niveau suivant
     useEffect(() => {
         const fetchNextLevelXp = async (): Promise<void> => {
