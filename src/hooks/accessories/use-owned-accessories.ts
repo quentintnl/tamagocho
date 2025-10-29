@@ -38,6 +38,7 @@ interface UseOwnedAccessoriesReturn {
  * Encapsule la logique de récupération et de mise à jour des accessoires
  * pour respecter le principe de responsabilité unique.
  *
+ * @param {number} [refreshTrigger] - Compteur de rafraîchissement externe (optionnel)
  * @returns {UseOwnedAccessoriesReturn} État et fonctions de gestion des accessoires
  *
  * @example
@@ -45,8 +46,13 @@ interface UseOwnedAccessoriesReturn {
  *
  * // Rafraîchir après un achat
  * await refresh()
+ *
+ * // Ou avec trigger externe
+ * const [trigger, setTrigger] = useState(0)
+ * const { ownedAccessories } = useOwnedAccessories(trigger)
+ * setTrigger(t => t + 1) // Force le rafraîchissement
  */
-export function useOwnedAccessories (): UseOwnedAccessoriesReturn {
+export function useOwnedAccessories (refreshTrigger?: number): UseOwnedAccessoriesReturn {
   const [ownedAccessories, setOwnedAccessories] = useState<OwnedAccessory[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -68,10 +74,10 @@ export function useOwnedAccessories (): UseOwnedAccessoriesReturn {
     }
   }
 
-  // Chargement initial
+  // Chargement initial et rafraîchissement sur trigger externe
   useEffect(() => {
     void fetchOwnedAccessories()
-  }, [])
+  }, [refreshTrigger])
 
   return {
     ownedAccessories,

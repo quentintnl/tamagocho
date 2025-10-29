@@ -41,6 +41,7 @@ interface CreaturePageClientProps {
  */
 export function CreaturePageClient ({ monster }: CreaturePageClientProps): React.ReactNode {
     const [currentAction, setCurrentAction] = useState<MonsterAction>(null)
+    const [refreshTrigger, setRefreshTrigger] = useState(0)
 
     // Hooks personnalisés pour la gestion de l'état
     const { currentMonster, xpToNextLevel, refreshMonster } = useMonsterData(monster)
@@ -78,6 +79,15 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
             refreshMonster(),
             refreshAccessories()
         ])
+    }
+
+    /**
+     * Rafraîchit les accessoires après un achat ou un changement
+     * Incrémente le trigger pour forcer le rafraîchissement du OwnedAccessoriesManager
+     */
+    const handleAccessoriesRefresh = async (): Promise<void> => {
+        await refreshAccessories()
+        setRefreshTrigger(prev => prev + 1)
     }
 
     return (
@@ -127,7 +137,8 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                     <OwnedAccessoriesManager
                         monsterId={currentMonster._id}
                         equippedAccessories={equippedAccessories}
-                        onAccessoryChange={refreshAccessories}
+                        onAccessoryChange={handleAccessoriesRefresh}
+                        refreshTrigger={refreshTrigger}
                     />
                 </div>
 
@@ -137,7 +148,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                         accessories={getAvailableAccessories()}
                         monsterId={currentMonster._id}
                         ownedAccessoryIds={ownedAccessoryIds}
-                        onPurchaseSuccess={refreshAccessories}
+                        onPurchaseSuccess={handleAccessoriesRefresh}
                     />
                 </div>
             </div>

@@ -41,6 +41,8 @@ interface OwnedAccessoriesManagerProps {
   equippedAccessories: OwnedAccessory[]
   /** Callback appelé après un changement d'équipement (équiper/déséquiper) */
   onAccessoryChange?: () => void
+  /** Trigger de rafraîchissement externe (incrémenter pour forcer un refresh) */
+  refreshTrigger?: number
 }
 
 /**
@@ -165,15 +167,17 @@ function OwnedAccessoryCard ({
  *   monsterId="monster-123"
  *   equippedAccessories={equipped}
  *   onAccessoryChange={handleRefresh}
+ *   refreshTrigger={trigger}
  * />
  */
 export function OwnedAccessoriesManager ({
   monsterId,
   equippedAccessories,
-  onAccessoryChange
+  onAccessoryChange,
+  refreshTrigger
 }: OwnedAccessoriesManagerProps): React.ReactNode {
   // Hooks personnalisés pour la gestion de l'état
-  const { ownedAccessories, loading, refresh } = useOwnedAccessories()
+  const { ownedAccessories, loading, refresh } = useOwnedAccessories(refreshTrigger)
   const { processingId, message, toggleEquip } = useAccessoryEquipment()
 
   /**
