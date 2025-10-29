@@ -17,6 +17,7 @@ import { useState, useEffect } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import Button from '@/components/button'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
+import { pricingTable } from '@/config/pricing'
 import type { authClient } from '@/lib/auth-client'
 
 type Session = typeof authClient.$Infer.Session
@@ -51,8 +52,8 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
     }
   }, [])
 
-  // Montants prédéfinis
-  const presetAmounts = [10, 25, 50, 100, 500]
+  // Montants prédéfinis (récupérés dynamiquement depuis pricing.ts)
+  const presetAmounts = Object.keys(pricingTable).map(Number)
 
   /**
    * Redirige vers Stripe pour acheter des koins
