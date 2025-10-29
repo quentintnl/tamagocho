@@ -1,137 +1,214 @@
 /**
  * AccessoryCard Component
  *
- * Presentation Layer: Displays a single accessory card with purchase option
+ * Presentation Layer: Display accessory in the shop
  *
  * Responsibilities:
- * - Display accessory information (name, description, price, rarity)
- * - Handle purchase button click
- * - Show visual feedback during purchase
+ * - Display accessory information with visual styling
+ * - Show ownership status
+ * - Handle purchase interaction
+ * - Show loading state during purchase
  *
- * Single Responsibility Principle: Only handles UI rendering of one accessory
+ * Single Responsibility Principle: Pure presentation component for shop accessories
  */
 
 'use client'
 
-import { useState } from 'react'
-import type { Accessory } from '@/types/accessory'
-import Button from '@/components/button'
-import { generateAccessoryById, hasAccessorySVGSupport } from '@/services/accessories/accessory-generator'
+import type { Accessory, AccessoryRarity } from '@/types/accessory'
 
 /**
- * Props for AccessoryCard component
+ * Props pour le composant AccessoryCard
  */
 interface AccessoryCardProps {
-  /** Accessory data to display */
+  /** Accessoire à afficher */
   accessory: Accessory
-  /** Current user's coin balance */
+  /** Montant de coins de l'utilisateur */
   userCoins: number
-  /** Callback when purchase button is clicked */
-  onPurchase: (accessoryId: string) => Promise<void>
-  /** Whether a purchase is in progress */
+  /** Callback lors de l'achat */
+  onPurchase: (accessoryId: string) => void
+  /** Indique si l'achat est en cours */
   isPurchasing: boolean
+  /** Indique si l'accessoire est déjà possédé */
+  isOwned?: boolean
 }
 
 /**
- * Get color class based on rarity
+ * Obtenir la couleur de badge selon la rareté
  */
-function getRarityColor (rarity: string): string {
+function getRarityColor (rarity: AccessoryRarity): string {
   switch (rarity) {
-    case 'common': return 'border-lochinvar-300 bg-lochinvar-50'
-    case 'rare': return 'border-fuchsia-blue-300 bg-fuchsia-blue-50'
-    case 'epic': return 'border-moccaccino-300 bg-moccaccino-50'
-    case 'legendary': return 'border-yellow-400 bg-yellow-50'
-    default: return 'border-gray-300 bg-gray-50'
+    case 'common':
+      return 'bg-slate-100/80 text-slate-600'
+    case 'rare':
+      return 'bg-lochinvar-100/80 text-lochinvar-600'
+    case 'epic':
+      return 'bg-fuchsia-blue-100/80 text-fuchsia-blue-600'
+    case 'legendary':
+      return 'bg-moccaccino-100/80 text-moccaccino-600'
   }
 }
 
 /**
- * Get rarity label in French
+ * Obtenir le label de rareté en français
  */
-function getRarityLabel (rarity: string): string {
+function getRarityLabel (rarity: AccessoryRarity): string {
   switch (rarity) {
-    case 'common': return 'Commun'
-    case 'rare': return 'Rare'
-    case 'epic': return 'Épique'
-    case 'legendary': return 'Légendaire'
-    default: return rarity
+    case 'common':
+      return 'Commun'
+    case 'rare':
+      return 'Rare'
+    case 'epic':
+      return 'Épique'
+    case 'legendary':
+      return 'Légendaire'
   }
 }
 
 /**
- * AccessoryCard component
+ * Obtenir le label de catégorie en français
  */
-export function AccessoryCard ({ accessory, userCoins, onPurchase, isPurchasing }: AccessoryCardProps): React.ReactNode {
-  const [isHovered, setIsHovered] = useState(false)
-  const canAfford = userCoins >= accessory.price
+function getCategoryLabel (category: string): string {
+  switch (category) {
+    case 'hat':
+      return 'Chapeau'
+    case 'glasses':
+      return 'Lunettes'
+    case 'necklace':
+      return 'Collier'
+    case 'background':
+      return 'Arrière-plan'
+    case 'effect':
+      return 'Effet'
+    default:
+      return category
+  }
+}
+
+/**
+ * Carte d'affichage d'un accessoire dans la boutique
+ *
+ * Responsabilité unique : afficher les informations visuelles
+ * et textuelles d'un accessoire avec son état d'achat.
+ *
+ * Applique SRP en déléguant :
+ * - Le calcul des couleurs à getRarityColor
+ * - Le formatage des labels à getRarityLabel et getCategoryLabel
+ *
+ * @param {AccessoryCardProps} props - Props du composant
+ * @returns {React.ReactNode} Carte d'accessoire interactive
+ *
+ * @example
+ * <AccessoryCard
+ *   accessory={accessory}
+ *   userCoins={100}
+ *   onPurchase={(id) => handlePurchase(id)}
+ *   isPurchasing={false}
+ *   isOwned={false}
+ * />
+ */
+export function AccessoryCard ({
+  accessory,
+  userCoins,
+  onPurchase,
+  isPurchasing,
+  isOwned = false
+}: AccessoryCardProps): React.ReactNode {
   const rarityColor = getRarityColor(accessory.rarity)
+  const rarityLabel = getRarityLabel(accessory.rarity)
+  const categoryLabel = getCategoryLabel(accessory.category)
+  const canAfford = userCoins >= accessory.price
 
-  // Vérifier si l'accessoire a un support SVG
-  const hasSVGSupport = hasAccessorySVGSupport(accessory.id)
-  const svgContent = hasSVGSupport ? generateAccessoryById(accessory.id) : null
-
-  const handlePurchase = async (): Promise<void> => {
-    await onPurchase(accessory.id)
+  const handleClick = (): void => {
+    if (!isOwned && !isPurchasing && canAfford) {
+      onPurchase(accessory.id)
+    }
   }
 
   return (
-    <div
-      className={`border-2 rounded-lg p-4 transition-all duration-300 ${rarityColor} ${isHovered ? 'scale-105 shadow-lg' : 'shadow-md'}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <article
+      className='group relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-white/90 via-white to-lochinvar-50/70 p-6 shadow-[0_20px_54px_rgba(15,23,42,0.14)] ring-1 ring-white/70 backdrop-blur transition-transform duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)]'
     >
-      {/* Icon et Rareté */}
-      <div className='flex justify-between items-start mb-3'>
-        {hasSVGSupport && svgContent !== null ? (
-          <div
-            className='w-16 h-16'
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-          />
-        ) : (
-          <div className='text-4xl'>{accessory.icon}</div>
-        )}
-        <span className='text-xs font-bold uppercase px-2 py-1 rounded bg-white/70'>
-          {getRarityLabel(accessory.rarity)}
-        </span>
-      </div>
+      {/* Bulles décoratives */}
+      <div
+        className='pointer-events-none absolute -right-16 top-20 h-40 w-40 rounded-full bg-fuchsia-blue-100/40 blur-3xl transition-opacity duration-500 group-hover:opacity-60'
+        aria-hidden='true'
+      />
+      <div
+        className='pointer-events-none absolute -left-20 -top-16 h-48 w-48 rounded-full bg-lochinvar-100/40 blur-3xl transition-opacity duration-500 group-hover:opacity-60'
+        aria-hidden='true'
+      />
 
-      {/* Nom */}
-      <h3 className='text-xl font-bold mb-2 text-foreground'>{accessory.name}</h3>
+      <div className='relative flex flex-col gap-5'>
+        {/* Zone d'affichage de l'icône */}
+        <div className='relative flex items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 p-8 ring-1 ring-white/70'>
+          <span className='text-6xl transition-transform duration-300 group-hover:scale-110' aria-label={accessory.name}>
+            {accessory.icon}
+          </span>
 
-      {/* Description */}
-      <p className='text-sm text-foreground/70 mb-3'>{accessory.description}</p>
+          {/* Badge de rareté */}
+          <span
+            className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide shadow-inner ${rarityColor}`}
+          >
+            {rarityLabel}
+          </span>
 
-      {/* Effet */}
-      {accessory.effect !== undefined && (
-        <div className='mb-3 p-2 bg-white/50 rounded text-xs'>
-          <span className='font-semibold'>✨ Effet:</span> {accessory.effect}
-        </div>
-      )}
-
-      {/* Prix et Bouton */}
-      <div className='flex items-center justify-between mt-4'>
-        <div className='flex items-center gap-1'>
-          <span className='text-2xl font-bold text-moccaccino-600'>{accessory.price}</span>
-          <span className='text-sm text-moccaccino-500'>🪙</span>
+          {/* Badge possédé */}
+          {isOwned && (
+            <span className='absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-green-100/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-green-600 shadow-inner'>
+              ✓ Possédé
+            </span>
+          )}
         </div>
 
-        <Button
-          size='sm'
-          variant={canAfford ? 'primary' : 'outline'}
-          disabled={!canAfford || isPurchasing}
-          onClick={handlePurchase}
-        >
-          {isPurchasing ? 'Achat...' : canAfford ? 'Acheter' : 'Trop cher'}
-        </Button>
-      </div>
+        {/* Informations textuelles */}
+        <div className='flex flex-1 flex-col gap-4'>
+          <div className='flex flex-col gap-2'>
+            <div className='flex items-start justify-between gap-3'>
+              <h3 className='text-lg font-semibold text-slate-900 sm:text-xl'>{accessory.name}</h3>
+              <span className='inline-flex items-center gap-1 rounded-full bg-amber-100/80 px-3 py-1 text-xs font-semibold text-amber-600 shadow-inner'>
+                <span aria-hidden='true'>💰</span>
+                {accessory.price}
+              </span>
+            </div>
 
-      {/* Message si pas assez de coins */}
-      {!canAfford && (
-        <p className='text-xs text-moccaccino-600 mt-2 text-center'>
-          Besoin de {accessory.price - userCoins} 🪙 de plus
-        </p>
-      )}
-    </div>
+            <p className='text-sm text-slate-600'>{accessory.description}</p>
+
+            <div className='flex flex-wrap gap-2'>
+              <span className='inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600'>
+                {categoryLabel}
+              </span>
+              {accessory.effect !== undefined && (
+                <span className='inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-1 text-xs text-purple-600'>
+                  <span aria-hidden='true'>✨</span>
+                  {accessory.effect}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Bouton d'achat ou statut */}
+          {isOwned ? (
+            <div className='mt-2 w-full rounded-xl bg-gradient-to-r from-green-100 to-green-200 px-4 py-3 text-center text-sm font-semibold text-green-700'>
+              ✓ Déjà possédé
+            </div>
+          ) : (
+            <button
+              onClick={handleClick}
+              disabled={!canAfford || isPurchasing}
+              className={`mt-2 w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-lg transition-all duration-300 active:scale-95 ${
+                isPurchasing
+                  ? 'bg-slate-300 text-slate-500 cursor-wait'
+                  : canAfford
+                    ? 'bg-gradient-to-r from-moccaccino-500 to-moccaccino-600 text-white hover:from-moccaccino-600 hover:to-moccaccino-700 hover:shadow-xl'
+                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              }`}
+            >
+              {isPurchasing ? 'Achat en cours...' : canAfford ? 'Acheter' : 'Fonds insuffisants'}
+            </button>
+          )}
+        </div>
+      </div>
+    </article>
   )
 }
 

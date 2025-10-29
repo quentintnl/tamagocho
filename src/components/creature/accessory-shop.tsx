@@ -28,6 +28,10 @@ interface AccessoryShopProps {
   accessories: Accessory[]
   /** Monster ID for purchase association */
   monsterId: string
+  /** List of owned accessory IDs */
+  ownedAccessoryIds?: string[]
+  /** Callback appelé après un achat réussi */
+  onPurchaseSuccess?: () => void
 }
 
 /**
@@ -45,7 +49,7 @@ const CATEGORIES: Array<{ value: AccessoryCategory | 'all', label: string, icon:
 /**
  * AccessoryShop component
  */
-export function AccessoryShop ({ accessories, monsterId }: AccessoryShopProps): React.ReactNode {
+export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [], onPurchaseSuccess }: AccessoryShopProps): React.ReactNode {
   const [selectedCategory, setSelectedCategory] = useState<AccessoryCategory | 'all'>('all')
   const [purchasingId, setPurchasingId] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
@@ -69,6 +73,10 @@ export function AccessoryShop ({ accessories, monsterId }: AccessoryShopProps): 
       setMessage({ type: 'success', text: result.message })
       // Refresh wallet to show updated balance
       await refreshWallet()
+      // Appeler le callback pour rafraîchir les accessoires possédés
+      if (onPurchaseSuccess !== undefined) {
+        onPurchaseSuccess()
+      }
     } else {
       setMessage({ type: 'error', text: result.message })
     }
@@ -135,6 +143,7 @@ export function AccessoryShop ({ accessories, monsterId }: AccessoryShopProps): 
             userCoins={wallet?.coin ?? 0}
             onPurchase={handlePurchase}
             isPurchasing={purchasingId === accessory.id}
+            isOwned={ownedAccessoryIds.includes(accessory.id)}
           />
         ))}
       </div>

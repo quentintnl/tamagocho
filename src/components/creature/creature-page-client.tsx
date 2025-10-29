@@ -12,7 +12,7 @@ import { CreatureColorsPanel } from './creature-colors-panel'
 import { AccessoryShop } from './accessory-shop'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { getAvailableAccessories } from '@/services/accessory.service'
-import { getMonsterAccessories } from '@/actions/accessory.actions'
+import { getMonsterAccessories, getUserOwnedAccessoryIds } from '@/actions/accessory.actions'
 import type { OwnedAccessory } from '@/types/accessory'
 
 /**
@@ -45,6 +45,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
     const [currentMonster, setCurrentMonster] = useState<PopulatedMonster>(monster)
     const [xpToNextLevel, setXpToNextLevel] = useState<number>(0)
     const [equippedAccessories, setEquippedAccessories] = useState<OwnedAccessory[]>([])
+    const [ownedAccessoryIds, setOwnedAccessoryIds] = useState<string[]>([])
 
     // Parse des traits depuis le JSON stocké en base
     const traits: MonsterTraits = parseMonsterTraits(monster.traits) ?? {
@@ -73,6 +74,20 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
 
         void fetchEquippedAccessories()
     }, [currentMonster._id])
+
+    // Récupération des IDs des accessoires possédés
+    useEffect(() => {
+        const fetchOwnedAccessoryIds = async (): Promise<void> => {
+            try {
+                const ids = await getUserOwnedAccessoryIds()
+                setOwnedAccessoryIds(ids)
+            } catch (error) {
+                console.error('Erreur lors de la récupération des accessoires possédés :', error)
+            }
+        }
+
+        void fetchOwnedAccessoryIds()
+    }, [])
 
     // Récupération de l'XP requis pour le niveau suivant
     useEffect(() => {
@@ -122,8 +137,23 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
             // Rafraîchir aussi les accessoires
             const accessories = await getMonsterAccessories(currentMonster._id)
             setEquippedAccessories(accessories)
+            // Rafraîchir les IDs des accessoires possédés
+            const ids = await getUserOwnedAccessoryIds()
+            setOwnedAccessoryIds(ids)
         } catch (error) {
             console.error('Erreur lors du rafraîchissement forcé :', error)
+        }
+    }
+
+    /**
+     * Rafraîchir les accessoires possédés après un achat
+     */
+    const refreshOwnedAccessories = async (): Promise<void> => {
+        try {
+            const ids = await getUserOwnedAccessoryIds()
+            setOwnedAccessoryIds(ids)
+        } catch (error) {
+            console.error('Erreur lors du rafraîchissement des accessoires possédés :', error)
         }
     }
 
@@ -175,6 +205,8 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                     <AccessoryShop
                         accessories={getAvailableAccessories()}
                         monsterId={currentMonster._id}
+                        ownedAccessoryIds={ownedAccessoryIds}
+                        onPurchaseSuccess={refreshOwnedAccessories}
                     />
                 </div>
             </div>
