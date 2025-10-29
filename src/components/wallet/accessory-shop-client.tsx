@@ -13,11 +13,13 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { AccessoriesList } from './accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
+import { getUserOwnedAccessoryIds, purchaseAccessory } from '@/actions/accessory.actions'
+import { getMonsters } from '@/actions/monsters.actions'
 import type { AccessoryCategory, AccessoryRarity } from '@/types/accessory'
 
 interface AccessoryShopClientProps {
@@ -32,6 +34,24 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [categoryFilter, setCategoryFilter] = useState<AccessoryCategory | 'all'>('all')
   const [rarityFilter, setRarityFilter] = useState<AccessoryRarity | 'all'>('all')
+  const [ownedAccessoryIds, setOwnedAccessoryIds] = useState<string[]>([])
+  const [isLoadingOwned, setIsLoadingOwned] = useState(true)
+
+  // Charger les accessoires possédés
+  useEffect(() => {
+    const loadOwnedAccessories = async (): Promise<void> => {
+      try {
+        const ids = await getUserOwnedAccessoryIds()
+        setOwnedAccessoryIds(ids)
+      } catch (error) {
+        console.error('Error loading owned accessories:', error)
+      } finally {
+        setIsLoadingOwned(false)
+      }
+    }
+
+    void loadOwnedAccessories()
+  }, [])
 
   // Récupérer tous les accessoires
   const allAccessories = getAvailableAccessories()
@@ -62,12 +82,28 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
     }
 
     try {
-      // TODO: Implémenter l'action de déduction de coins et d'achat d'accessoire
-      // const success = await purchaseAccessory(accessoryId, accessory.price)
+      // Récupérer le premier monstre de l'utilisateur
+      const monsters = await getMonsters()
 
-      // Pour l'instant, on simule un achat réussi
-      setMessage({ type: 'success', text: `✅ ${accessory.name} acheté avec succès !` })
-      await refresh()
+      if (monsters.length === 0) {
+        setMessage({ type: 'error', text: '❌ Vous devez d\'abord créer un monstre' })
+        return
+      }
+
+      const firstMonster = monsters[0]
+
+      // Acheter et équiper l'accessoire
+      const result = await purchaseAccessory(accessoryId, firstMonster._id.toString())
+
+      if (result.success) {
+        setMessage({ type: 'success', text: result.message })
+        // Rafraîchir le wallet et les accessoires possédés
+        await refresh()
+        const updatedIds = await getUserOwnedAccessoryIds()
+        setOwnedAccessoryIds(updatedIds)
+      } else {
+        setMessage({ type: 'error', text: result.message })
+      }
     } catch (error) {
       console.error('Erreur lors de l\'achat:', error)
       setMessage({ type: 'error', text: '❌ Une erreur est survenue lors de l\'achat' })
@@ -148,7 +184,7 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
         </div>
 
         {/* Liste des accessoires */}
-        {isLoading ? (
+        {isLoading || isLoadingOwned ? (
           <div className='flex min-h-[400px] items-center justify-center'>
             <div className='text-center'>
               <div className='mx-auto h-12 w-12 animate-spin rounded-full border-4 border-lochinvar-200 border-t-lochinvar-600' />
@@ -159,7 +195,7 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
           <AccessoriesList
             accessories={filteredAccessories}
             onPurchase={handlePurchase}
-            ownedAccessoryIds={[]} // TODO: Récupérer depuis la base de données
+            ownedAccessoryIds={ownedAccessoryIds}
           />
         )}
       </main>
