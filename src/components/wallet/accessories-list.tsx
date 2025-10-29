@@ -1,4 +1,5 @@
-import { AccessoryCard } from './accessory-card'
+
+import { UniversalAccessoryCard } from '@/components/accessories/universal-accessory-card'
 import type { Accessory } from '@/types/accessory'
 
 /**
@@ -20,8 +21,9 @@ interface AccessoriesListProps {
  * en grille responsive.
  *
  * Applique SRP en déléguant :
- * - Le rendu de chaque accessoire à AccessoryCard
+ * - Le rendu de chaque accessoire à UniversalAccessoryCard
  * - La vérification de possession via ownedAccessoryIds
+ * - La détection automatique du type SVG au composant universel
  *
  * @param {AccessoriesListProps} props - Props du composant
  * @returns {React.ReactNode} Grille d'accessoires
@@ -53,7 +55,7 @@ export function AccessoriesList ({
   return (
     <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
       {accessories.map((accessory) => (
-        <AccessoryCard
+        <UniversalAccessoryCard
           key={accessory.id}
           accessory={accessory}
           onPurchase={onPurchase}

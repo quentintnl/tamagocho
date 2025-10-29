@@ -16,6 +16,7 @@
 import { useState } from 'react'
 import type { Accessory } from '@/types/accessory'
 import Button from '@/components/button'
+import { generateAccessoryById, hasAccessorySVGSupport } from '@/services/accessories/accessory-generator'
 
 /**
  * Props for AccessoryCard component
@@ -65,6 +66,10 @@ export function AccessoryCard ({ accessory, userCoins, onPurchase, isPurchasing 
   const canAfford = userCoins >= accessory.price
   const rarityColor = getRarityColor(accessory.rarity)
 
+  // Vérifier si l'accessoire a un support SVG
+  const hasSVGSupport = hasAccessorySVGSupport(accessory.id)
+  const svgContent = hasSVGSupport ? generateAccessoryById(accessory.id) : null
+
   const handlePurchase = async (): Promise<void> => {
     await onPurchase(accessory.id)
   }
@@ -77,7 +82,14 @@ export function AccessoryCard ({ accessory, userCoins, onPurchase, isPurchasing 
     >
       {/* Icon et Rareté */}
       <div className='flex justify-between items-start mb-3'>
-        <div className='text-4xl'>{accessory.icon}</div>
+        {hasSVGSupport && svgContent !== null ? (
+          <div
+            className='w-16 h-16'
+            dangerouslySetInnerHTML={{ __html: svgContent }}
+          />
+        ) : (
+          <div className='text-4xl'>{accessory.icon}</div>
+        )}
         <span className='text-xs font-bold uppercase px-2 py-1 rounded bg-white/70'>
           {getRarityLabel(accessory.rarity)}
         </span>
