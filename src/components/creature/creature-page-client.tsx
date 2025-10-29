@@ -10,6 +10,7 @@ import { CreatureStatsPanel } from './creature-stats-panel'
 import { CreatureTraitsPanel } from './creature-traits-panel'
 import { CreatureColorsPanel } from './creature-colors-panel'
 import { AccessoryShop } from './accessory-shop'
+import { OwnedAccessoriesManager } from './owned-accessories-manager'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { getAvailableAccessories } from '@/services/accessory.service'
 import { getMonsterAccessories, getUserOwnedAccessoryIds } from '@/actions/accessory.actions'
@@ -202,6 +203,15 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                         <CreatureTraitsPanel traits={traits} />
                         <CreatureColorsPanel traits={traits} />
                     </div>
+                </div>
+
+                {/* Gestionnaire d'accessoires possédés */}
+                <div className='mt-12'>
+                    <OwnedAccessoriesManager
+                        monsterId={currentMonster._id}
+                        equippedAccessories={equippedAccessories}
+                        onAccessoryChange={refreshOwnedAccessories}
+                    />
                 </div>
 
                 {/* Boutique d'accessoires */}
