@@ -150,8 +150,12 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
      */
     const refreshOwnedAccessories = async (): Promise<void> => {
         try {
+            // Rafraîchir les IDs des accessoires possédés
             const ids = await getUserOwnedAccessoryIds()
             setOwnedAccessoryIds(ids)
+            // Rafraîchir également les accessoires équipés sur le monstre
+            const accessories = await getMonsterAccessories(currentMonster._id)
+            setEquippedAccessories(accessories)
         } catch (error) {
             console.error('Erreur lors du rafraîchissement des accessoires possédés :', error)
         }
