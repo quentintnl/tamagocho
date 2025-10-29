@@ -15,6 +15,7 @@
 'use client'
 
 import type { Accessory, AccessoryRarity } from '@/types/accessory'
+import { generateAccessoryById, hasAccessorySVGSupport } from '@/services/accessories/accessory-generator'
 
 /**
  * Props pour le composant AccessoryCard
@@ -118,6 +119,10 @@ export function AccessoryCard ({
   const categoryLabel = getCategoryLabel(accessory.category)
   const canAfford = userCoins >= accessory.price
 
+  // Vérifier si l'accessoire a un support SVG
+  const hasSVGSupport = hasAccessorySVGSupport(accessory.id)
+  const svgContent = hasSVGSupport ? generateAccessoryById(accessory.id) : null
+
   const handleClick = (): void => {
     if (!isOwned && !isPurchasing && canAfford) {
       onPurchase(accessory.id)
@@ -141,9 +146,18 @@ export function AccessoryCard ({
       <div className='relative flex flex-col gap-5'>
         {/* Zone d'affichage de l'icône */}
         <div className='relative flex items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 p-8 ring-1 ring-white/70'>
-          <span className='text-6xl transition-transform duration-300 group-hover:scale-110' aria-label={accessory.name}>
-            {accessory.icon}
-          </span>
+          {hasSVGSupport && svgContent !== null ? (
+            // Affichage SVG
+            <div
+              className='w-32 h-32 transition-transform duration-300 group-hover:scale-110'
+              dangerouslySetInnerHTML={{ __html: svgContent }}
+            />
+          ) : (
+            // Fallback sur emoji
+            <span className='text-6xl transition-transform duration-300 group-hover:scale-110' aria-label={accessory.name}>
+              {accessory.icon}
+            </span>
+          )}
 
           {/* Badge de rareté */}
           <span
