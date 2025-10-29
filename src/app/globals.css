@@ -149,7 +149,7 @@ body {
     opacity: 1;
   }
   100% {
-    transform: 
+    transform:
       translate(
         calc(cos(var(--particle-angle)) * var(--particle-distance)),
         calc(sin(var(--particle-angle)) * var(--particle-distance))
@@ -281,3 +281,16 @@ body {
   background: radial-gradient(circle, rgba(255, 230, 109, 0.4), transparent);
   animation: energy-flash 0.5s ease-in-out 3;
 }
+
+/* Animation pour le modal de succès */
+@keyframes scale-in {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+

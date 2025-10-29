@@ -17,6 +17,7 @@ import { useState, useEffect } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import Button from '@/components/button'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
+import SuccessModal from '@/components/wallet/success-modal'
 import { pricingTable } from '@/config/pricing'
 import type { authClient } from '@/lib/auth-client'
 
@@ -33,12 +34,13 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
   const { wallet, isLoading, refresh } = useWallet()
   const [isAdding, setIsAdding] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   // Vérifier si on revient d'un paiement réussi
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.get('success') === 'true') {
-      setMessage({ type: 'success', text: '✅ Paiement réussi ! Vos coins seront ajoutés dans quelques instants.' })
+      setShowSuccessModal(true)
       // Rafraîchir le wallet après 2 secondes
       setTimeout(() => {
         void refresh()
@@ -86,6 +88,14 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-moccaccino-50 via-white to-lochinvar-50'>
+      {/* Modal de succès avec confettis */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => { setShowSuccessModal(false) }}
+        title='Paiement réussi !'
+        message='Vos coins seront ajoutés dans quelques instants. Merci pour votre achat ! 🎉'
+      />
+
       {/* Header avec wallet */}
       <PageHeaderWithWallet
         title='Mon Wallet'
