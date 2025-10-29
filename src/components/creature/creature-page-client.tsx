@@ -8,7 +8,6 @@ import { CreatureHeader } from './creature-header'
 import { CreatureMonsterDisplay } from './creature-monster-display'
 import { CreatureStatsPanel } from './creature-stats-panel'
 import { CreatureTraitsPanel } from './creature-traits-panel'
-import { CreatureColorsPanel } from './creature-colors-panel'
 import { AccessoryShop } from './accessory-shop'
 import { OwnedAccessoriesManager } from './owned-accessories-manager'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
@@ -201,12 +200,11 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                             updatedAt={currentMonster.updatedAt}
                         />
                         <CreatureTraitsPanel traits={traits} />
-                        <CreatureColorsPanel traits={traits} />
                     </div>
                 </div>
 
-                {/* Gestionnaire d'accessoires possédés */}
-                <div className='mt-12'>
+                {/* Gestionnaire d'accessoires possédés - Pleine largeur */}
+                <div className='mt-8'>
                     <OwnedAccessoriesManager
                         monsterId={currentMonster._id}
                         equippedAccessories={equippedAccessories}

@@ -118,7 +118,7 @@ export function OwnedAccessoriesManager ({
   const [loading, setLoading] = useState(true)
   const [processingId, setProcessingId] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
 
   // Charger les accessoires possédés
   useEffect(() => {
@@ -233,22 +233,24 @@ export function OwnedAccessoriesManager ({
               <p className='text-sm'>Achetez-en dans la boutique ci-dessous !</p>
             </div>
           ) : (
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'>
-              {ownedAccessories.map((ownedAccessory) => {
-                const accessory = getAccessoryById(ownedAccessory.accessoryId)
-                if (accessory === null) return null
+            <div className='max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-fuchsia-blue-300 scrollbar-track-slate-100'>
+              <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'>
+                {ownedAccessories.map((ownedAccessory) => {
+                  const accessory = getAccessoryById(ownedAccessory.accessoryId)
+                  if (accessory === null) return null
 
-                return (
-                  <OwnedAccessoryCard
-                    key={ownedAccessory._id}
-                    ownedAccessory={ownedAccessory}
-                    accessory={accessory}
-                    isEquipped={isAccessoryEquipped(ownedAccessory._id)}
-                    onToggleEquip={handleToggleEquip}
-                    isProcessing={processingId === ownedAccessory._id}
-                  />
-                )
-              })}
+                  return (
+                    <OwnedAccessoryCard
+                      key={ownedAccessory._id}
+                      ownedAccessory={ownedAccessory}
+                      accessory={accessory}
+                      isEquipped={isAccessoryEquipped(ownedAccessory._id)}
+                      onToggleEquip={handleToggleEquip}
+                      isProcessing={processingId === ownedAccessory._id}
+                    />
+                  )
+                })}
+              </div>
             </div>
           )}
 
