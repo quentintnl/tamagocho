@@ -9,7 +9,9 @@ import { CreatureMonsterDisplay } from './creature-monster-display'
 import { CreatureStatsPanel } from './creature-stats-panel'
 import { CreatureTraitsPanel } from './creature-traits-panel'
 import { CreatureColorsPanel } from './creature-colors-panel'
+import { AccessoryShop } from './accessory-shop'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
+import { getAvailableAccessories } from '@/services/accessory.service'
 
 /**
  * Props pour le composant CreaturePageClient
@@ -165,6 +167,14 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                         <CreatureTraitsPanel traits={traits} />
                         <CreatureColorsPanel traits={traits} />
                     </div>
+                </div>
+
+                {/* Boutique d'accessoires */}
+                <div className='mt-12'>
+                    <AccessoryShop
+                        accessories={getAvailableAccessories()}
+                        monsterId={currentMonster._id}
+                    />
                 </div>
             </div>
             </div>
