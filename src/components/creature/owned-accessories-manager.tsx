@@ -1,48 +1,86 @@
 /**
  * OwnedAccessoriesManager Component
  *
- * Presentation Layer: Manage owned accessories for a monster
+ * Presentation Layer: Gestion des accessoires possédés par l'utilisateur
  *
- * Responsibilities:
- * - Display all owned accessories
- * - Allow equipping/unequipping accessories
- * - Show equipped status
- * - Handle equip/unequip actions
+ * Responsabilités:
+ * - Orchestrer l'affichage des accessoires possédés
+ * - Coordonner les interactions entre les hooks et les composants enfants
+ * - Gérer le rafraîchissement après équipement/déséquipement
  *
- * Single Responsibility Principle: Orchestrates accessory management UI
+ * Single Responsibility Principle: Orchestre uniquement l'UI de gestion des accessoires
+ * Open/Closed Principle: Extensible via les composants enfants sans modification
+ * Dependency Inversion: Dépend des hooks (abstractions) plutôt que de la logique directe
+ *
+ * Optimisations appliquées:
+ * - Extraction de la logique métier dans des hooks dédiés (useOwnedAccessories, useAccessoryEquipment)
+ * - Création de sous-composants réutilisables (CollapsibleSection, AccessoriesGrid, FeedbackMessage)
+ * - Séparation claire des responsabilités pour faciliter les tests et la maintenance
+ *
+ * @module components/creature/owned-accessories-manager
  */
 
 'use client'
 
-import { useState, useEffect } from 'react'
 import type { OwnedAccessory } from '@/types/accessory'
 import type { Accessory } from '@/types/accessory'
-import { getUserOwnedAccessories, equipAccessory, removeAccessory } from '@/actions/accessory.actions'
 import { getAccessoryById } from '@/services/accessory.service'
+import { useOwnedAccessories, useAccessoryEquipment } from '@/hooks/accessories'
+import { CollapsibleSection } from './collapsible-section'
+import { AccessoriesGrid } from './accessories-grid'
+import { FeedbackMessage } from './feedback-message'
 import { generateAccessoryById, hasAccessorySVGSupport } from '@/services/accessories/accessory-generator'
 
 /**
  * Props pour le composant OwnedAccessoriesManager
  */
 interface OwnedAccessoriesManagerProps {
-  /** ID du monstre */
+  /** ID unique du monstre concerné */
   monsterId: string
-  /** Accessoires actuellement équipés */
+  /** Liste des accessoires actuellement équipés sur le monstre */
   equippedAccessories: OwnedAccessory[]
-  /** Callback après équipement/déséquipement */
+  /** Callback appelé après un changement d'équipement (équiper/déséquiper) */
   onAccessoryChange?: () => void
 }
 
 /**
- * Composant de carte d'accessoire possédé
+ * Props pour le composant OwnedAccessoryCard
+ *
+ * Définit les propriétés nécessaires pour afficher une carte d'accessoire
+ * possédé avec son état d'équipement et ses actions.
  */
 interface OwnedAccessoryCardProps {
+  /** Instance d'accessoire possédé (avec son ID unique) */
   ownedAccessory: OwnedAccessory
+  /** Métadonnées de l'accessoire (nom, icône, etc.) */
   accessory: Accessory
+  /** Indique si l'accessoire est actuellement équipé */
   isEquipped: boolean
+  /** Callback pour équiper/déséquiper l'accessoire */
   onToggleEquip: (ownedAccessoryId: string, shouldEquip: boolean) => void
+  /** Indique si une opération est en cours sur cet accessoire */
   isProcessing: boolean
 }
+
+/**
+ * Composant de carte d'accessoire possédé
+ *
+ * Affiche un accessoire avec son icône, son nom et un bouton pour l'équiper/déséquiper.
+ * Respecte le principe de responsabilité unique en se concentrant uniquement sur
+ * l'affichage d'un seul accessoire.
+ *
+ * @param {OwnedAccessoryCardProps} props - Props du composant
+ * @returns {React.ReactNode} Carte d'accessoire interactive
+ *
+ * @example
+ * <OwnedAccessoryCard
+ *   ownedAccessory={ownedAcc}
+ *   accessory={acc}
+ *   isEquipped={true}
+ *   onToggleEquip={handleToggle}
+ *   isProcessing={false}
+ * />
+ */
 
 function OwnedAccessoryCard ({
   ownedAccessory,
@@ -108,161 +146,103 @@ function OwnedAccessoryCard ({
 
 /**
  * Gestionnaire d'accessoires possédés
+ *
+ * Composant orchestrateur qui coordonne l'affichage des accessoires possédés
+ * et leur équipement sur un monstre spécifique.
+ *
+ * Délègue :
+ * - La gestion de l'état aux hooks personnalisés (useOwnedAccessories, useAccessoryEquipment)
+ * - L'affichage de la section repliable à CollapsibleSection
+ * - L'affichage de la grille à AccessoriesGrid
+ * - Les messages de feedback à FeedbackMessage
+ * - Le rendu de chaque carte à OwnedAccessoryCard
+ *
+ * @param {OwnedAccessoriesManagerProps} props - Props du composant
+ * @returns {React.ReactNode} Interface complète de gestion des accessoires
+ *
+ * @example
+ * <OwnedAccessoriesManager
+ *   monsterId="monster-123"
+ *   equippedAccessories={equipped}
+ *   onAccessoryChange={handleRefresh}
+ * />
  */
 export function OwnedAccessoriesManager ({
   monsterId,
   equippedAccessories,
   onAccessoryChange
 }: OwnedAccessoriesManagerProps): React.ReactNode {
-  const [ownedAccessories, setOwnedAccessories] = useState<OwnedAccessory[]>([])
-  const [loading, setLoading] = useState(true)
-  const [processingId, setProcessingId] = useState<string | null>(null)
-  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
-  const [isOpen, setIsOpen] = useState(true)
-
-  // Charger les accessoires possédés
-  useEffect(() => {
-    const fetchOwnedAccessories = async (): Promise<void> => {
-      try {
-        setLoading(true)
-        const accessories = await getUserOwnedAccessories()
-        if (accessories !== null) {
-          setOwnedAccessories(accessories)
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement des accessoires :', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    void fetchOwnedAccessories()
-  }, [])
+  // Hooks personnalisés pour la gestion de l'état
+  const { ownedAccessories, loading, refresh } = useOwnedAccessories()
+  const { processingId, message, toggleEquip } = useAccessoryEquipment()
 
   /**
-   * Gérer l'équipement/déséquipement d'un accessoire
-   */
-  const handleToggleEquip = async (ownedAccessoryId: string, shouldEquip: boolean): Promise<void> => {
-    setProcessingId(ownedAccessoryId)
-    setMessage(null)
-
-    try {
-      let result
-      if (shouldEquip) {
-        result = await equipAccessory(ownedAccessoryId, monsterId)
-      } else {
-        result = await removeAccessory(ownedAccessoryId)
-      }
-
-      if (result.success) {
-        setMessage({ type: 'success', text: result.message })
-        // Rafraîchir les données
-        const accessories = await getUserOwnedAccessories()
-        if (accessories !== null) {
-          setOwnedAccessories(accessories)
-        }
-        if (onAccessoryChange !== undefined) {
-          onAccessoryChange()
-        }
-      } else {
-        setMessage({ type: 'error', text: result.message })
-      }
-    } catch (error) {
-      console.error('Erreur lors de l\'équipement/déséquipement :', error)
-      setMessage({ type: 'error', text: 'Une erreur est survenue' })
-    } finally {
-      setProcessingId(null)
-      // Effacer le message après 3 secondes
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
-    }
-  }
-
-  /**
-   * Vérifier si un accessoire est équipé
+   * Vérifie si un accessoire est équipé sur le monstre
+   *
+   * @param {string} ownedAccessoryId - ID de l'accessoire possédé
+   * @returns {boolean} true si l'accessoire est équipé
    */
   const isAccessoryEquipped = (ownedAccessoryId: string): boolean => {
     return equippedAccessories.some(acc => acc._id === ownedAccessoryId)
   }
 
+  /**
+   * Gère l'équipement/déséquipement d'un accessoire
+   *
+   * @param {string} ownedAccessoryId - ID de l'accessoire possédé
+   * @param {boolean} shouldEquip - true pour équiper, false pour déséquiper
+   */
+  const handleToggleEquip = async (ownedAccessoryId: string, shouldEquip: boolean): Promise<void> => {
+    const success = await toggleEquip(ownedAccessoryId, shouldEquip, monsterId)
+
+    if (success) {
+      // Rafraîchir les données locales
+      await refresh()
+      // Notifier le parent
+      if (onAccessoryChange !== undefined) {
+        onAccessoryChange()
+      }
+    }
+  }
+
   return (
-    <div className='bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-lg border-2 border-fuchsia-blue-200'>
-      {/* Header avec bouton toggle */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className='w-full flex items-center justify-between mb-4'
-      >
-        <div>
-          <h2 className='text-2xl font-bold text-foreground flex items-center gap-2'>
-            👜 Mes Accessoires
-          </h2>
-          <p className='text-sm text-foreground/70'>
-            {ownedAccessories.length} accessoire{ownedAccessories.length > 1 ? 's' : ''} possédé{ownedAccessories.length > 1 ? 's' : ''}
-          </p>
-        </div>
-        <div className='text-2xl transition-transform duration-300' style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-          ▼
-        </div>
-      </button>
-
-      {/* Contenu dépliable */}
-      {isOpen && (
-        <div className='mt-4'>
-          {/* Message de feedback */}
-          {message !== null && (
-            <div
-              className={`mb-4 p-3 rounded-lg border-2 ${
-                message.type === 'success'
-                  ? 'bg-lochinvar-50 border-lochinvar-300 text-lochinvar-800'
-                  : 'bg-moccaccino-50 border-moccaccino-300 text-moccaccino-800'
-              }`}
-            >
-              {message.text}
-            </div>
-          )}
-
-          {/* Liste des accessoires */}
-          {loading ? (
-            <div className='text-center py-8 text-foreground/50'>
-              <p>Chargement...</p>
-            </div>
-          ) : ownedAccessories.length === 0 ? (
-            <div className='text-center py-8 text-foreground/50'>
-              <p className='text-lg mb-2'>🎁 Vous n'avez pas encore d'accessoires</p>
-              <p className='text-sm'>Achetez-en dans la boutique ci-dessous !</p>
-            </div>
-          ) : (
-            <div className='max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-fuchsia-blue-300 scrollbar-track-slate-100'>
-              <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'>
-                {ownedAccessories.map((ownedAccessory) => {
-                  const accessory = getAccessoryById(ownedAccessory.accessoryId)
-                  if (accessory === null) return null
-
-                  return (
-                    <OwnedAccessoryCard
-                      key={ownedAccessory._id}
-                      ownedAccessory={ownedAccessory}
-                      accessory={accessory}
-                      isEquipped={isAccessoryEquipped(ownedAccessory._id)}
-                      onToggleEquip={handleToggleEquip}
-                      isProcessing={processingId === ownedAccessory._id}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Info footer */}
-          <div className='mt-4 p-3 bg-fuchsia-blue-50 rounded-lg border border-fuchsia-blue-200'>
-            <p className='text-xs text-fuchsia-blue-800'>
-              💡 <strong>Astuce :</strong> Cliquez sur "Équiper" pour voir l'accessoire sur votre monstre !
-            </p>
-          </div>
-        </div>
+    <CollapsibleSection
+      title='Mes Accessoires'
+      subtitle={`${ownedAccessories.length} accessoire${ownedAccessories.length > 1 ? 's' : ''} possédé${ownedAccessories.length > 1 ? 's' : ''}`}
+      icon='👜'
+      defaultOpen={true}
+    >
+      {/* Message de feedback */}
+      {message !== null && (
+        <FeedbackMessage type={message.type} text={message.text} />
       )}
-    </div>
+
+      {/* Grille des accessoires */}
+      <AccessoriesGrid isLoading={loading} count={ownedAccessories.length}>
+        {ownedAccessories.map((ownedAccessory) => {
+          const accessory = getAccessoryById(ownedAccessory.accessoryId)
+          if (accessory === null) return null
+
+          return (
+            <OwnedAccessoryCard
+              key={ownedAccessory._id}
+              ownedAccessory={ownedAccessory}
+              accessory={accessory}
+              isEquipped={isAccessoryEquipped(ownedAccessory._id)}
+              onToggleEquip={handleToggleEquip}
+              isProcessing={processingId === ownedAccessory._id}
+            />
+          )
+        })}
+      </AccessoriesGrid>
+
+      {/* Info footer */}
+      <div className='mt-4 p-3 bg-fuchsia-blue-50 rounded-lg border border-fuchsia-blue-200'>
+        <p className='text-xs text-fuchsia-blue-800'>
+          💡 <strong>Astuce :</strong> Cliquez sur "Équiper" pour voir l'accessoire sur votre monstre !
+        </p>
+      </div>
+    </CollapsibleSection>
   )
 }
 

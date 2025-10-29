@@ -17,3 +17,6 @@ export type { MonsterStats } from './use-monster-stats'
 
 export { useQuests } from './use-quests'
 export type { Quest } from './use-quests'
+
+export { useMonsterRefresh } from './use-monster-refresh'
+

@@ -1,15 +1,18 @@
 /**
  * AccessoryShop Component
  *
- * Presentation Layer: Displays the accessory shop with filtering options
+ * Presentation Layer: Affichage de la boutique d'accessoires avec filtrage
  *
- * Responsibilities:
- * - Display all available accessories
- * - Allow filtering by category
- * - Handle accessory purchases
- * - Show purchase feedback
+ * Responsabilités:
+ * - Orchestrer l'affichage de la boutique d'accessoires
+ * - Gérer le filtrage par catégorie
+ * - Coordonner les achats via le hook usePurchaseAccessory
  *
- * Single Responsibility Principle: Orchestrates the shop UI
+ * Single Responsibility Principle: Orchestre uniquement l'UI de la boutique
+ * Open/Closed Principle: Extensible via les composants enfants
+ * Dependency Inversion: Dépend des hooks (abstractions) pour la logique métier
+ *
+ * @module components/creature/accessory-shop
  */
 
 'use client'
@@ -17,25 +20,27 @@
 import { useState } from 'react'
 import type { Accessory, AccessoryCategory } from '@/types/accessory'
 import { AccessoryCard } from './accessory-card'
-import { purchaseAccessory } from '@/actions/accessory.actions'
+import { CategoryFilter } from './category-filter'
+import { FeedbackMessage } from './feedback-message'
+import { usePurchaseAccessory } from '@/hooks/accessories'
 import { useWallet } from '@/hooks/useWallet'
 
 /**
- * Props for AccessoryShop component
+ * Props pour le composant AccessoryShop
  */
 interface AccessoryShopProps {
-  /** List of available accessories */
+  /** Liste des accessoires disponibles à l'achat */
   accessories: Accessory[]
-  /** Monster ID for purchase association */
+  /** ID du monstre pour l'association d'achat */
   monsterId: string
-  /** List of owned accessory IDs */
+  /** Liste des IDs d'accessoires déjà possédés */
   ownedAccessoryIds?: string[]
   /** Callback appelé après un achat réussi */
   onPurchaseSuccess?: () => void
 }
 
 /**
- * Category filter options
+ * Options de filtrage par catégorie
  */
 const CATEGORIES: Array<{ value: AccessoryCategory | 'all', label: string, icon: string }> = [
   { value: 'all', label: 'Tout', icon: '🎯' },
@@ -47,46 +52,53 @@ const CATEGORIES: Array<{ value: AccessoryCategory | 'all', label: string, icon:
 ]
 
 /**
- * AccessoryShop component
+ * Composant de boutique d'accessoires
+ *
+ * Orchestre l'affichage de la boutique avec filtrage et achat d'accessoires.
+ * Délègue la logique d'achat au hook usePurchaseAccessory et l'affichage
+ * du filtre au composant CategoryFilter.
+ *
+ * @param {AccessoryShopProps} props - Props du composant
+ * @returns {React.ReactNode} Interface complète de la boutique
+ *
+ * @example
+ * <AccessoryShop
+ *   accessories={availableAccessories}
+ *   monsterId="monster-123"
+ *   ownedAccessoryIds={ownedIds}
+ *   onPurchaseSuccess={handleRefresh}
+ * />
  */
 export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [], onPurchaseSuccess }: AccessoryShopProps): React.ReactNode {
   const [selectedCategory, setSelectedCategory] = useState<AccessoryCategory | 'all'>('all')
-  const [purchasingId, setPurchasingId] = useState<string | null>(null)
-  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
-  const { wallet, refresh: refreshWallet } = useWallet()
 
-  // Filter accessories by category
+  // Hooks pour la gestion de l'état
+  const { wallet, refresh: refreshWallet } = useWallet()
+  const { purchasingId, message, handlePurchase } = usePurchaseAccessory()
+
+  /**
+   * Filtre les accessoires selon la catégorie sélectionnée
+   */
   const filteredAccessories = selectedCategory === 'all'
     ? accessories
     : accessories.filter(acc => acc.category === selectedCategory)
 
   /**
-   * Handle accessory purchase
+   * Gère l'achat d'un accessoire
+   *
+   * @param {string} accessoryId - ID de l'accessoire à acheter
    */
-  const handlePurchase = async (accessoryId: string): Promise<void> => {
-    setPurchasingId(accessoryId)
-    setMessage(null)
+  const handleAccessoryPurchase = async (accessoryId: string): Promise<void> => {
+    const success = await handlePurchase(accessoryId, monsterId)
 
-    const result = await purchaseAccessory(accessoryId, monsterId)
-
-    if (result.success) {
-      setMessage({ type: 'success', text: result.message })
-      // Refresh wallet to show updated balance
+    if (success) {
+      // Rafraîchir le wallet pour afficher le solde mis à jour
       await refreshWallet()
-      // Appeler le callback pour rafraîchir les accessoires possédés
+      // Notifier le parent pour rafraîchir les accessoires possédés
       if (onPurchaseSuccess !== undefined) {
         onPurchaseSuccess()
       }
-    } else {
-      setMessage({ type: 'error', text: result.message })
     }
-
-    setPurchasingId(null)
-
-    // Clear message after 3 seconds
-    setTimeout(() => {
-      setMessage(null)
-    }, 3000)
   }
 
   return (
@@ -103,52 +115,31 @@ export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [],
 
       {/* Message de feedback */}
       {message !== null && (
-        <div
-          className={`mb-4 p-4 rounded-lg border-2 ${
-            message.type === 'success'
-              ? 'bg-lochinvar-50 border-lochinvar-300 text-lochinvar-800'
-              : 'bg-moccaccino-50 border-moccaccino-300 text-moccaccino-800'
-          }`}
-        >
-          {message.text}
-        </div>
+        <FeedbackMessage type={message.type} text={message.text} />
       )}
 
-      {/* Category Filters */}
-      <div className='mb-6'>
-        <div className='flex flex-wrap gap-2'>
-          {CATEGORIES.map(category => (
-            <button
-              key={category.value}
-              onClick={() => setSelectedCategory(category.value)}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
-                selectedCategory === category.value
-                  ? 'bg-moccaccino-500 text-white shadow-md scale-105'
-                  : 'bg-lochinvar-100 text-lochinvar-700 hover:bg-lochinvar-200'
-              }`}
-            >
-              <span className='mr-1'>{category.icon}</span>
-              {category.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Filtre de catégories */}
+      <CategoryFilter
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        categories={CATEGORIES}
+      />
 
-      {/* Accessories Grid */}
+      {/* Grille d'accessoires */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
         {filteredAccessories.map(accessory => (
           <AccessoryCard
             key={accessory.id}
             accessory={accessory}
             userCoins={wallet?.coin ?? 0}
-            onPurchase={handlePurchase}
+            onPurchase={handleAccessoryPurchase}
             isPurchasing={purchasingId === accessory.id}
             isOwned={ownedAccessoryIds.includes(accessory.id)}
           />
         ))}
       </div>
 
-      {/* Empty State */}
+      {/* État vide */}
       {filteredAccessories.length === 0 && (
         <div className='text-center py-12 text-foreground/50'>
           <p className='text-xl'>Aucun accessoire dans cette catégorie</p>

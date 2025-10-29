@@ -3,95 +3,84 @@
  *
  * Presentation Layer: Page de gestion du wallet
  *
- * Responsibilities:
- * - Afficher le solde actuel
- * - Permettre d'ajouter de la monnaie
- * - Afficher l'historique des transactions (optionnel)
+ * Responsabilités:
+ * - Orchestrer l'affichage du solde et des options d'achat
+ * - Coordonner les hooks pour la gestion du paiement
+ * - Gérer les redirections après paiement Stripe
  *
- * Single Responsibility: Interface de gestion du wallet
+ * Single Responsibility Principle: Orchestre uniquement l'interface de gestion du wallet
+ * Open/Closed Principle: Extensible via les composants enfants
+ * Dependency Inversion: Dépend des hooks (abstractions) pour la logique métier
+ *
+ * @module components/wallet/wallet-page-client
  */
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useWallet } from '@/hooks/useWallet'
+import { usePaymentRedirect, useKoinsPurchase } from '@/hooks/wallet'
 import Button from '@/components/button'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import SuccessModal from '@/components/wallet/success-modal'
+import { WalletBalance } from './wallet-balance'
+import { AddCoinsPanel } from './add-coins-panel'
 import { pricingTable } from '@/config/pricing'
 import type { authClient } from '@/lib/auth-client'
 
 type Session = typeof authClient.$Infer.Session
 
+/**
+ * Props pour le composant WalletPageClient
+ */
 interface WalletPageClientProps {
+  /** Session utilisateur Better Auth */
   session: Session
 }
 
 /**
  * Composant client de la page wallet
+ *
+ * Orchestre l'affichage du solde, des options d'achat et gère les redirections
+ * après paiement. Délègue la logique métier aux hooks personnalisés.
+ *
+ * @param {WalletPageClientProps} props - Props du composant
+ * @returns {React.ReactNode} Page complète de gestion du wallet
+ *
+ * @example
+ * <WalletPageClient session={session} />
  */
 export default function WalletPageClient ({ session }: WalletPageClientProps): React.ReactNode {
+  // Hooks pour la gestion de l'état
   const { wallet, isLoading, refresh } = useWallet()
-  const [isAdding, setIsAdding] = useState(false)
-  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
-
-  // Vérifier si on revient d'un paiement réussi
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('success') === 'true') {
-      setShowSuccessModal(true)
-      // Rafraîchir le wallet après 2 secondes
-      setTimeout(() => {
-        void refresh()
-      }, 2000)
-      // Nettoyer l'URL
-      window.history.replaceState({}, '', '/wallet')
-    } else if (urlParams.get('canceled') === 'true') {
-      setMessage({ type: 'error', text: '❌ Paiement annulé' })
-      // Nettoyer l'URL
-      window.history.replaceState({}, '', '/wallet')
-    }
-  }, [])
+  const { showSuccessModal, showErrorMessage, closeSuccessModal, onPaymentSuccess } = usePaymentRedirect()
+  const { isProcessing, message, buyKoins } = useKoinsPurchase()
 
   // Montants prédéfinis (récupérés dynamiquement depuis pricing.ts)
   const presetAmounts = Object.keys(pricingTable).map(Number)
 
   /**
-   * Redirige vers Stripe pour acheter des koins
+   * Configure le rafraîchissement du wallet après un paiement réussi
+   */
+  useEffect(() => {
+    onPaymentSuccess(refresh)
+  }, [showSuccessModal])
+
+  /**
+   * Gère le clic sur un montant pour acheter des koins
+   *
+   * @param {number} amount - Montant de koins à acheter
    */
   const handleBuyKoins = async (amount: number): Promise<void> => {
-    setIsAdding(true)
-    setMessage(null)
-
-    try {
-      const response = await fetch('/api/checkout/sessions', {
-        method: 'POST',
-        body: JSON.stringify({ amount })
-      })
-      const data = await response.json()
-
-      if (data.url !== null && data.url !== undefined) {
-        // Redirection vers Stripe
-        window.location.href = data.url
-      } else {
-        setMessage({ type: 'error', text: 'Erreur lors de la création de la session de paiement' })
-        setIsAdding(false)
-      }
-    } catch (error) {
-      console.error('Erreur:', error)
-      setMessage({ type: 'error', text: 'Une erreur est survenue lors de la redirection vers Stripe' })
-      setIsAdding(false)
-    }
+    await buyKoins(amount)
   }
-
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-moccaccino-50 via-white to-lochinvar-50'>
       {/* Modal de succès avec confettis */}
       <SuccessModal
         isOpen={showSuccessModal}
-        onClose={() => { setShowSuccessModal(false) }}
+        onClose={closeSuccessModal}
         title='Paiement réussi !'
         message='Vos coins seront ajoutés dans quelques instants. Merci pour votre achat ! 🎉'
       />
@@ -105,105 +94,29 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
 
       <main className='container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl'>
         {/* Message de notification */}
-        {message !== null && (
-          <div className={`mb-6 p-4 rounded-lg border ${
-            message.type === 'success' 
-              ? 'bg-green-50 border-green-200 text-green-800' 
-              : 'bg-red-50 border-red-200 text-red-800'
-          }`}>
-            <p className='font-medium'>{message.text}</p>
+        {(message !== null || showErrorMessage) && (
+          <div className='mb-6 p-4 rounded-lg border bg-red-50 border-red-200 text-red-800'>
+            <p className='font-medium'>
+              {message?.text ?? '❌ Paiement annulé'}
+            </p>
           </div>
         )}
 
         <div className='grid gap-8 md:grid-cols-2'>
           {/* Carte d'affichage du solde */}
-          <div className='bg-white rounded-2xl shadow-lg p-8 border border-gray-100'>
-            <h2 className='text-2xl font-bold text-gray-800 mb-6'>
-              Solde actuel
-            </h2>
-
-            {isLoading ? (
-              <div className='animate-pulse'>
-                <div className='h-20 bg-gray-200 rounded-lg mb-4' />
-                <div className='h-4 bg-gray-200 rounded w-3/4' />
-              </div>
-            ) : (
-              <>
-                {/* Affichage du solde */}
-                <div className='mb-6'>
-                  <div className='flex items-center justify-center gap-4 p-6 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl border-2 border-yellow-300 shadow-inner'>
-                    <div className='flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg'>
-                      <span className='text-3xl'>💰</span>
-                    </div>
-                    <div className='text-center'>
-                      <p className='text-5xl font-bold text-gray-800'>
-                        {wallet?.coin.toLocaleString() ?? 0}
-                      </p>
-                      <p className='text-sm text-gray-600 mt-1'>pièces</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Informations utilisateur */}
-                <div className='space-y-2 text-sm text-gray-600'>
-                  <p>
-                    <span className='font-medium'>Compte :</span> {session.user.name ?? session.user.email}
-                  </p>
-                  <p>
-                    <span className='font-medium'>Dernière mise à jour :</span>{' '}
-                    {wallet?.updatedAt
-                      ? new Date(wallet.updatedAt).toLocaleDateString('fr-FR', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })
-                      : 'N/A'
-                    }
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
+          <WalletBalance
+            wallet={wallet}
+            session={session}
+            isLoading={isLoading}
+          />
 
           {/* Carte d'ajout de monnaie */}
-          <div className='bg-white rounded-2xl shadow-lg p-8 border border-gray-100'>
-            <h2 className='text-2xl font-bold text-gray-800 mb-6'>
-              Ajouter de la monnaie
-            </h2>
-
-            <div className='space-y-6'>
-              {/* Montants prédéfinis */}
-              <div>
-                <label className='block text-sm font-medium text-gray-700 mb-3'>
-                  Choisissez un montant pour acheter
-                </label>
-                <div className='grid grid-cols-3 gap-2'>
-                  {presetAmounts.map((amount) => (
-                    <Button
-                      key={amount}
-                      onClick={async () => { await handleBuyKoins(amount) }}
-                      disabled={isAdding}
-                      variant='outline'
-                      size='md'
-                    >
-                      {isAdding ? '...' : `${amount} 💰`}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Note explicative */}
-              <div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
-                <p className='text-sm text-blue-800'>
-                  <span className='font-medium'>💡 Info :</span> Cliquez sur un montant pour être redirigé vers le paiement sécurisé Stripe.
-                </p>
-              </div>
-            </div>
-          </div>
+          <AddCoinsPanel
+            presetAmounts={presetAmounts}
+            onAmountClick={handleBuyKoins}
+            isProcessing={isProcessing}
+          />
         </div>
-
 
         {/* Bouton retour vers le dashboard */}
         <div className='mt-8 text-center'>
@@ -219,4 +132,3 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
     </div>
   )
 }
-

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters.actions'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
@@ -10,7 +10,8 @@ import {
   useMonsterStats,
   useLatestAdoptionLabel,
   useFavoriteMoodMessage,
-  useQuests
+  useQuests,
+  useMonsterRefresh
 } from '@/hooks/dashboard'
 import CreateMonsterModal from './create-monster-modal'
 import { WelcomeHero } from './welcome-hero'
@@ -42,9 +43,12 @@ type Session = typeof authClient.$Infer.Session
  * @example
  * <DashboardContent session={session} monsters={monsters} />
  */
-function DashboardContent ({ session, monsters }: { session: Session, monsters: PopulatedMonster[] }): React.ReactNode {
+function DashboardContent ({ session, monsters: initialMonsters }: { session: Session, monsters: PopulatedMonster[] }): React.ReactNode {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [monsterList, setMonsterList] = useState<PopulatedMonster[]>(monsters)
+
+  // Hook pour le rafraîchissement automatique des monstres
+  const { monsters } = useMonsterRefresh(initialMonsters, 1000)
+
   // Extraction des informations utilisateur
   const userDisplay = useUserDisplay(session)
 
@@ -56,46 +60,33 @@ function DashboardContent ({ session, monsters }: { session: Session, monsters: 
   // Génération des quêtes
   const quests = useQuests(stats)
 
-  useEffect(() => {
-    const fetchAndUpdateMonsters = async (): Promise<void> => {
-      const response = await fetch('/api/monsters')
-      const updatedMonsters = await response.json()
-      setMonsterList(updatedMonsters)
-    }
-
-    const interval = setInterval(() => {
-      void fetchAndUpdateMonsters()
-    }, 1000) // Met à jour toutes les 60 secondes
-
-    return () => clearInterval(interval)
-  }, [])
-
   /**
-     * Déconnecte l'utilisateur et redirige vers la page de connexion
-     */
+   * Déconnecte l'utilisateur et redirige vers la page de connexion
+   */
   const handleLogout = (): void => {
     void authClient.signOut()
     window.location.href = '/sign-in'
   }
 
   /**
-     * Ouvre le modal de création de monstre
-     */
+   * Ouvre le modal de création de monstre
+   */
   const handleCreateMonster = (): void => {
     setIsModalOpen(true)
   }
 
   /**
-     * Ferme le modal de création de monstre
-     */
+   * Ferme le modal de création de monstre
+   */
   const handleCloseModal = (): void => {
     setIsModalOpen(false)
   }
 
   /**
-     * Soumet le formulaire de création de monstre
-     * @param {CreateMonsterFormValues} values - Valeurs du formulaire
-     */
+   * Soumet le formulaire de création de monstre et recharge la page
+   *
+   * @param {CreateMonsterFormValues} values - Valeurs du formulaire
+   */
   const handleMonsterSubmit = (values: CreateMonsterFormValues): void => {
     void createMonster(values).then(() => {
       window.location.reload()
@@ -177,7 +168,7 @@ function DashboardContent ({ session, monsters }: { session: Session, monsters: 
         {/* Section grille principale : liste des monstres + sidebar */}
         <section className='mt-12 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
           <div>
-            <MonstersList monsters={monsterList} className='mt-0' />
+            <MonstersList monsters={monsters} className='mt-0' />
           </div>
 
           <aside className='flex flex-col gap-6'>
