@@ -40,7 +40,10 @@ export async function getUserWallet (): Promise<Wallet | null> {
     }
 
     // Récupération ou création du wallet
-    return await getOrCreateWallet(session.user.id)
+    const wallet = await getOrCreateWallet(session.user.id)
+
+    // Sérialisation pour Client Components (convertit ObjectId et Dates)
+    return JSON.parse(JSON.stringify(wallet))
   } catch (error) {
     console.error('Error getting user wallet:', error)
     return null
@@ -76,7 +79,8 @@ export async function addCoinsToWallet (amount: number): Promise<Wallet | null> 
     revalidatePath('/dashboard')
     revalidatePath('/creature')
 
-    return wallet
+    // Sérialisation pour Client Components
+    return JSON.parse(JSON.stringify(wallet))
   } catch (error) {
     console.error('Error adding coins to wallet:', error)
     return null
@@ -112,7 +116,8 @@ export async function subtractCoinsFromWallet (amount: number): Promise<Wallet |
     revalidatePath('/dashboard')
     revalidatePath('/creature')
 
-    return wallet
+    // Sérialisation pour Client Components
+    return JSON.parse(JSON.stringify(wallet))
   } catch (error) {
     console.error('Error subtracting coins from wallet:', error)
     return null

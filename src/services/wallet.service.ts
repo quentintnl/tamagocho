@@ -19,6 +19,24 @@ import type { Wallet as WalletType, CreateWalletDTO, UpdateWalletBalanceDTO } fr
 import { connectMongooseToDatabase } from '@/db'
 
 /**
+ * Serializes a Mongoose wallet document to a plain object
+ * Converts ObjectId and Dates to strings for Client Component compatibility
+ *
+ * @param doc - Mongoose wallet document
+ * @returns Plain wallet object
+ */
+function serializeWallet (doc: any): WalletType {
+  const obj = doc.toObject()
+  return {
+    _id: obj._id.toString(),
+    ownerId: obj.ownerId,
+    coin: obj.coin,
+    createdAt: obj.createdAt instanceof Date ? obj.createdAt : new Date(obj.createdAt),
+    updatedAt: obj.updatedAt instanceof Date ? obj.updatedAt : new Date(obj.updatedAt)
+  }
+}
+
+/**
  * Creates a new wallet for a user
  * Single Responsibility: Handle wallet creation logic
  *
@@ -33,7 +51,7 @@ export async function createWallet (data: CreateWalletDTO): Promise<WalletType> 
     coin: data.coin ?? 0
   })
 
-  return wallet.toObject() as WalletType
+  return serializeWallet(wallet)
 }
 
 /**
@@ -52,7 +70,7 @@ export async function getWalletByOwnerId (ownerId: string): Promise<WalletType |
     return null
   }
 
-  return wallet.toObject() as WalletType
+  return serializeWallet(wallet)
 }
 
 /**
@@ -71,7 +89,7 @@ export async function getOrCreateWallet (ownerId: string): Promise<WalletType> {
     wallet = await Wallet.create({ ownerId, coin: 0 })
   }
 
-  return wallet.toObject() as WalletType
+  return serializeWallet(wallet)
 }
 
 /**
@@ -99,7 +117,7 @@ export async function addCoins (data: UpdateWalletBalanceDTO): Promise<WalletTyp
     throw new Error('Wallet not found')
   }
 
-  return wallet.toObject() as WalletType
+  return serializeWallet(wallet)
 }
 
 /**
@@ -130,7 +148,7 @@ export async function subtractCoins (data: UpdateWalletBalanceDTO): Promise<Wall
   wallet.coin -= data.amount
   await wallet.save()
 
-  return wallet.toObject() as WalletType
+  return serializeWallet(wallet)
 }
 
 /**

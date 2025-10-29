@@ -32,12 +32,13 @@ export async function POST (request: Request): Promise<Response> {
                 quantity: 1
             }
         ],
+        customer_email: session.user.email,
         mode: 'payment',
         success_url: `${process.env.NEXT_PUBLIC_APP_URL as string}/wallet`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL as string}/wallet`,
         metadata: {
             userId: session.user.id,
-            amount: amount.toString()
+            productId: product.productId
         }
     })
 

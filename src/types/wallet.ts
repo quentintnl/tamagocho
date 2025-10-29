@@ -12,8 +12,8 @@ export interface Wallet {
   _id: string
   ownerId: string
   coin: number
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 /**
