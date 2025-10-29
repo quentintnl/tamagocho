@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import type { OwnedAccessory } from '@/types/accessory'
 
 type MonsterState = 'happy' | 'sad' | 'hungry' | 'sleepy' | 'angry'
 type MonsterAction = 'feed' | 'comfort' | 'hug' | 'wake' | null
@@ -28,6 +29,7 @@ interface PixelMonsterProps {
   traits?: MonsterTraits
   level?: number
   currentAction?: MonsterAction
+  equippedAccessories?: OwnedAccessory[]
 }
 
 const defaultTraits: MonsterTraits = {
@@ -60,7 +62,8 @@ export function PixelMonster ({
   state,
   traits = defaultTraits,
   level = 1,
-  currentAction = null
+  currentAction = null,
+  equippedAccessories = []
 }: PixelMonsterProps): React.ReactNode {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const frameRef = useRef(0)
@@ -92,7 +95,7 @@ export function PixelMonster ({
         }
       }
 
-      drawMonster(ctx, state, frameRef.current, traits, level, currentActionRef.current, actionFrameRef.current, particlesRef.current)
+      drawMonster(ctx, state, frameRef.current, traits, level, currentActionRef.current, actionFrameRef.current, particlesRef.current, equippedAccessories)
       animationId = requestAnimationFrame(animate)
     }
 
@@ -103,7 +106,7 @@ export function PixelMonster ({
         cancelAnimationFrame(animationId)
       }
     }
-  }, [state, traits, level])
+  }, [state, traits, level, equippedAccessories])
 
   useEffect(() => {
     if (currentAction !== null && currentAction !== currentActionRef.current) {
@@ -159,7 +162,8 @@ function drawMonster (
   level: number,
   currentAction: MonsterAction,
   actionFrame: number,
-  particles: Particle[]
+  particles: Particle[],
+  equippedAccessories: OwnedAccessory[]
 ): void {
   const pixelSize = 6
   const bounce = Math.sin(frame * 0.05) * 3
@@ -260,6 +264,9 @@ function drawMonster (
   drawAntenna(ctx, traits.antennaStyle, traits.antennaColor, traits.bobbleColor, bodyY, pixelSize, frame)
 
   drawAccessory(ctx, traits.accessory, traits.accentColor, bodyY, pixelSize, frame)
+
+  // Dessiner les accessoires achetés équipés
+  drawEquippedAccessories(ctx, equippedAccessories, bodyY, pixelSize, frame)
 
   drawStateEffects(ctx, state, bodyY, pixelSize, frame)
 
@@ -639,6 +646,268 @@ function drawAccessory (
     case 'none':
       break
   }
+}
+
+/**
+ * Dessine les accessoires achetés équipés sur le monstre
+ */
+function drawEquippedAccessories (
+  ctx: CanvasRenderingContext2D,
+  equippedAccessories: OwnedAccessory[],
+  bodyY: number,
+  pixelSize: number,
+  frame: number
+): void {
+  if (equippedAccessories.length === 0) return
+
+  equippedAccessories.forEach(ownedAccessory => {
+    const { accessoryId } = ownedAccessory
+
+    // Dessiner selon le type d'accessoire
+    if (accessoryId.startsWith('hat-')) {
+      drawPurchasedHat(ctx, accessoryId, bodyY, pixelSize, frame)
+    } else if (accessoryId.startsWith('glasses-')) {
+      drawPurchasedGlasses(ctx, accessoryId, bodyY, pixelSize)
+    } else if (accessoryId.startsWith('necklace-')) {
+      drawPurchasedNecklace(ctx, accessoryId, bodyY, pixelSize)
+    } else if (accessoryId.startsWith('effect-')) {
+      drawPurchasedEffect(ctx, accessoryId, bodyY, pixelSize, frame)
+    } else if (accessoryId.startsWith('bg-')) {
+      drawPurchasedBackground(ctx, accessoryId, frame)
+    }
+  })
+}
+
+/**
+ * Dessine un chapeau acheté sur le monstre
+ */
+function drawPurchasedHat (
+  ctx: CanvasRenderingContext2D,
+  hatId: string,
+  bodyY: number,
+  pixelSize: number,
+  frame: number
+): void {
+  const hatBounce = Math.sin(frame * 0.05) * 1
+
+  switch (hatId) {
+    case 'hat-party': {
+      // Chapeau de fête - cône coloré
+      ctx.fillStyle = '#FF6B9D'
+      const points = [
+        [75, bodyY - 18 + hatBounce],
+        [69, bodyY - 6 + hatBounce],
+        [81, bodyY - 6 + hatBounce]
+      ]
+      ctx.beginPath()
+      ctx.moveTo(points[0][0], points[0][1])
+      ctx.lineTo(points[1][0], points[1][1])
+      ctx.lineTo(points[2][0], points[2][1])
+      ctx.closePath()
+      ctx.fill()
+      // Pompon
+      ctx.fillStyle = '#FFD700'
+      ctx.fillRect(72, bodyY - 21 + hatBounce, pixelSize * 2, pixelSize * 2)
+      break
+    }
+    case 'hat-crown': {
+      // Couronne royale
+      ctx.fillStyle = '#FFD700'
+      ctx.fillRect(60, bodyY - 12 + hatBounce, pixelSize * 7, pixelSize)
+      ctx.fillRect(63, bodyY - 15 + hatBounce, pixelSize, pixelSize * 2)
+      ctx.fillRect(69, bodyY - 18 + hatBounce, pixelSize, pixelSize * 3)
+      ctx.fillRect(75, bodyY - 15 + hatBounce, pixelSize, pixelSize * 2)
+      ctx.fillRect(81, bodyY - 18 + hatBounce, pixelSize, pixelSize * 3)
+      ctx.fillRect(87, bodyY - 15 + hatBounce, pixelSize, pixelSize * 2)
+      // Gemmes
+      ctx.fillStyle = '#FF1493'
+      ctx.fillRect(69, bodyY - 15 + hatBounce, pixelSize, pixelSize)
+      ctx.fillRect(81, bodyY - 15 + hatBounce, pixelSize, pixelSize)
+      break
+    }
+    case 'hat-wizard': {
+      // Chapeau de sorcier
+      ctx.fillStyle = '#6B4C9A'
+      const wizPoints = [
+        [75, bodyY - 24 + hatBounce],
+        [63, bodyY - 6 + hatBounce],
+        [87, bodyY - 6 + hatBounce]
+      ]
+      ctx.beginPath()
+      ctx.moveTo(wizPoints[0][0], wizPoints[0][1])
+      ctx.lineTo(wizPoints[1][0], wizPoints[1][1])
+      ctx.lineTo(wizPoints[2][0], wizPoints[2][1])
+      ctx.closePath()
+      ctx.fill()
+      // Bord du chapeau
+      ctx.fillRect(57, bodyY - 9 + hatBounce, pixelSize * 6, pixelSize)
+      // Étoiles magiques
+      ctx.fillStyle = '#FFD700'
+      ctx.font = '12px Arial'
+      ctx.fillText('✨', 72, bodyY - 15 + hatBounce)
+      break
+    }
+  }
+}
+
+/**
+ * Dessine des lunettes achetées sur le monstre
+ */
+function drawPurchasedGlasses (
+  ctx: CanvasRenderingContext2D,
+  glassesId: string,
+  bodyY: number,
+  pixelSize: number
+): void {
+  switch (glassesId) {
+    case 'glasses-cool': {
+      // Lunettes de soleil
+      ctx.fillStyle = '#2C2C2C'
+      ctx.fillRect(60, bodyY + 21, pixelSize * 3, pixelSize * 2)
+      ctx.fillRect(90, bodyY + 21, pixelSize * 3, pixelSize * 2)
+      ctx.fillRect(63, bodyY + 22, pixelSize, pixelSize)
+      ctx.fillRect(93, bodyY + 22, pixelSize, pixelSize)
+      break
+    }
+    case 'glasses-nerd': {
+      // Lunettes de génie
+      ctx.strokeStyle = '#2C2C2C'
+      ctx.lineWidth = 2
+      ctx.beginPath()
+      ctx.arc(66, bodyY + 24, 6, 0, Math.PI * 2)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(96, bodyY + 24, 6, 0, Math.PI * 2)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.moveTo(72, bodyY + 24)
+      ctx.lineTo(90, bodyY + 24)
+      ctx.stroke()
+      break
+    }
+  }
+}
+
+/**
+ * Dessine un collier acheté sur le monstre
+ */
+function drawPurchasedNecklace (
+  ctx: CanvasRenderingContext2D,
+  necklaceId: string,
+  bodyY: number,
+  pixelSize: number
+): void {
+  switch (necklaceId) {
+    case 'necklace-heart': {
+      // Collier cœur
+      ctx.fillStyle = '#FF69B4'
+      ctx.fillRect(75, bodyY + 48, pixelSize * 2, pixelSize * 2)
+      ctx.fillRect(72, bodyY + 51, pixelSize, pixelSize)
+      ctx.fillRect(81, bodyY + 51, pixelSize, pixelSize)
+      break
+    }
+    case 'necklace-diamond': {
+      // Collier diamant
+      ctx.fillStyle = '#00CED1'
+      ctx.fillRect(75, bodyY + 48, pixelSize * 2, pixelSize)
+      ctx.fillRect(72, bodyY + 51, pixelSize, pixelSize)
+      ctx.fillRect(81, bodyY + 51, pixelSize, pixelSize)
+      ctx.fillRect(75, bodyY + 54, pixelSize * 2, pixelSize)
+      // Brillance
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(75, bodyY + 48, pixelSize / 2, pixelSize / 2)
+      break
+    }
+  }
+}
+
+/**
+ * Dessine un effet acheté autour du monstre
+ */
+function drawPurchasedEffect (
+  ctx: CanvasRenderingContext2D,
+  effectId: string,
+  bodyY: number,
+  pixelSize: number,
+  frame: number
+): void {
+  switch (effectId) {
+    case 'effect-sparkles': {
+      // Paillettes magiques qui tournent autour
+      const sparklePositions = [
+        { angle: frame * 0.05, radius: 45 },
+        { angle: frame * 0.05 + Math.PI / 2, radius: 40 },
+        { angle: frame * 0.05 + Math.PI, radius: 45 },
+        { angle: frame * 0.05 + Math.PI * 1.5, radius: 40 }
+      ]
+      ctx.fillStyle = '#FFD700'
+      ctx.font = '16px Arial'
+      sparklePositions.forEach(pos => {
+        const x = 80 + Math.cos(pos.angle) * pos.radius
+        const y = bodyY + 30 + Math.sin(pos.angle) * pos.radius
+        ctx.fillText('✨', x, y)
+      })
+      break
+    }
+    case 'effect-fire': {
+      // Aura de feu
+      const fireIntensity = Math.sin(frame * 0.1) * 0.3 + 0.7
+      ctx.save()
+      ctx.globalAlpha = fireIntensity
+      ctx.fillStyle = '#FF4500'
+      ctx.font = '20px Arial'
+      ctx.fillText('🔥', 50, bodyY + 30)
+      ctx.fillText('🔥', 100, bodyY + 30)
+      ctx.fillText('🔥', 75, bodyY + 15)
+      ctx.restore()
+      break
+    }
+  }
+}
+
+/**
+ * Dessine un arrière-plan acheté
+ */
+function drawPurchasedBackground (
+  ctx: CanvasRenderingContext2D,
+  bgId: string,
+  frame: number
+): void {
+  ctx.save()
+  ctx.globalAlpha = 0.3
+
+  switch (bgId) {
+    case 'bg-stars': {
+      // Fond étoilé
+      ctx.fillStyle = '#FFD700'
+      const stars = [
+        { x: 20, y: 20 + Math.sin(frame * 0.03) * 3 },
+        { x: 140, y: 30 + Math.sin(frame * 0.04) * 3 },
+        { x: 30, y: 120 + Math.sin(frame * 0.05) * 3 },
+        { x: 130, y: 100 + Math.sin(frame * 0.035) * 3 },
+        { x: 80, y: 15 + Math.sin(frame * 0.045) * 3 }
+      ]
+      ctx.font = '14px Arial'
+      stars.forEach(star => {
+        ctx.fillText('⭐', star.x, star.y)
+      })
+      break
+    }
+    case 'bg-rainbow': {
+      // Arc-en-ciel
+      const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3']
+      colors.forEach((color, i) => {
+        ctx.strokeStyle = color
+        ctx.lineWidth = 3
+        ctx.beginPath()
+        ctx.arc(80, 180, 60 + i * 8, Math.PI, 0)
+        ctx.stroke()
+      })
+      break
+    }
+  }
+
+  ctx.restore()
 }
 
 function drawStateEffects (

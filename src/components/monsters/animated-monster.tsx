@@ -3,6 +3,7 @@
 import { PixelMonster } from '@/components/monsters/pixel-monster'
 import type { MonsterTraits, MonsterState } from '@/types/monster'
 import type { MonsterAction } from '@/hooks/monsters'
+import type { OwnedAccessory } from '@/types/accessory'
 
 /**
  * Props pour le composant AnimatedMonster
@@ -16,6 +17,8 @@ interface AnimatedMonsterProps {
   level: number
   /** Action actuellement en cours (optionnel) */
   currentAction?: MonsterAction
+  /** Accessoires équipés (optionnel) */
+  equippedAccessories?: OwnedAccessory[]
 }
 
 /**
@@ -43,7 +46,8 @@ export function AnimatedMonster ({
   state,
   traits,
   level,
-  currentAction
+  currentAction,
+  equippedAccessories = []
 }: AnimatedMonsterProps): React.ReactNode {
   return (
     <div className='relative overflow-visible'>
@@ -52,6 +56,7 @@ export function AnimatedMonster ({
         traits={traits}
         level={level}
         currentAction={currentAction}
+        equippedAccessories={equippedAccessories}
       />
     </div>
   )

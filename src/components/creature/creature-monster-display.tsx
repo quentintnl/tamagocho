@@ -1,6 +1,7 @@
 import { AnimatedMonster, MonsterActions } from '@/components/monsters'
 import type { MonsterTraits, MonsterState } from '@/types/monster'
 import type { MonsterAction } from '@/hooks/monsters'
+import type { OwnedAccessory } from '@/types/accessory'
 import { getStateLabel } from '@/lib/utils'
 
 /**
@@ -21,6 +22,8 @@ interface CreatureMonsterDisplayProps {
   monsterId: string
   /** Callback appelé après l'action pour rafraîchir les données */
   onActionComplete?: () => void
+  /** Accessoires équipés sur le monstre */
+  equippedAccessories?: OwnedAccessory[]
 }
 
 /**
@@ -52,7 +55,8 @@ export function CreatureMonsterDisplay ({
   currentAction,
   onAction,
   monsterId,
-  onActionComplete
+  onActionComplete,
+  equippedAccessories = []
 }: CreatureMonsterDisplayProps): React.ReactNode {
   return (
     <div className='bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border-4 border-lochinvar-200'>
@@ -63,6 +67,7 @@ export function CreatureMonsterDisplay ({
           traits={traits}
           level={level}
           currentAction={currentAction}
+          equippedAccessories={equippedAccessories}
         />
       </div>
 
