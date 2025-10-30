@@ -30,6 +30,7 @@ import {
 } from '@/services/owned-accessory.service'
 import { revalidatePath } from 'next/cache'
 import type { OwnedAccessory } from '@/types/accessory'
+import { trackQuestProgress } from '@/services/daily-quest.service'
 
 /**
  * Purchase an accessory for the user's monster
@@ -101,6 +102,14 @@ export async function purchaseAccessory (accessoryId: string, monsterId: string)
       accessoryId,
       monsterId
     )
+
+    // Tracking automatique des quêtes
+    try {
+      await trackQuestProgress(session.user.id, 'buy_accessory', 1)
+      await trackQuestProgress(session.user.id, 'equip_accessory', 1)
+    } catch (questError) {
+      console.warn('Failed to track quest progress:', questError)
+    }
 
     // Revalidation du cache
     revalidatePath('/creature')
@@ -192,6 +201,13 @@ export async function purchaseAccessoryOnly (accessoryId: string): Promise<{
       accessoryId
       // pas de monsterId = non équipé
     )
+
+    // Tracking automatique des quêtes
+    try {
+      await trackQuestProgress(session.user.id, 'buy_accessory', 1)
+    } catch (questError) {
+      console.warn('Failed to track quest progress:', questError)
+    }
 
     // Revalidation du cache
     revalidatePath('/shop')
@@ -304,6 +320,13 @@ export async function equipAccessory (
         success: false,
         message: 'Accessoire introuvable'
       }
+    }
+
+    // Tracking automatique des quêtes
+    try {
+      await trackQuestProgress(session.user.id, 'equip_accessory', 1)
+    } catch (questError) {
+      console.warn('Failed to track quest progress:', questError)
     }
 
     revalidatePath('/creature')

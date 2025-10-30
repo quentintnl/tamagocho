@@ -12,6 +12,7 @@ import { MonsterAction } from '@/hooks/monsters'
 import { headers } from 'next/headers'
 import { getActionReward, type MonsterActionType } from '@/config/rewards'
 import { addCoins } from '@/services/wallet.service'
+import { trackQuestProgress } from '@/services/daily-quest.service'
 
 /**
  * Résultat d'une action sur un monstre
@@ -139,6 +140,21 @@ export async function doActionOnMonster (id: string, action: MonsterAction): Pro
         ownerId: user.id,
         amount: koinsEarned
       })
+
+      // Tracking automatique des quêtes
+      try {
+        // Track "feed_monster" quest
+        if (action === 'feed') {
+          await trackQuestProgress(user.id, 'feed_monster', 1)
+        }
+        // Track "play_with_monster" quest (hug, wake, comfort are considered playing)
+        if (action === 'hug' || action === 'wake' || action === 'comfort') {
+          await trackQuestProgress(user.id, 'play_with_monster', 1)
+        }
+      } catch (questError) {
+        // Ne pas bloquer l'action si le tracking échoue
+        console.warn('Failed to track quest progress:', questError)
+      }
 
       // Revalidation du cache pour rafraîchir la page
       revalidatePath(`/creature/${id}`)

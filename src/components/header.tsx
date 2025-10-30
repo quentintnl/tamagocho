@@ -15,6 +15,7 @@ export default function Header (): React.ReactNode {
     if (pathname === '/shop') return 'Boutique'
     if (pathname === '/wallet') return 'Mon Wallet'
     if (pathname === '/gallery') return 'Galerie Communautaire'
+    if (pathname === '/quests') return 'Quêtes du Jour'
     if (pathname?.startsWith('/creature/')) return 'Ma Créature'
     return 'Tamagotcho'
   }
@@ -43,6 +44,10 @@ export default function Header (): React.ReactNode {
 
   const handleWallet = (): void => {
     window.location.href = '/wallet'
+  }
+
+  const handleQuests = (): void => {
+    window.location.href = '/quests'
   }
 
   return (
@@ -102,6 +107,22 @@ export default function Header (): React.ReactNode {
               title='Découvrir les monstres publics de la communauté'
             >
               🌍 Monstres Publics
+            </button>
+
+            {/* Quêtes */}
+            <button
+              onClick={handleQuests}
+              className={`
+                px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                ${
+                  isActive('/quests')
+                    ? 'border-2 border-meadow-500 text-forest-700 bg-meadow-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
+                }
+              `}
+              title='Complétez vos quêtes quotidiennes'
+            >
+              🎯 Quêtes
             </button>
 
             {/* Boutique */}
