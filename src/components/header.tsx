@@ -23,7 +23,7 @@ export default function Header (): React.ReactNode {
   }
 
   const handleMonsters = (): void => {
-    window.location.href = '/monster'
+    window.location.href = '/monsters'
   }
 
   return (

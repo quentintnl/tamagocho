@@ -117,17 +117,6 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
             isProcessing={isProcessing}
           />
         </div>
-
-        {/* Bouton retour vers le dashboard */}
-        <div className='mt-8 text-center'>
-          <Button
-            variant='ghost'
-            size='md'
-            onClick={() => { window.location.href = '/dashboard' }}
-          >
-            ← Retour au Dashboard
-          </Button>
-        </div>
       </main>
     </div>
   )

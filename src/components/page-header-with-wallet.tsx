@@ -60,7 +60,7 @@ export default function PageHeaderWithWallet ({
   }
 
   const handleMonsters = (): void => {
-    window.location.href = '/monster'
+    window.location.href = '/monsters'
   }
 
   return (
@@ -86,8 +86,26 @@ export default function PageHeaderWithWallet ({
             {children}
           </div>
 
-          {/* Partie droite : Bouton boutique + Wallet */}
-          <div className='flex items-center gap-3 flex-shrink-0'>
+          {/* Partie droite : Boutons de navigation + Wallet */}
+          <div className='flex items-center gap-2 flex-shrink-0'>
+            {showDashboardButton && (
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={handleDashboard}
+              >
+                📊 Dashboard
+              </Button>
+            )}
+            {showMonstersButton && (
+              <Button
+                variant='ghost'
+                size='sm'
+                onClick={handleMonsters}
+              >
+                👾 Monstres
+              </Button>
+            )}
             {showShopButton && (
               <Button
                 variant='primary'
