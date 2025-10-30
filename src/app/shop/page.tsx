@@ -10,9 +10,11 @@
 import { useState, useEffect } from 'react'
 import { AccessoriesList } from '@/components/wallet/accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
-import { getUserOwnedAccessoryIds } from '@/actions/accessory.actions'
+import { getUserOwnedAccessoryIds, purchaseAccessoryOnly } from '@/actions/accessory.actions'
 import { useWallet } from '@/hooks/useWallet'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
+import { PurchaseConfirmationModal } from '@/components/accessories/purchase-confirmation-modal'
+import { toast } from 'react-toastify'
 import type { Accessory } from '@/types/accessory'
 
 /**
@@ -30,6 +32,7 @@ export default function ShopPage (): React.ReactNode {
   const [accessories, setAccessories] = useState<Accessory[]>([])
   const [ownedAccessoryIds, setOwnedAccessoryIds] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
   const { wallet } = useWallet()
 
   // Charger les accessoires disponibles et possédés au montage
@@ -46,6 +49,7 @@ export default function ShopPage (): React.ReactNode {
         setOwnedAccessoryIds(ownedIds)
       } catch (error) {
         console.error('Erreur lors du chargement des accessoires:', error)
+        toast.error('Erreur lors du chargement des accessoires')
       } finally {
         setIsLoading(false)
       }
@@ -55,36 +59,57 @@ export default function ShopPage (): React.ReactNode {
   }, [])
 
   /**
-   * Gère l'achat d'un accessoire
+   * Ouvre le modal de confirmation pour un accessoire
    *
    * @param {string} accessoryId - ID de l'accessoire à acheter
    */
   const handlePurchase = async (accessoryId: string): Promise<void> => {
+    const accessory = accessories.find(acc => acc.id === accessoryId)
+    if (accessory === undefined || accessory === null) {
+      toast.error('Accessoire introuvable')
+      return
+    }
+
+    setSelectedAccessory(accessory)
+  }
+
+  /**
+   * Confirme l'achat de l'accessoire sélectionné
+   */
+  const handleConfirmPurchase = async (): Promise<void> => {
+    if (selectedAccessory === null) return
+
     try {
-      const accessory = accessories.find(acc => acc.id === accessoryId)
-      if (accessory === undefined || accessory === null) {
-        alert('Accessoire introuvable')
-        return
+      // Appeler l'action pour acheter l'accessoire SANS l'équiper
+      const result = await purchaseAccessoryOnly(selectedAccessory.id)
+
+      if (result.success) {
+        toast.success(result.message, {
+          icon: '✨',
+          autoClose: 5000
+        })
+
+        // Recharger les données pour afficher l'accessoire comme possédé
+        const updatedOwnedIds = await getUserOwnedAccessoryIds()
+        setOwnedAccessoryIds(updatedOwnedIds)
+      } else {
+        toast.error(result.message, {
+          autoClose: 5000
+        })
       }
-
-      const currentBalance = wallet?.coin ?? 0
-
-      // Vérifier le solde
-      if (currentBalance < accessory.price) {
-        alert(`Solde insuffisant ! Il vous faut ${accessory.price} pièces mais vous n'en avez que ${currentBalance}.`)
-        return
-      }
-
-      // Pour l'instant, on demande à l'utilisateur de passer par la page monstre
-      // TODO: Ajouter un sélecteur de monstre dans la boutique
-      alert(`Fonctionnalité en cours de développement. Pour acheter un accessoire, veuillez le faire depuis la page de votre monstre.`)
-
-      // Rediriger vers le dashboard
-      window.location.href = '/dashboard'
     } catch (error) {
       console.error('Erreur lors de l\'achat:', error)
-      alert('Une erreur est survenue lors de l\'achat. Veuillez réessayer.')
+      toast.error('Une erreur est survenue lors de l\'achat. Veuillez réessayer.')
+    } finally {
+      setSelectedAccessory(null)
     }
+  }
+
+  /**
+   * Annule l'achat
+   */
+  const handleCancelPurchase = (): void => {
+    setSelectedAccessory(null)
   }
 
   if (isLoading) {
@@ -145,6 +170,16 @@ export default function ShopPage (): React.ReactNode {
           ownedAccessoryIds={ownedAccessoryIds}
         />
       </main>
+
+      {/* Modal de confirmation */}
+      {selectedAccessory !== null && (
+        <PurchaseConfirmationModal
+          accessory={selectedAccessory}
+          onConfirm={handleConfirmPurchase}
+          onCancel={handleCancelPurchase}
+          currentBalance={wallet?.coin ?? 0}
+        />
+      )}
     </div>
   )
 }

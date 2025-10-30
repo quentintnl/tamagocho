@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Jersey_10, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 
 const jersey10 = Jersey_10({
@@ -40,7 +41,18 @@ export default function RootLayout ({
         className={`${jersey10.variable} ${geistMono.variable} antialiased font-sans`}
       >
         {children}
-        <ToastContainer />
+        <ToastContainer
+          position='top-right'
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='light'
+        />
       </body>
     </html>
   )

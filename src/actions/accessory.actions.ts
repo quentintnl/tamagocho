@@ -124,6 +124,96 @@ export async function purchaseAccessory (accessoryId: string, monsterId: string)
 }
 
 /**
+ * Purchase an accessory without equipping it to a monster
+ * Single Responsibility: Add accessory to user's inventory only
+ *
+ * @param accessoryId - ID of the accessory to purchase
+ * @returns Success status and message
+ */
+export async function purchaseAccessoryOnly (accessoryId: string): Promise<{
+  success: boolean
+  message: string
+  remainingCoins?: number
+  ownedAccessoryId?: string
+}> {
+  try {
+    // Vérification de l'authentification
+    const session = await auth.api.getSession({
+      headers: await headers()
+    })
+
+    if (session === null || session === undefined) {
+      return {
+        success: false,
+        message: 'Vous devez être connecté pour acheter un accessoire'
+      }
+    }
+
+    // Récupération de l'accessoire
+    const accessory = getAccessoryById(accessoryId)
+
+    if (accessory === null) {
+      return {
+        success: false,
+        message: 'Accessoire introuvable'
+      }
+    }
+
+    // Vérifier si l'utilisateur possède déjà cet accessoire
+    const alreadyOwned = await userOwnsAccessory(session.user.id, accessoryId)
+
+    if (alreadyOwned) {
+      return {
+        success: false,
+        message: 'Vous possédez déjà cet accessoire'
+      }
+    }
+
+    // Récupération du wallet
+    const wallet = await getOrCreateWallet(session.user.id)
+
+    // Vérification du solde
+    if (wallet.coin < accessory.price) {
+      return {
+        success: false,
+        message: `Solde insuffisant. Vous avez ${wallet.coin} gochoCoins, il en faut ${accessory.price}`
+      }
+    }
+
+    // Déduction des coins
+    const updatedWallet = await subtractCoins({
+      ownerId: session.user.id,
+      amount: accessory.price
+    })
+
+    // Création de l'accessoire possédé SANS équipement
+    const ownedAccessory = await createOwnedAccessory(
+      session.user.id,
+      accessoryId
+      // pas de monsterId = non équipé
+    )
+
+    // Revalidation du cache
+    revalidatePath('/shop')
+    revalidatePath('/wallet')
+    revalidatePath('/accessories-demo')
+
+    return {
+      success: true,
+      message: `${accessory.name} acheté avec succès ! Vous pouvez maintenant l'équiper à vos monstres.`,
+      remainingCoins: updatedWallet.coin,
+      ownedAccessoryId: ownedAccessory._id.toString()
+    }
+  } catch (error) {
+    console.error('Error purchasing accessory:', error)
+    return {
+      success: false,
+      message: 'Erreur lors de l\'achat de l\'accessoire'
+    }
+  }
+}
+
+/**
  * Get all owned accessories for the current user
  *
  * @returns Array of owned accessories or null if not authenticated
