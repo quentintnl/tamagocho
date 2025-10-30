@@ -63,17 +63,17 @@ export function ShopTabs ({
 
   return (
     <div className='flex justify-center mb-8'>
-      <div className='inline-flex bg-white/80 backdrop-blur-md rounded-2xl p-2 shadow-lg ring-1 ring-white/60'>
+      <div className='inline-flex bg-white/90 backdrop-blur-md rounded-3xl p-2 shadow-xl ring-2 ring-meadow-200/60'>
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => { onTabChange(tab.id) }}
             className={`
-              relative px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300
+              relative px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300
               ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-br from-moccaccino-500 to-moccaccino-600 text-white shadow-md'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-gradient-to-br from-meadow-500 to-forest-500 text-white shadow-lg'
+                  : 'text-forest-600 hover:text-forest-800 hover:bg-meadow-50'
               }
             `}
           >
@@ -86,7 +86,7 @@ export function ShopTabs ({
                   ${
                     activeTab === tab.id
                       ? 'bg-white/20 text-white'
-                      : 'bg-slate-200 text-slate-700'
+                      : 'bg-meadow-200 text-forest-700'
                   }
                 `}
               >

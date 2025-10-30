@@ -95,7 +95,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
   }
 
   return (
-    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-moccaccino-100 via-white to-fuchsia-blue-100'>
+    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50'>
       {/* Système de mise à jour automatique des monstres */}
       <MonstersAutoUpdater
         userId={session.user.id}
@@ -109,16 +109,17 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
       {/* Header avec wallet */}
       <PageHeaderWithWallet title='Dashboard' />
 
-      {/* Bulles décoratives de fond */}
-      <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-fuchsia-blue-200/40 blur-3xl' aria-hidden='true' />
-      <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-lochinvar-200/50 blur-3xl' aria-hidden='true' />
+      {/* Bulles décoratives de fond - thème nature */}
+      <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-lavender-200/40 blur-3xl' aria-hidden='true' />
+      <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-meadow-200/50 blur-3xl' aria-hidden='true' />
+      <div className='pointer-events-none absolute right-1/3 top-1/3 h-64 w-64 rounded-full bg-sky-200/30 blur-3xl' aria-hidden='true' />
 
       <main className='relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 pt-20 sm:px-6 lg:px-8'>
         {/* Section héro avec bienvenue et profil */}
-        <section className='relative overflow-hidden rounded-3xl bg-white/80 px-6 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.18)] ring-1 ring-white/60 sm:px-10'>
-          {/* Bulles décoratives internes */}
-          <div className='pointer-events-none absolute -right-28 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-moccaccino-200/70 via-fuchsia-blue-200/50 to-white/40 blur-3xl' aria-hidden='true' />
-          <div className='pointer-events-none absolute -left-32 bottom-0 h-64 w-64 translate-y-1/2 rounded-full bg-gradient-to-tr from-lochinvar-200/60 via-white/30 to-fuchsia-blue-100/60 blur-3xl' aria-hidden='true' />
+        <section className='relative overflow-hidden rounded-3xl bg-white/90 backdrop-blur-sm px-6 py-10 shadow-[0_20px_60px_rgba(22,101,52,0.15)] ring-1 ring-meadow-200/60 sm:px-10'>
+          {/* Bulles décoratives internes - thème nature */}
+          <div className='pointer-events-none absolute -right-28 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-meadow-200/70 via-sky-200/50 to-white/40 blur-3xl' aria-hidden='true' />
+          <div className='pointer-events-none absolute -left-32 bottom-0 h-64 w-64 translate-y-1/2 rounded-full bg-gradient-to-tr from-lavender-200/60 via-white/30 to-meadow-100/60 blur-3xl' aria-hidden='true' />
 
           <div className='relative flex flex-col gap-10 lg:flex-row lg:items-center'>
             {/* Message de bienvenue et actions principales */}
@@ -129,7 +130,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
             />
 
             {/* Carte de profil et statistiques */}
-            <div className='flex flex-1 flex-col gap-4 rounded-3xl bg-gradient-to-br from-lochinvar-100/80 via-white to-fuchsia-blue-100/70 p-6 ring-1 ring-white/70 backdrop-blur'>
+            <div className='flex flex-1 flex-col gap-4 rounded-3xl bg-gradient-to-br from-meadow-100/80 via-white to-sky-100/70 p-6 ring-1 ring-meadow-200/70 backdrop-blur shadow-lg'>
               <UserProfileCard userDisplay={userDisplay} />
 
               <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
@@ -157,18 +158,18 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
               {/* Lien vers la page wallet */}
               <button
                 onClick={() => { window.location.href = '/wallet' }}
-                className='mt-4 w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg border-2 border-yellow-200 hover:border-yellow-300 hover:shadow-md transition-all duration-200 group'
+                className='mt-4 w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-sunset-50 to-sunset-100 rounded-2xl border-2 border-sunset-200 hover:border-sunset-300 hover:shadow-lg transition-all duration-200 group'
               >
                 <div className='flex items-center gap-3'>
-                  <div className='flex items-center justify-center w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
+                  <div className='flex items-center justify-center w-10 h-10 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
                     <span className='text-xl'>💰</span>
                   </div>
                   <div className='text-left'>
-                    <p className='text-sm font-medium text-gray-600'>Mon Wallet</p>
-                    <p className='text-lg font-bold text-gray-800'>Gérer mes pièces</p>
+                    <p className='text-sm font-medium text-forest-600'>Mon Wallet</p>
+                    <p className='text-lg font-bold text-forest-800'>Gérer mes pièces</p>
                   </div>
                 </div>
-                <svg className='w-5 h-5 text-gray-400 group-hover:text-moccaccino-600 group-hover:translate-x-1 transition-all' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <svg className='w-5 h-5 text-forest-400 group-hover:text-meadow-600 group-hover:translate-x-1 transition-all' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
                 </svg>
               </button>

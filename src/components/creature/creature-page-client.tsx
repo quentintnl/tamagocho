@@ -96,10 +96,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
     return (
         <div className='min-h-screen bg-gradient-to-b from-lochinvar-50 to-fuchsia-blue-50'>
             {/* Header avec wallet et bouton retour */}
-            <PageHeaderWithWallet
-                showBackButton={true}
-                backUrl='/dashboard'
-            />
+            <PageHeaderWithWallet />
 
             <div className='py-12'>
                 <div className='container mx-auto px-4 max-w-4xl'>

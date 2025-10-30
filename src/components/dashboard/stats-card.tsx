@@ -38,32 +38,32 @@ export function StatsCard ({
   color,
   fullWidth = false
 }: StatsCardProps): React.ReactNode {
-  // Mapping des couleurs aux classes Tailwind
+  // Mapping des couleurs aux classes Tailwind - thème nature
   const ringColorClass = {
-    lochinvar: 'ring-lochinvar-200/60',
-    'fuchsia-blue': 'ring-fuchsia-blue-200/60',
-    moccaccino: 'ring-moccaccino-200/60'
+    lochinvar: 'ring-meadow-200/60',
+    'fuchsia-blue': 'ring-sky-200/60',
+    moccaccino: 'ring-lavender-200/60'
   }[color]
 
   const textColorClass = {
-    lochinvar: 'text-lochinvar-500',
-    'fuchsia-blue': 'text-fuchsia-blue-500',
-    moccaccino: 'text-moccaccino-500'
+    lochinvar: 'text-meadow-600',
+    'fuchsia-blue': 'text-sky-600',
+    moccaccino: 'text-lavender-600'
   }[color]
 
   const widthClass = fullWidth ? 'sm:col-span-2' : ''
 
   return (
     <div
-      className={`rounded-2xl bg-white/80 p-4 shadow-[0_12px_30px_rgba(15,23,42,0.08)] ring-1 ${ringColorClass} ${widthClass}`}
+      className={`rounded-2xl bg-white/90 backdrop-blur-sm p-4 shadow-[0_12px_30px_rgba(22,101,52,0.1)] ring-1 ${ringColorClass} hover:shadow-lg transition-shadow ${widthClass}`}
     >
       <p className={`text-xs font-semibold uppercase tracking-wide ${textColorClass}`}>
         {title}
       </p>
-      <p className='mt-2 text-3xl font-black text-slate-900'>
+      <p className='mt-2 text-3xl font-black text-forest-800'>
         {value}
       </p>
-      <p className='text-xs text-slate-500'>
+      <p className='text-xs text-forest-600'>
         {description}
       </p>
     </div>

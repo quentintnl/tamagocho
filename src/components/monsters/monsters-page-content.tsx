@@ -54,42 +54,40 @@ export default function MonstersPageContent ({
   }
 
   return (
-    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-moccaccino-100 via-white to-fuchsia-blue-100'>
+    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50'>
       {/* Système de mise à jour automatique des monstres */}
       <MonstersAutoUpdater
         userId={session.user.id}
       />
 
       {/* Header avec wallet */}
-      <PageHeaderWithWallet
-        title='Mes Monstres'
-        showBackButton={true}
-        backUrl='/dashboard'
-        showDashboardButton={false}
-        showMonstersButton={false}
-      />
+      <PageHeaderWithWallet title='Mes Créatures' />
 
       {/* Contenu principal */}
       <main className='container relative mx-auto px-4 py-8 sm:px-6 lg:px-8'>
-        {/* Décoration de fond */}
+        {/* Décoration de fond - thème nature */}
         <div
-          className='pointer-events-none absolute left-1/4 top-20 h-96 w-96 rounded-full bg-lochinvar-200/30 blur-3xl'
+          className='pointer-events-none absolute left-1/4 top-20 h-96 w-96 rounded-full bg-meadow-200/30 blur-3xl'
           aria-hidden='true'
         />
         <div
-          className='pointer-events-none absolute bottom-40 right-1/4 h-96 w-96 rounded-full bg-fuchsia-blue-200/30 blur-3xl'
+          className='pointer-events-none absolute bottom-40 right-1/4 h-96 w-96 rounded-full bg-lavender-200/30 blur-3xl'
+          aria-hidden='true'
+        />
+        <div
+          className='pointer-events-none absolute top-1/2 left-1/2 h-80 w-80 rounded-full bg-sky-200/20 blur-3xl'
           aria-hidden='true'
         />
 
         {/* Section de bienvenue */}
         <div className='relative mb-8 text-center'>
-          <h1 className='mb-2 text-4xl font-bold text-slate-900 sm:text-5xl'>
-            🎮 Ma Collection de Monstres
+          <h1 className='mb-2 text-4xl font-bold text-forest-800 sm:text-5xl'>
+            🌸 Ma Collection de Créatures
           </h1>
-          <p className='text-lg text-slate-600'>
+          <p className='text-lg text-forest-600 leading-relaxed'>
             {monsters.length === 0
-              ? 'Adoptez votre premier monstre pour commencer l\'aventure !'
-              : `Vous avez ${monsters.length} monstre${monsters.length > 1 ? 's' : ''} dans votre collection`}
+              ? 'Adoptez votre premier compagnon pour commencer l\'aventure zen !'
+              : `Vous avez ${monsters.length} créature${monsters.length > 1 ? 's' : ''} dans votre petit paradis`}
           </p>
         </div>
 

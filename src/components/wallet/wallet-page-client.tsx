@@ -86,11 +86,7 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
       />
 
       {/* Header avec wallet */}
-      <PageHeaderWithWallet
-        title='Mon Wallet'
-        showBackButton={true}
-        backUrl='/dashboard'
-      />
+      <PageHeaderWithWallet title='Mon Wallet' />
 
       <main className='container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl'>
         {/* Message de notification */}

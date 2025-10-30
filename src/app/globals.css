@@ -6,41 +6,122 @@
 }
 
 @theme inline {
-  --color-moccaccino-50: #fff3f1;
-  --color-moccaccino-100: #ffe5e1;
-  --color-moccaccino-200: #ffcfc8;
-  --color-moccaccino-300: #ffada1;
-  --color-moccaccino-400: #fe7d6b;
-  --color-moccaccino-500: #f7533c;
-  --color-moccaccino-600: #e5361d;
-  --color-moccaccino-700: #c02a15;
-  --color-moccaccino-800: #9f2615;
-  --color-moccaccino-900: #772216;
-  --color-moccaccino-950: #480f07;
+  /* Nature/Cosy/Zen Palette inspired by Toca Nature, Slime Rancher, Cozy Grove */
 
-  --color-lochinvar-50: #f4f9f8;
-  --color-lochinvar-100: #d9eee8;
-  --color-lochinvar-200: #b3dcd3;
-  --color-lochinvar-300: #86c2b7;
-  --color-lochinvar-400: #5da499;
-  --color-lochinvar-500: #469086;
-  --color-lochinvar-600: #336e67;
-  --color-lochinvar-700: #2c5954;
-  --color-lochinvar-800: #274845;
-  --color-lochinvar-900: #243d3a;
-  --color-lochinvar-950: #102322;
+  /* Meadow Green - Herbe douce et apaisante */
+  --color-meadow-50: #f0fdf4;
+  --color-meadow-100: #dcfce7;
+  --color-meadow-200: #bbf7d0;
+  --color-meadow-300: #86efac;
+  --color-meadow-400: #4ade80;
+  --color-meadow-500: #22c55e;
+  --color-meadow-600: #16a34a;
+  --color-meadow-700: #15803d;
+  --color-meadow-800: #166534;
+  --color-meadow-900: #14532d;
+  --color-meadow-950: #052e16;
 
-  --color-fuchsia-blue-50: #f6f5fd;
-  --color-fuchsia-blue-100: #eeecfb;
-  --color-fuchsia-blue-200: #e0dcf8;
-  --color-fuchsia-blue-300: #c8bff3;
-  --color-fuchsia-blue-400: #ab9bea;
-  --color-fuchsia-blue-500: #8f72e0;
-  --color-fuchsia-blue-600: #835cd5;
-  --color-fuchsia-blue-700: #6d42bf;
-  --color-fuchsia-blue-800: #5b37a0;
-  --color-fuchsia-blue-900: #4c2e84;
-  --color-fuchsia-blue-950: #2f1c59;
+  /* Forest - Vert forêt profond et rassurant */
+  --color-forest-50: #f0fdf5;
+  --color-forest-100: #dcfce8;
+  --color-forest-200: #b8f4cf;
+  --color-forest-300: #7ee7ab;
+  --color-forest-400: #3dd17e;
+  --color-forest-500: #14b866;
+  --color-forest-600: #0a9851;
+  --color-forest-700: #0a7842;
+  --color-forest-800: #0b5f36;
+  --color-forest-900: #0a4e2e;
+  --color-forest-950: #042c19;
+
+  /* Sky Blue - Ciel clair et apaisant */
+  --color-sky-50: #f0f9ff;
+  --color-sky-100: #e0f2fe;
+  --color-sky-200: #bae6fd;
+  --color-sky-300: #7dd3fc;
+  --color-sky-400: #38bdf8;
+  --color-sky-500: #0ea5e9;
+  --color-sky-600: #0284c7;
+  --color-sky-700: #0369a1;
+  --color-sky-800: #075985;
+  --color-sky-900: #0c4a6e;
+  --color-sky-950: #082f49;
+
+  /* Sunset - Coucher de soleil chaleureux */
+  --color-sunset-50: #fff7ed;
+  --color-sunset-100: #ffedd5;
+  --color-sunset-200: #fed7aa;
+  --color-sunset-300: #fdba74;
+  --color-sunset-400: #fb923c;
+  --color-sunset-500: #f97316;
+  --color-sunset-600: #ea580c;
+  --color-sunset-700: #c2410c;
+  --color-sunset-800: #9a3412;
+  --color-sunset-900: #7c2d12;
+  --color-sunset-950: #431407;
+
+  /* Earth - Terre naturelle et stable */
+  --color-earth-50: #faf8f5;
+  --color-earth-100: #f2ede3;
+  --color-earth-200: #e6d9c5;
+  --color-earth-300: #d4bc9e;
+  --color-earth-400: #c09a74;
+  --color-earth-500: #b28559;
+  --color-earth-600: #a5724d;
+  --color-earth-700: #895a41;
+  --color-earth-800: #6f4a38;
+  --color-earth-900: #5a3d30;
+  --color-earth-950: #302019;
+
+  /* Lavender - Lavande douce pour une touche zen */
+  --color-lavender-50: #faf5ff;
+  --color-lavender-100: #f3e8ff;
+  --color-lavender-200: #e9d5ff;
+  --color-lavender-300: #d8b4fe;
+  --color-lavender-400: #c084fc;
+  --color-lavender-500: #a855f7;
+  --color-lavender-600: #9333ea;
+  --color-lavender-700: #7e22ce;
+  --color-lavender-800: #6b21a8;
+  --color-lavender-900: #581c87;
+  --color-lavender-950: #3b0764;
+
+  /* Legacy colors for backward compatibility */
+  --color-moccaccino-50: #fff7ed;
+  --color-moccaccino-100: #ffedd5;
+  --color-moccaccino-200: #fed7aa;
+  --color-moccaccino-300: #fdba74;
+  --color-moccaccino-400: #fb923c;
+  --color-moccaccino-500: #f97316;
+  --color-moccaccino-600: #ea580c;
+  --color-moccaccino-700: #c2410c;
+  --color-moccaccino-800: #9a3412;
+  --color-moccaccino-900: #7c2d12;
+  --color-moccaccino-950: #431407;
+
+  --color-lochinvar-50: #f0fdf5;
+  --color-lochinvar-100: #dcfce8;
+  --color-lochinvar-200: #b8f4cf;
+  --color-lochinvar-300: #7ee7ab;
+  --color-lochinvar-400: #3dd17e;
+  --color-lochinvar-500: #14b866;
+  --color-lochinvar-600: #0a9851;
+  --color-lochinvar-700: #0a7842;
+  --color-lochinvar-800: #0b5f36;
+  --color-lochinvar-900: #0a4e2e;
+  --color-lochinvar-950: #042c19;
+
+  --color-fuchsia-blue-50: #faf5ff;
+  --color-fuchsia-blue-100: #f3e8ff;
+  --color-fuchsia-blue-200: #e9d5ff;
+  --color-fuchsia-blue-300: #d8b4fe;
+  --color-fuchsia-blue-400: #c084fc;
+  --color-fuchsia-blue-500: #a855f7;
+  --color-fuchsia-blue-600: #9333ea;
+  --color-fuchsia-blue-700: #7e22ce;
+  --color-fuchsia-blue-800: #6b21a8;
+  --color-fuchsia-blue-900: #581c87;
+  --color-fuchsia-blue-950: #3b0764;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -50,17 +131,64 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f0fdf4;
+    --foreground: #14532d;
   }
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(180deg, #e0f2fe 0%, #dcfce7 50%, #f0fdf4 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   --font-sans: var(--font-jersey10);
   --font-mono: var(--font-geist-mono);
   font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont;
+  min-height: 100vh;
+}
+
+/* Nature decorative elements */
+.nature-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.nature-bg::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to top, rgba(34, 197, 94, 0.1), transparent);
+  pointer-events: none;
+}
+
+/* Floating leaves animation */
+@keyframes float-leaves {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+}
+
+.floating-leaf {
+  animation: float-leaves 6s ease-in-out infinite;
+}
+
+/* Cloud animation */
+@keyframes drift-cloud {
+  0% {
+    transform: translateX(-100px);
+  }
+  100% {
+    transform: translateX(100vw);
+  }
+}
+
+.drifting-cloud {
+  animation: drift-cloud 60s linear infinite;
 }
 
 /* Animations personnalisées pour les actions du monstre */

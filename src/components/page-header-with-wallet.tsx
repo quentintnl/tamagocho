@@ -2,59 +2,53 @@
  * Page Header with Wallet Component
  *
  * Presentation Layer: Composant réutilisable pour afficher un header
- * avec le wallet en haut à droite des pages internes
+ * avec navigation et wallet
  *
  * Responsabilités:
  * - Afficher un titre de page
- * - Afficher le wallet de l'utilisateur
- * - Navigation de retour (optionnelle)
+ * - Afficher les 4 boutons de navigation
+ * - Afficher le wallet avec le nombre de coins
  *
- * Single Responsibility: Header interne avec wallet
+ * Single Responsibility: Header interne unifié
  */
 
 'use client'
 
-import WalletDisplay from '@/components/wallet-display'
-import Button from '@/components/button'
+import { usePathname } from 'next/navigation'
+import { useWallet } from '@/hooks/useWallet'
 
 interface PageHeaderWithWalletProps {
   title?: string
-  showBackButton?: boolean
-  backUrl?: string
-  showShopButton?: boolean
-  showDashboardButton?: boolean
-  showMonstersButton?: boolean
-  children?: React.ReactNode
 }
 
 /**
  * Header de page avec wallet intégré
  *
- * @param title - Titre de la page (optionnel)
- * @param showBackButton - Afficher le bouton retour
- * @param backUrl - URL de retour
- * @param showShopButton - Afficher le bouton boutique (par défaut true)
- * @param showDashboardButton - Afficher le bouton dashboard (par défaut true)
- * @param showMonstersButton - Afficher le bouton mes monstres (par défaut true)
- * @param children - Contenu additionnel dans le header
+ * @param title - Titre de la page (optionnel, sinon détecté automatiquement)
  */
 export default function PageHeaderWithWallet ({
-  title,
-  showBackButton = false,
-  backUrl = '/dashboard',
-  showShopButton = true,
-  showDashboardButton = true,
-  showMonstersButton = true,
-  children
+  title
 }: PageHeaderWithWalletProps): React.ReactNode {
-  const handleBack = (): void => {
-    window.location.href = backUrl
+  const pathname = usePathname()
+  const { wallet } = useWallet()
+
+  // Déterminer le nom de la page actuelle
+  const getPageTitle = (): string => {
+    if (title !== undefined) return title
+    if (pathname === '/dashboard') return 'Dashboard'
+    if (pathname === '/monsters') return 'Mes Créatures'
+    if (pathname === '/shop') return 'Boutique'
+    if (pathname === '/wallet') return 'Mon Wallet'
+    if (pathname?.startsWith('/creature/')) return 'Ma Créature'
+    return 'Tamagotcho'
   }
 
-  const handleShop = (): void => {
-    window.location.href = '/shop'
+  // Déterminer si un bouton est actif
+  const isActive = (path: string): boolean => {
+    return pathname === path
   }
 
+  // Navigation handlers
   const handleDashboard = (): void => {
     window.location.href = '/dashboard'
   }
@@ -63,59 +57,91 @@ export default function PageHeaderWithWallet ({
     window.location.href = '/monsters'
   }
 
+  const handleShop = (): void => {
+    window.location.href = '/shop'
+  }
+
+  const handleWallet = (): void => {
+    window.location.href = '/wallet'
+  }
+
   return (
-    <div className='sticky top-0 z-40 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200'>
+    <div className='sticky top-0 z-40 bg-gradient-to-r from-meadow-50/90 to-sky-50/90 backdrop-blur-md shadow-lg border-b-2 border-meadow-200/50'>
       <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex items-center justify-between h-16 gap-4'>
-          {/* Partie gauche : bouton retour + titre */}
-          <div className='flex items-center gap-3 flex-1 min-w-0'>
-            {showBackButton && (
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={handleBack}
-              >
-                ← Retour
-              </Button>
-            )}
-            {title !== undefined && (
-              <h1 className='text-lg font-bold text-gray-800 truncate'>
-                {title}
-              </h1>
-            )}
-            {children}
+          {/* Nom de la page à gauche */}
+          <div className='flex-shrink-0'>
+            <h1 className='text-xl font-bold bg-gradient-to-r from-forest-700 to-meadow-600 bg-clip-text text-transparent'>
+              {getPageTitle()}
+            </h1>
           </div>
 
-          {/* Partie droite : Boutons de navigation + Wallet */}
-          <div className='flex items-center gap-2 flex-shrink-0'>
-            {showDashboardButton && (
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={handleDashboard}
-              >
-                📊 Dashboard
-              </Button>
-            )}
-            {showMonstersButton && (
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={handleMonsters}
-              >
-                👾 Monstres
-              </Button>
-            )}
-            {showShopButton && (
-              <Button
-                variant='primary'
-                size='sm'
-                onClick={handleShop}
-              >
-                🛍️ Boutique
-              </Button>
-            )}
-            <WalletDisplay variant='compact' />
+          {/* 4 Boutons à droite */}
+          <div className='flex items-center gap-2'>
+            {/* Dashboard */}
+            <button
+              onClick={handleDashboard}
+              className={`
+                px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                ${
+                  isActive('/dashboard')
+                    ? 'border-2 border-meadow-500 text-forest-700 bg-meadow-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
+                }
+              `}
+            >
+              📊 Dashboard
+            </button>
+
+            {/* Monstres */}
+            <button
+              onClick={handleMonsters}
+              className={`
+                px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                ${
+                  isActive('/monsters')
+                    ? 'border-2 border-meadow-500 text-forest-700 bg-meadow-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
+                }
+              `}
+            >
+              👾 Monstres
+            </button>
+
+            {/* Boutique */}
+            <button
+              onClick={handleShop}
+              className={`
+                px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                ${
+                  isActive('/shop')
+                    ? 'border-2 border-meadow-500 text-forest-700 bg-meadow-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
+                }
+              `}
+            >
+              🛍️ Boutique
+            </button>
+
+            {/* Coins avec affichage du montant */}
+            <button
+              onClick={handleWallet}
+              className={`
+                px-3 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2
+                ${
+                  isActive('/wallet')
+                    ? 'border-2 border-sunset-500 text-forest-700 bg-sunset-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-sunset-300 hover:bg-sunset-50/30'
+                }
+              `}
+            >
+              <div className='flex items-center justify-center w-5 h-5 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full'>
+                <span className='text-xs'>💰</span>
+              </div>
+              <span className='font-bold'>
+                {wallet?.coin?.toLocaleString() ?? '0'}
+              </span>
+            </button>
           </div>
         </div>
       </div>

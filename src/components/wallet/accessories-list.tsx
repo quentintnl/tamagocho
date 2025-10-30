@@ -42,11 +42,11 @@ export function AccessoriesList ({
 }: AccessoriesListProps): React.ReactNode {
   if (accessories.length === 0) {
     return (
-      <div className='flex min-h-[400px] items-center justify-center rounded-3xl bg-gradient-to-br from-white/90 via-white to-slate-50/70 p-12 shadow-[0_20px_54px_rgba(15,23,42,0.14)] ring-1 ring-white/70'>
+      <div className='flex min-h-[400px] items-center justify-center rounded-3xl bg-gradient-to-br from-white/90 via-meadow-50/50 to-sky-50/70 p-12 shadow-[0_20px_54px_rgba(22,101,52,0.14)] ring-2 ring-meadow-200/70 backdrop-blur-sm'>
         <div className='text-center'>
           <p className='text-7xl'>🛍️</p>
-          <p className='mt-4 text-lg font-medium text-slate-900'>Aucun accessoire disponible</p>
-          <p className='mt-2 text-sm text-slate-600'>Revenez plus tard pour découvrir de nouveaux articles !</p>
+          <p className='mt-4 text-lg font-medium text-forest-800'>Aucun accessoire disponible</p>
+          <p className='mt-2 text-sm text-forest-600'>Revenez plus tard pour découvrir de nouveaux articles ! 🌿</p>
         </div>
       </div>
     )

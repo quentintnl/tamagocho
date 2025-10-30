@@ -134,23 +134,24 @@ export default function ShopPage (): React.ReactNode {
 
   if (isLoading) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-moccaccino-50 via-white to-lochinvar-50 flex items-center justify-center'>
+      <div className='min-h-screen bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50 flex items-center justify-center'>
         <div className='text-center'>
           <div className='text-6xl mb-4'>🛍️</div>
-          <p className='text-xl font-medium text-slate-700'>Chargement de la boutique...</p>
+          <p className='text-xl font-medium text-forest-700'>Chargement de la boutique...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-moccaccino-50 via-white to-lochinvar-50'>
+    <div className='min-h-screen bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50 relative overflow-hidden'>
       {/* Header avec wallet */}
-      <PageHeaderWithWallet title='Boutique' showShopButton={false} />
+      <PageHeaderWithWallet title='Boutique' />
 
-      {/* Bulles décoratives de fond */}
-      <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-fuchsia-blue-200/40 blur-3xl' aria-hidden='true' />
-      <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-lochinvar-200/50 blur-3xl' aria-hidden='true' />
+      {/* Bulles décoratives de fond - thème nature */}
+      <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-lavender-200/40 blur-3xl' aria-hidden='true' />
+      <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-meadow-200/50 blur-3xl' aria-hidden='true' />
+      <div className='pointer-events-none absolute right-1/3 top-1/2 h-64 w-64 rounded-full bg-sky-200/30 blur-3xl' aria-hidden='true' />
 
       {/* Contenu principal */}
       <main className='relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 pt-24'>
@@ -159,27 +160,27 @@ export default function ShopPage (): React.ReactNode {
           <div className='inline-block mb-4'>
             <div className='text-7xl animate-bounce'>🛍️</div>
           </div>
-          <h1 className='text-4xl font-bold text-slate-900 mb-3'>
-            Boutique d&apos;Accessoires
+          <h1 className='text-4xl font-bold text-forest-800 mb-3'>
+            Boutique Naturelle 🌿
           </h1>
-          <p className='text-lg text-slate-600 max-w-2xl mx-auto'>
-            Personnalisez vos monstres avec style ! Découvrez notre collection exclusive d&apos;accessoires et d&apos;arrière-plans pour rendre vos compagnons uniques.
+          <p className='text-lg text-forest-600 max-w-2xl mx-auto leading-relaxed'>
+            Personnalisez vos compagnons avec style ! Découvrez notre collection d&apos;accessoires et d&apos;arrière-plans pour créer un petit paradis unique.
           </p>
         </div>
 
         {/* Statistiques de la boutique */}
         <div className='mb-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto'>
-          <div className='bg-white/80 backdrop-blur-md rounded-xl p-4 shadow-md ring-1 ring-white/60 text-center'>
-            <p className='text-sm text-slate-600'>Articles disponibles</p>
-            <p className='text-3xl font-bold text-moccaccino-600'>{accessories.length}</p>
+          <div className='bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-lg ring-2 ring-meadow-200/60 text-center hover:shadow-xl transition-shadow'>
+            <p className='text-sm text-forest-600 font-medium'>Articles disponibles</p>
+            <p className='text-3xl font-bold text-meadow-600'>{accessories.length}</p>
           </div>
-          <div className='bg-white/80 backdrop-blur-md rounded-xl p-4 shadow-md ring-1 ring-white/60 text-center'>
-            <p className='text-sm text-slate-600'>Accessoires possédés</p>
-            <p className='text-3xl font-bold text-lochinvar-600'>{ownedAccessoryIds.length}</p>
+          <div className='bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-lg ring-2 ring-sky-200/60 text-center hover:shadow-xl transition-shadow'>
+            <p className='text-sm text-forest-600 font-medium'>Accessoires possédés</p>
+            <p className='text-3xl font-bold text-sky-600'>{ownedAccessoryIds.length}</p>
           </div>
-          <div className='bg-white/80 backdrop-blur-md rounded-xl p-4 shadow-md ring-1 ring-white/60 text-center'>
-            <p className='text-sm text-slate-600'>Votre solde</p>
-            <p className='text-3xl font-bold text-fuchsia-blue-600'>{wallet?.coin ?? 0} 💰</p>
+          <div className='bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-lg ring-2 ring-sunset-200/60 text-center hover:shadow-xl transition-shadow'>
+            <p className='text-sm text-forest-600 font-medium'>Votre solde</p>
+            <p className='text-3xl font-bold text-sunset-600'>{wallet?.coin ?? 0} 💰</p>
           </div>
         </div>
 
@@ -193,10 +194,10 @@ export default function ShopPage (): React.ReactNode {
 
         {/* En-tête de section */}
         <div className='mb-6'>
-          <h2 className='text-2xl font-semibold text-slate-900'>
+          <h2 className='text-2xl font-semibold text-forest-800'>
             {activeTab === 'accessories' ? '🎨 Accessoires' : '🖼️ Arrière-plans'}
           </h2>
-          <p className='mt-2 text-sm text-slate-600'>
+          <p className='mt-2 text-sm text-forest-600'>
             {filteredAccessories.length} {activeTab === 'accessories' ? 'accessoires' : 'arrière-plans'} disponibles
           </p>
         </div>

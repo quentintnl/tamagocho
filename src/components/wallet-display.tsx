@@ -57,13 +57,13 @@ export default function WalletDisplay ({
     return (
       <button
         onClick={handleClick}
-        className='flex items-center space-x-2 px-2 py-1 rounded-lg hover:bg-gray-100 transition-all duration-200 cursor-pointer group'
+        className='flex items-center space-x-2 px-2 py-1 rounded-lg hover:bg-meadow-50 transition-all duration-200 cursor-pointer group'
         title='Gérer mon wallet'
       >
-        <div className='flex items-center justify-center w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-sm group-hover:scale-110 transition-transform'>
+        <div className='flex items-center justify-center w-6 h-6 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full shadow-sm group-hover:scale-110 transition-transform'>
           <span className='text-xs font-bold text-white'>💰</span>
         </div>
-        <span className='text-sm font-bold text-gray-800 group-hover:text-moccaccino-600 transition-colors'>
+        <span className='text-sm font-bold text-forest-800 group-hover:text-meadow-600 transition-colors'>
           {wallet.coin.toLocaleString()}
         </span>
       </button>
@@ -74,15 +74,15 @@ export default function WalletDisplay ({
   return (
     <button
       onClick={handleClick}
-      className='flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-lg border border-yellow-200 shadow-sm hover:shadow-md hover:border-yellow-300 transition-all duration-200 cursor-pointer group'
+      className='flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-sunset-50 to-sunset-100 rounded-2xl border-2 border-sunset-200 shadow-md hover:shadow-lg hover:border-sunset-300 transition-all duration-200 cursor-pointer group'
       title='Gérer mon wallet'
     >
-      <div className='flex items-center justify-center w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
+      <div className='flex items-center justify-center w-8 h-8 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
         <span className='text-base font-bold text-white'>💰</span>
       </div>
       <div className='flex flex-col'>
-        <span className='text-xs text-gray-500'>Pièces</span>
-        <span className='text-lg font-bold text-gray-800 group-hover:text-moccaccino-600 transition-colors'>
+        <span className='text-xs text-forest-600 font-medium'>Pièces</span>
+        <span className='text-lg font-bold text-forest-800 group-hover:text-meadow-600 transition-colors'>
           {wallet.coin.toLocaleString()}
         </span>
       </div>

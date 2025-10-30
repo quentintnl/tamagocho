@@ -36,25 +36,25 @@ export function WelcomeHero ({
 }: WelcomeHeroProps): React.ReactNode {
   return (
     <div className='max-w-xl space-y-6'>
-      <div className='inline-flex items-center gap-3 rounded-full border border-moccaccino-200/80 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-moccaccino-500'>
-        <span aria-hidden='true'>🌈</span>
+      <div className='inline-flex items-center gap-3 rounded-full border-2 border-meadow-200/80 bg-white/90 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-forest-700 shadow-sm'>
+        <span aria-hidden='true'>🌿</span>
         <span>Hey {userDisplay.displayName}</span>
       </div>
 
-      <h1 className='text-4xl font-black text-slate-900 sm:text-5xl'>
-        Bienvenue dans ton QG Tamagotcho
+      <h1 className='text-4xl font-black text-forest-800 sm:text-5xl leading-tight'>
+        Bienvenue dans ton havre de paix 🌱
       </h1>
 
-      <p className='text-base text-slate-600 sm:text-lg'>
-        Dompte des créatures adorables, surveille leur humeur et transforme chaque journée en mini-aventure numérique.
+      <p className='text-base text-forest-600 sm:text-lg leading-relaxed'>
+        Prenez soin de vos créatures adorables dans un petit écosystème zen. Observez-les grandir paisiblement au rythme de la nature.
       </p>
 
       <div className='flex flex-wrap items-center gap-3'>
         <Button size='lg' onClick={onCreateMonster}>
-          Créer une créature
+          🌸 Créer une créature
         </Button>
         <Button size='lg' variant='ghost' onClick={onLogout}>
-          Se déconnecter
+          👋 Se déconnecter
         </Button>
       </div>
     </div>

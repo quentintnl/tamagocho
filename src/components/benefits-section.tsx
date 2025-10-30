@@ -8,19 +8,19 @@ function getColorClasses (colorTheme: BenefitCardProps['colorTheme']): {
 } {
   const colorMaps = {
     moccaccino: {
-      background: 'bg-moccaccino-50',
-      border: 'border-moccaccino-100',
-      iconBackground: 'bg-moccaccino-500'
+      background: 'bg-meadow-50/80',
+      border: 'border-meadow-200',
+      iconBackground: 'bg-gradient-to-br from-meadow-400 to-forest-500'
     },
     lochinvar: {
-      background: 'bg-lochinvar-50',
-      border: 'border-lochinvar-100',
-      iconBackground: 'bg-lochinvar-500'
+      background: 'bg-sky-50/80',
+      border: 'border-sky-200',
+      iconBackground: 'bg-gradient-to-br from-sky-400 to-sky-600'
     },
     'fuchsia-blue': {
-      background: 'bg-fuchsia-blue-50',
-      border: 'border-fuchsia-blue-100',
-      iconBackground: 'bg-fuchsia-blue-500'
+      background: 'bg-lavender-50/80',
+      border: 'border-lavender-200',
+      iconBackground: 'bg-gradient-to-br from-lavender-400 to-lavender-600'
     }
   }
   return colorMaps[colorTheme]
@@ -36,12 +36,12 @@ export function BenefitCard ({
   const colors = getColorClasses(colorTheme)
 
   return (
-    <div className={`text-center p-8 rounded-2xl ${colors.background} border ${colors.border}`}>
-      <div className={`w-16 h-16 ${colors.iconBackground} rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-6`}>
+    <div className={`text-center p-8 rounded-3xl ${colors.background} border-2 ${colors.border} shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm`}>
+      <div className={`w-16 h-16 ${colors.iconBackground} rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-6 shadow-md`}>
         {icon}
       </div>
-      <h3 className='text-xl font-semibold text-gray-900 mb-4'>{title}</h3>
-      <p className='text-gray-600'>{description}</p>
+      <h3 className='text-xl font-semibold text-forest-800 mb-4'>{title}</h3>
+      <p className='text-forest-600 leading-relaxed'>{description}</p>
     </div>
   )
 }
@@ -50,34 +50,38 @@ export function BenefitCard ({
 export default function BenefitsSection (): React.ReactNode {
   const benefits: BenefitCardProps[] = [
     {
-      icon: '💖',
-      title: 'Créatures Attachantes',
-      description: 'Des monstres adorables avec des personnalités uniques qui évoluent selon vos soins',
+      icon: '🌸',
+      title: 'Créatures Apaisantes',
+      description: 'Des compagnons doux qui évoluent paisiblement dans leur petit écosystème naturel',
       colorTheme: 'moccaccino'
     },
     {
-      icon: '🎮',
-      title: 'Gameplay Engageant',
-      description: 'Nourrissez, jouez et prenez soin de votre créature pour débloquer de nouvelles capacités',
+      icon: '🍃',
+      title: 'Monde Zen & Relaxant',
+      description: 'Prenez soin de votre créature dans un environnement apaisant inspiré de la nature',
       colorTheme: 'lochinvar'
     },
     {
-      icon: '🌟',
-      title: 'Évolution Continue',
-      description: 'Regardez votre monstre grandir et se transformer à travers différentes phases de vie',
+      icon: '🌿',
+      title: 'Évolution Naturelle',
+      description: 'Observez votre compagnon grandir au rythme des saisons dans son petit paradis',
       colorTheme: 'fuchsia-blue'
     }
   ]
 
   return (
-    <section id='benefits' className='py-20 bg-white'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <section id='benefits' className='py-20 bg-gradient-to-b from-transparent via-sky-50/30 to-meadow-50/30 relative overflow-hidden'>
+      {/* Decorative elements */}
+      <div className='absolute top-0 right-0 w-64 h-64 bg-meadow-200/20 rounded-full blur-3xl'></div>
+      <div className='absolute bottom-0 left-0 w-64 h-64 bg-sky-200/20 rounded-full blur-3xl'></div>
+
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10'>
         <div className='text-center mb-16'>
-          <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-            Pourquoi choisir Tamagotcho ?
+          <h2 className='text-3xl md:text-4xl font-bold text-forest-800 mb-4'>
+            Un havre de paix pour vos créatures 🌱
           </h2>
-          <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
-            Une expérience de jeu unique qui combine nostalgie et innovation moderne
+          <p className='text-xl text-forest-600 max-w-2xl mx-auto leading-relaxed'>
+            Une expérience douce et relaxante inspirée des merveilles de la nature
           </p>
         </div>
 

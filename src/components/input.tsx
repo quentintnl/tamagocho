@@ -23,17 +23,17 @@ function InputField ({
   return (
     <div className='flex flex-col space-y-2'>
       {(label != null && label.length > 0) && (
-        <label className='text-sm font-medium text-gray-700 ml-1'>
+        <label className='text-sm font-medium text-forest-700 ml-1'>
           {label}
         </label>
       )}
       <input
         className={`
-          w-full px-4 py-3 rounded-xl border-2 bg-white/50 backdrop-blur-sm
-          transition-all duration-300 text-gray-800 placeholder-gray-400
-          focus:outline-none focus:ring-2 focus:ring-moccaccino-400 focus:border-moccaccino-400
-          hover:border-moccaccino-300 hover:bg-white/70
-          ${(error != null && error.length > 0) ? 'border-red-400 bg-red-50/50' : 'border-gray-200'}
+          w-full px-4 py-3 rounded-2xl border-2 bg-white/60 backdrop-blur-sm
+          transition-all duration-300 text-forest-800 placeholder-forest-400
+          focus:outline-none focus:ring-2 focus:ring-meadow-400 focus:border-meadow-500
+          hover:border-meadow-300 hover:bg-white/80
+          ${(error != null && error.length > 0) ? 'border-red-400 bg-red-50/50' : 'border-meadow-200'}
         `}
         type={type}
         name={name}

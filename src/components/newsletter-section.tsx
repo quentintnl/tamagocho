@@ -21,12 +21,18 @@ export default function NewsletterSection (): React.ReactNode {
   }
 
   return (
-    <section id='newsletter' className='py-20 bg-gradient-to-r from-moccaccino-500 to-fuchsia-blue-500'>
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
-        <h2 className='text-3xl md:text-4xl font-bold text-white mb-4'>
-          Rejoignez notre communauté !
+    <section id='newsletter' className='py-20 bg-gradient-to-r from-sunset-400 via-sunset-500 to-sunset-600 relative overflow-hidden'>
+      {/* Decorative elements */}
+      <div className='absolute inset-0 opacity-20'>
+        <div className='absolute top-10 right-10 text-9xl'>☀️</div>
+        <div className='absolute bottom-10 left-10 text-8xl'>🌅</div>
+      </div>
+
+      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10'>
+        <h2 className='text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg'>
+          Rejoignez notre communauté zen ! 🌸
         </h2>
-        <p className='text-xl text-white/90 mb-8'>
+        <p className='text-xl text-white/95 mb-8 drop-shadow-md'>
           Inscrivez-vous à notre newsletter et recevez <strong>10% de réduction</strong> sur votre premier achat in-app
         </p>
 
@@ -37,14 +43,14 @@ export default function NewsletterSection (): React.ReactNode {
             onChange={handleEmailChange}
             placeholder='Votre adresse email'
             required
-            className='flex-1 px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50'
+            className='flex-1 px-4 py-3 rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm text-white placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50'
           />
           <Button variant='outline' size='md'>
-            S'inscrire
+            S'inscrire 🌿
           </Button>
         </form>
 
-        <p className='text-sm text-white/70 mt-4'>
+        <p className='text-sm text-white/80 mt-4 drop-shadow-sm'>
           * Offre valable pour les nouveaux utilisateurs uniquement
         </p>
       </div>

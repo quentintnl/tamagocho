@@ -1,23 +1,29 @@
 'use client'
 
-import Image from 'next/image'
-import Button from '@/components/button'
-import type { NavigationItem } from '@/types/components'
+import { usePathname } from 'next/navigation'
+import { useWallet } from '@/hooks/useWallet'
 
-// Single Responsibility: Header handles only navigation and branding
+// Single Responsibility: Header handles only navigation and page title display
 export default function Header (): React.ReactNode {
-  const navigationItems: NavigationItem[] = [
-    { href: '#hero', label: 'Accueil' },
-    { href: '#benefits', label: 'Avantages' },
-    { href: '#monsters', label: 'Créatures' },
-    { href: '#actions', label: 'Actions' },
-    { href: '#newsletter', label: 'Newsletter' }
-  ]
+  const pathname = usePathname()
+  const { wallet } = useWallet()
 
-  const handleSignin = (): void => {
-    window.location.href = '/sign-in'
+  // Déterminer le nom de la page actuelle
+  const getPageTitle = (): string => {
+    if (pathname === '/dashboard') return 'Dashboard'
+    if (pathname === '/monsters') return 'Mes Créatures'
+    if (pathname === '/shop') return 'Boutique'
+    if (pathname === '/wallet') return 'Mon Wallet'
+    if (pathname?.startsWith('/creature/')) return 'Ma Créature'
+    return 'Tamagotcho'
   }
 
+  // Déterminer si un bouton est actif
+  const isActive = (path: string): boolean => {
+    return pathname === path
+  }
+
+  // Navigation handlers
   const handleDashboard = (): void => {
     window.location.href = '/dashboard'
   }
@@ -26,53 +32,91 @@ export default function Header (): React.ReactNode {
     window.location.href = '/monsters'
   }
 
+  const handleShop = (): void => {
+    window.location.href = '/shop'
+  }
+
+  const handleWallet = (): void => {
+    window.location.href = '/wallet'
+  }
+
   return (
-    <header className='bg-white shadow-sm sticky top-0 z-50'>
+    <header className='bg-gradient-to-r from-meadow-50/90 to-sky-50/90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b-2 border-meadow-200/50'>
       <nav className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex justify-between items-center h-16'>
-          {/* Logo */}
+          {/* Nom de la page à gauche */}
           <div className='flex-shrink-0'>
-            <div className='flex items-center space-x-2'>
-              <Image
-                src='/logo_comp.webp'
-                alt='Tamagotcho Logo'
-                width={40}
-                height={40}
-                className='w-10 h-10'
-                priority
-              />
-              <span className='text-2xl font-bold text-moccaccino-600'>
-                Tamagotcho
-              </span>
-            </div>
+            <h1 className='text-2xl font-bold bg-gradient-to-r from-forest-700 to-meadow-600 bg-clip-text text-transparent'>
+              {getPageTitle()}
+            </h1>
           </div>
 
-          {/* Navigation Menu */}
-          <div className='hidden md:block'>
-            <div className='ml-10 flex items-baseline space-x-8'>
-              {navigationItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className='text-gray-700 hover:text-moccaccino-600 px-3 py-2 text-sm font-medium transition-colors'
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className='flex items-center gap-3'>
-            <Button variant='outline' size='md' onClick={handleDashboard}>
+          {/* 4 Boutons à droite */}
+          <div className='flex items-center gap-2'>
+            {/* Dashboard */}
+            <button
+              onClick={handleDashboard}
+              className={`
+                px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                ${
+                  isActive('/dashboard')
+                    ? 'border-2 border-meadow-500 text-forest-700 bg-meadow-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
+                }
+              `}
+            >
               📊 Dashboard
-            </Button>
-            <Button variant='ghost' size='md' onClick={handleMonsters}>
-              👾 Mes Monstres
-            </Button>
-            <Button variant='primary' size='md' onClick={handleSignin}>
-              Créer mon monstre
-            </Button>
+            </button>
+
+            {/* Monstres */}
+            <button
+              onClick={handleMonsters}
+              className={`
+                px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                ${
+                  isActive('/monsters')
+                    ? 'border-2 border-meadow-500 text-forest-700 bg-meadow-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
+                }
+              `}
+            >
+              👾 Monstres
+            </button>
+
+            {/* Boutique */}
+            <button
+              onClick={handleShop}
+              className={`
+                px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300
+                ${
+                  isActive('/shop')
+                    ? 'border-2 border-meadow-500 text-forest-700 bg-meadow-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
+                }
+              `}
+            >
+              🛍️ Boutique
+            </button>
+
+            {/* Coins avec affichage du montant */}
+            <button
+              onClick={handleWallet}
+              className={`
+                px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2
+                ${
+                  isActive('/wallet')
+                    ? 'border-2 border-sunset-500 text-forest-700 bg-sunset-50/50'
+                    : 'border-2 border-transparent text-forest-600 hover:border-sunset-300 hover:bg-sunset-50/30'
+                }
+              `}
+            >
+              <div className='flex items-center justify-center w-5 h-5 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full'>
+                <span className='text-xs'>💰</span>
+              </div>
+              <span className='font-bold'>
+                {wallet?.coin?.toLocaleString() ?? '0'}
+              </span>
+            </button>
           </div>
         </div>
       </nav>

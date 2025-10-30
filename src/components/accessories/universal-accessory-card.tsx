@@ -29,18 +29,18 @@ interface UniversalAccessoryCardProps {
 }
 
 /**
- * Obtenir la couleur de badge selon la rareté
+ * Obtenir la couleur de badge selon la rareté - thème nature
  */
 function getRarityColor (rarity: AccessoryRarity): string {
   switch (rarity) {
     case 'common':
-      return 'bg-slate-100/80 text-slate-600'
+      return 'bg-earth-100/80 text-earth-700'
     case 'rare':
-      return 'bg-lochinvar-100/80 text-lochinvar-600'
+      return 'bg-sky-100/80 text-sky-700'
     case 'epic':
-      return 'bg-fuchsia-blue-100/80 text-fuchsia-blue-600'
+      return 'bg-lavender-100/80 text-lavender-700'
     case 'legendary':
-      return 'bg-moccaccino-100/80 text-moccaccino-600'
+      return 'bg-sunset-100/80 text-sunset-700'
   }
 }
 
@@ -123,21 +123,21 @@ export function UniversalAccessoryCard ({
 
   return (
     <article
-      className='group relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-white/90 via-white to-lochinvar-50/70 p-6 shadow-[0_20px_54px_rgba(15,23,42,0.14)] ring-1 ring-white/70 backdrop-blur transition-transform duration-500 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(15,23,42,0.18)]'
+      className='group relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-white/95 via-white to-meadow-50/60 p-6 shadow-[0_20px_54px_rgba(22,101,52,0.12)] ring-2 ring-meadow-200/60 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_70px_rgba(22,101,52,0.18)] hover:ring-meadow-300/70'
     >
-      {/* Bulles décoratives */}
+      {/* Bulles décoratives - thème nature */}
       <div
-        className='pointer-events-none absolute -right-16 top-20 h-40 w-40 rounded-full bg-fuchsia-blue-100/40 blur-3xl transition-opacity duration-500 group-hover:opacity-60'
+        className='pointer-events-none absolute -right-16 top-20 h-40 w-40 rounded-full bg-lavender-100/40 blur-3xl transition-opacity duration-500 group-hover:opacity-70'
         aria-hidden='true'
       />
       <div
-        className='pointer-events-none absolute -left-20 -top-16 h-48 w-48 rounded-full bg-lochinvar-100/40 blur-3xl transition-opacity duration-500 group-hover:opacity-60'
+        className='pointer-events-none absolute -left-20 -top-16 h-48 w-48 rounded-full bg-sky-100/40 blur-3xl transition-opacity duration-500 group-hover:opacity-70'
         aria-hidden='true'
       />
 
       <div className='relative flex flex-col gap-5'>
         {/* Zone d'affichage SVG ou Icon */}
-        <div className='relative flex items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 p-8 ring-1 ring-white/70'>
+        <div className='relative flex items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-meadow-50 to-sky-50 p-8 ring-1 ring-meadow-200/50 shadow-inner'>
           {hasSVGSupport && svgContent !== null ? (
             // Affichage SVG
             <div
@@ -153,14 +153,14 @@ export function UniversalAccessoryCard ({
 
           {/* Badge de rareté */}
           <span
-            className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide shadow-inner ${rarityColor}`}
+            className={`absolute right-3 top-3 inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide shadow-md ${rarityColor}`}
           >
             {rarityLabel}
           </span>
 
           {/* Badge possédé */}
           {isOwned && (
-            <span className='absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-green-100/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-green-600 shadow-inner'>
+            <span className='absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-meadow-100/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-meadow-700 shadow-md'>
               ✓ Possédé
             </span>
           )}
@@ -170,21 +170,21 @@ export function UniversalAccessoryCard ({
         <div className='flex flex-1 flex-col gap-4'>
           <div className='flex flex-col gap-2'>
             <div className='flex items-start justify-between gap-3'>
-              <h3 className='text-lg font-semibold text-slate-900 sm:text-xl'>{accessory.name}</h3>
-              <span className='inline-flex items-center gap-1 rounded-full bg-amber-100/80 px-3 py-1 text-xs font-semibold text-amber-600 shadow-inner'>
+              <h3 className='text-lg font-semibold text-forest-800 sm:text-xl'>{accessory.name}</h3>
+              <span className='inline-flex items-center gap-1 rounded-full bg-sunset-100/80 px-3 py-1 text-xs font-semibold text-sunset-700 shadow-inner'>
                 <span aria-hidden='true'>💰</span>
                 {accessory.price}
               </span>
             </div>
 
-            <p className='text-sm text-slate-600'>{accessory.description}</p>
+            <p className='text-sm text-forest-600 leading-relaxed'>{accessory.description}</p>
 
             <div className='flex flex-wrap gap-2'>
-              <span className='inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600'>
+              <span className='inline-flex items-center gap-1 rounded-full bg-earth-100 px-2.5 py-1 text-xs text-earth-700 font-medium'>
                 {categoryLabel}
               </span>
               {accessory.effect !== undefined && (
-                <span className='inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-1 text-xs text-purple-600'>
+                <span className='inline-flex items-center gap-1 rounded-full bg-lavender-100 px-2.5 py-1 text-xs text-lavender-700 font-medium'>
                   <span aria-hidden='true'>✨</span>
                   {accessory.effect}
                 </span>
@@ -196,9 +196,9 @@ export function UniversalAccessoryCard ({
           {!isOwned && onPurchase !== undefined && (
             <button
               onClick={handleClick}
-              className='mt-2 w-full rounded-xl bg-gradient-to-r from-moccaccino-500 to-moccaccino-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:from-moccaccino-600 hover:to-moccaccino-700 hover:shadow-xl active:scale-95'
+              className='mt-2 w-full rounded-2xl bg-gradient-to-r from-meadow-500 to-forest-500 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:from-meadow-600 hover:to-forest-600 hover:shadow-xl active:scale-95'
             >
-              Acheter
+              🌿 Acheter
             </button>
           )}
         </div>

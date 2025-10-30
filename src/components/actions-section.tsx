@@ -3,9 +3,9 @@ import type { ActionCardProps } from '@/types/components'
 // Open/Closed Principle: ActionCard can be extended with new color themes
 function getActionColorClasses (colorTheme: ActionCardProps['colorTheme']): string {
   const colorMaps = {
-    moccaccino: 'bg-moccaccino-100',
-    lochinvar: 'bg-lochinvar-100',
-    'fuchsia-blue': 'bg-fuchsia-blue-100'
+    moccaccino: 'bg-gradient-to-br from-meadow-200 to-meadow-300',
+    lochinvar: 'bg-gradient-to-br from-sky-200 to-sky-300',
+    'fuchsia-blue': 'bg-gradient-to-br from-lavender-200 to-lavender-300'
   }
   return colorMaps[colorTheme]
 }
@@ -20,12 +20,12 @@ export function ActionCard ({
   const colorClass = getActionColorClasses(colorTheme)
 
   return (
-    <div className='text-center'>
-      <div className={`w-20 h-20 ${colorClass} rounded-full flex items-center justify-center text-3xl mx-auto mb-4`}>
+    <div className='text-center transform hover:scale-105 transition-all duration-300'>
+      <div className={`w-20 h-20 ${colorClass} rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg`}>
         {icon}
       </div>
-      <h3 className='text-lg font-semibold text-gray-900 mb-2'>{title}</h3>
-      <p className='text-gray-600'>{description}</p>
+      <h3 className='text-lg font-semibold text-forest-800 mb-2'>{title}</h3>
+      <p className='text-forest-600 leading-relaxed'>{description}</p>
     </div>
   )
 }
@@ -36,38 +36,45 @@ export default function ActionsSection (): React.ReactNode {
     {
       icon: '🍎',
       title: 'Nourrir',
-      description: 'Offrez des repas délicieux pour maintenir votre créature en bonne santé',
+      description: 'Offrez des repas naturels pour que votre créature s\'épanouisse',
       colorTheme: 'moccaccino'
     },
     {
       icon: '🎾',
       title: 'Jouer',
-      description: 'Amusez-vous avec des mini-jeux pour renforcer votre relation',
+      description: 'Profitez de moments de joie dans votre petit écosystème',
       colorTheme: 'lochinvar'
     },
     {
       icon: '🛁',
-      title: 'Laver',
-      description: 'Gardez votre compagnon propre et heureux avec des soins réguliers',
+      title: 'Prendre soin',
+      description: 'Gardez votre compagnon heureux avec des soins doux',
       colorTheme: 'fuchsia-blue'
     },
     {
       icon: '💤',
-      title: 'Dormir',
-      description: 'Veillez sur le sommeil de votre créature pour qu\'elle récupère',
+      title: 'Se reposer',
+      description: 'Laissez votre créature se ressourcer paisiblement',
       colorTheme: 'moccaccino'
     }
   ]
 
   return (
-    <section id='actions' className='py-20 bg-white'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <section id='actions' className='py-20 bg-gradient-to-b from-transparent to-sky-50/30 relative overflow-hidden'>
+      {/* Nature elements */}
+      <div className='absolute inset-0 opacity-5'>
+        <div className='absolute top-10 left-10 text-9xl'>☁️</div>
+        <div className='absolute top-20 right-20 text-9xl'>☁️</div>
+        <div className='absolute bottom-10 left-1/3 text-7xl'>🌤️</div>
+      </div>
+
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10'>
         <div className='text-center mb-16'>
-          <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-            Que pouvez-vous faire ?
+          <h2 className='text-3xl md:text-4xl font-bold text-forest-800 mb-4'>
+            Prenez soin de votre petit monde 🌍
           </h2>
-          <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
-            Interagissez avec votre créature de multiples façons pour créer un lien unique
+          <p className='text-xl text-forest-600 max-w-2xl mx-auto leading-relaxed'>
+            Créez un lien unique avec votre créature à travers des interactions douces et apaisantes
           </p>
         </div>
 

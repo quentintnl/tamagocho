@@ -113,11 +113,7 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
   return (
     <div className='min-h-screen bg-gradient-to-br from-moccaccino-50 via-white to-lochinvar-50'>
       {/* Header avec wallet */}
-      <PageHeaderWithWallet
-        title="Boutique d'Accessoires"
-        showBackButton
-        backUrl="/wallet"
-      />
+      <PageHeaderWithWallet title="Boutique d'Accessoires" />
 
       {/* Contenu principal */}
       <main className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
