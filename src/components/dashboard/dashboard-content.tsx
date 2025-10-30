@@ -10,19 +10,18 @@ import {
   useMonsterStats,
   useLatestAdoptionLabel,
   useFavoriteMoodMessage,
-  useQuests,
   useMonsterRefresh
 } from '@/hooks/dashboard'
 import CreateMonsterModal from './create-monster-modal'
 import { WelcomeHero } from './welcome-hero'
 import { UserProfileCard } from './user-profile-card'
 import { StatsCard } from './stats-card'
-import { QuestsSection } from './quests-section'
 import { MoodTipSection } from './mood-tip-section'
 import MonstersList from '../monsters/monsters-list'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { MonstersAutoUpdater } from '@/components/monsters/auto-updater'
 import { QuestsAutoRenewer } from '@/components/quests/auto-renewer'
+import { DailyQuestsSection } from '@/components/quests/daily-quests-section'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -58,9 +57,6 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
   const stats = useMonsterStats(monsters)
   const latestAdoptionLabel = useLatestAdoptionLabel(stats.latestAdoption)
   const favoriteMoodMessage = useFavoriteMoodMessage(stats.favoriteMood, stats.totalMonsters)
-
-  // Génération des quêtes
-  const quests = useQuests(stats)
 
   /**
    * Déconnecte l'utilisateur et redirige vers la page de connexion
@@ -194,7 +190,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
           </div>
 
           <aside className='flex flex-col gap-6'>
-            <QuestsSection quests={quests} />
+            <DailyQuestsSection />
             <MoodTipSection message={favoriteMoodMessage} />
           </aside>
         </section>
