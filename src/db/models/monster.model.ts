@@ -31,6 +31,11 @@ const monsterSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
     required: true
+  },
+  isPublic: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 }, {
   timestamps: true

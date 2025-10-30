@@ -38,6 +38,7 @@ export interface DBMonster {
   traits: string // JSON serialized MonsterTraits
   state: MonsterState
   ownerId: string
+  isPublic: boolean
   createdAt: Date
   updatedAt: Date
 }

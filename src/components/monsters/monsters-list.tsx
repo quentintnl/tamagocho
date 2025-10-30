@@ -57,6 +57,7 @@ function MonstersList ({ monsters, className }: MonstersListProps): React.ReactN
               level={monster.level_id.level}
               createdAt={String(monster.createdAt)}
               updatedAt={String(monster.updatedAt)}
+              isPublic={monster.isPublic ?? false}
             />
           )
         })}

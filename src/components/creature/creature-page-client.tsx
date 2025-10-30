@@ -10,6 +10,7 @@ import { CreatureStatsPanel } from './creature-stats-panel'
 import { CreatureTraitsPanel } from './creature-traits-panel'
 import { AccessoryShop } from './accessory-shop'
 import { OwnedAccessoriesManager } from './owned-accessories-manager'
+import { PublicStatusToggle } from './public-status-toggle'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { getAvailableAccessories } from '@/services/accessory.service'
 import { useMonsterData, useMonsterAccessories, useAutoStateChange } from '@/hooks/monsters'
@@ -129,6 +130,10 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                             updatedAt={currentMonster.updatedAt}
                         />
                         <CreatureTraitsPanel traits={traits} />
+                        <PublicStatusToggle
+                            monsterId={currentMonster._id}
+                            initialIsPublic={currentMonster.isPublic ?? false}
+                        />
                     </div>
                 </div>
 
