@@ -4,7 +4,7 @@
  * Presentation Layer: Display user's daily quests with progress
  *
  * Responsibilities:
- * - Display 3 daily quests
+ * - Display 5 daily quests
  * - Show progress bars
  * - Display rewards
  * - Handle quest completion
