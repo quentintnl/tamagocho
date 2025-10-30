@@ -21,6 +21,9 @@ interface PageHeaderWithWalletProps {
   title?: string
   showBackButton?: boolean
   backUrl?: string
+  showShopButton?: boolean
+  showDashboardButton?: boolean
+  showMonstersButton?: boolean
   children?: React.ReactNode
 }
 
@@ -30,16 +33,34 @@ interface PageHeaderWithWalletProps {
  * @param title - Titre de la page (optionnel)
  * @param showBackButton - Afficher le bouton retour
  * @param backUrl - URL de retour
+ * @param showShopButton - Afficher le bouton boutique (par défaut true)
+ * @param showDashboardButton - Afficher le bouton dashboard (par défaut true)
+ * @param showMonstersButton - Afficher le bouton mes monstres (par défaut true)
  * @param children - Contenu additionnel dans le header
  */
 export default function PageHeaderWithWallet ({
   title,
   showBackButton = false,
   backUrl = '/dashboard',
+  showShopButton = true,
+  showDashboardButton = true,
+  showMonstersButton = true,
   children
 }: PageHeaderWithWalletProps): React.ReactNode {
   const handleBack = (): void => {
     window.location.href = backUrl
+  }
+
+  const handleShop = (): void => {
+    window.location.href = '/shop'
+  }
+
+  const handleDashboard = (): void => {
+    window.location.href = '/dashboard'
+  }
+
+  const handleMonsters = (): void => {
+    window.location.href = '/monster'
   }
 
   return (
@@ -65,8 +86,17 @@ export default function PageHeaderWithWallet ({
             {children}
           </div>
 
-          {/* Partie droite : Wallet */}
-          <div className='flex-shrink-0'>
+          {/* Partie droite : Bouton boutique + Wallet */}
+          <div className='flex items-center gap-3 flex-shrink-0'>
+            {showShopButton && (
+              <Button
+                variant='primary'
+                size='sm'
+                onClick={handleShop}
+              >
+                🛍️ Boutique
+              </Button>
+            )}
             <WalletDisplay variant='compact' />
           </div>
         </div>

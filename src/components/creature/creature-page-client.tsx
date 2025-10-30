@@ -144,16 +144,6 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                         refreshTrigger={refreshTrigger}
                     />
                 </div>
-
-                {/* Boutique d'accessoires */}
-                <div className='mt-12'>
-                    <AccessoryShop
-                        accessories={getAvailableAccessories()}
-                        monsterId={currentMonster._id}
-                        ownedAccessoryIds={ownedAccessoryIds}
-                        onPurchaseSuccess={handleAccessoriesRefresh}
-                    />
-                </div>
             </div>
             </div>
         </div>

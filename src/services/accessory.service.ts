@@ -47,8 +47,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'hat',
       rarity: 'common',
       price: BASE_PRICE * getRarityMultiplier('common'),
-      icon: '🎉',
-      effect: 'Augmente le bonheur de +5%'
+      icon: '🎉'
     },
     {
       id: 'hat-crown',
@@ -57,8 +56,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'hat',
       rarity: 'epic',
       price: BASE_PRICE * getRarityMultiplier('epic'),
-      icon: '👑',
-      effect: 'Augmente l\'XP de +10%'
+      icon: '👑'
     },
     {
       id: 'hat-wizard',
@@ -67,8 +65,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'hat',
       rarity: 'legendary',
       price: BASE_PRICE * getRarityMultiplier('legendary'),
-      icon: '🧙',
-      effect: 'Augmente l\'XP de +20%'
+      icon: '🧙'
     },
     // Lunettes
     {
@@ -78,8 +75,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'glasses',
       rarity: 'common',
       price: BASE_PRICE * getRarityMultiplier('common'),
-      icon: '😎',
-      effect: 'Style +100'
+      icon: '😎'
     },
     {
       id: 'glasses-nerd',
@@ -88,8 +84,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'glasses',
       rarity: 'rare',
       price: BASE_PRICE * getRarityMultiplier('rare'),
-      icon: '🤓',
-      effect: 'Augmente l\'XP de +5%'
+      icon: '🤓'
     },
     // Chaussures
     {
@@ -99,8 +94,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'shoes',
       rarity: 'common',
       price: BASE_PRICE * getRarityMultiplier('common'),
-      icon: '👟',
-      effect: 'Augmente la vitesse de +5%'
+      icon: '👟'
     },
     {
       id: 'shoes-boots',
@@ -109,8 +103,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'shoes',
       rarity: 'epic',
       price: BASE_PRICE * getRarityMultiplier('epic'),
-      icon: '🥾',
-      effect: 'Augmente la défense de +15%'
+      icon: '🥾'
     },
     // Arrière-plans
     {
@@ -120,8 +113,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'background',
       rarity: 'rare',
       price: BASE_PRICE * getRarityMultiplier('rare'),
-      icon: '✨',
-      effect: 'Ambiance nocturne'
+      icon: '✨'
     },
     {
       id: 'bg-rainbow',
@@ -130,8 +122,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'background',
       rarity: 'epic',
       price: BASE_PRICE * getRarityMultiplier('epic'),
-      icon: '🌈',
-      effect: 'Ambiance joyeuse'
+      icon: '🌈'
     },
     // Effets spéciaux
     {
@@ -141,8 +132,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'effect',
       rarity: 'rare',
       price: BASE_PRICE * getRarityMultiplier('rare'),
-      icon: '✨',
-      effect: 'Effet visuel permanent'
+      icon: '✨'
     },
     {
       id: 'effect-fire',
@@ -151,8 +141,7 @@ export function getAvailableAccessories (): Accessory[] {
       category: 'effect',
       rarity: 'legendary',
       price: BASE_PRICE * getRarityMultiplier('legendary'),
-      icon: '🔥',
-      effect: 'Augmente tous les gains de +25%'
+      icon: '🔥'
     }
   ]
 }

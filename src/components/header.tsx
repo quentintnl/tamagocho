@@ -18,6 +18,14 @@ export default function Header (): React.ReactNode {
     window.location.href = '/sign-in'
   }
 
+  const handleDashboard = (): void => {
+    window.location.href = '/dashboard'
+  }
+
+  const handleMonsters = (): void => {
+    window.location.href = '/monster'
+  }
+
   return (
     <header className='bg-white shadow-sm sticky top-0 z-50'>
       <nav className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -54,8 +62,14 @@ export default function Header (): React.ReactNode {
             </div>
           </div>
 
-          {/* CTA Button */}
-          <div className='flex items-center'>
+          {/* CTA Buttons */}
+          <div className='flex items-center gap-3'>
+            <Button variant='outline' size='md' onClick={handleDashboard}>
+              📊 Dashboard
+            </Button>
+            <Button variant='ghost' size='md' onClick={handleMonsters}>
+              👾 Mes Monstres
+            </Button>
             <Button variant='primary' size='md' onClick={handleSignin}>
               Créer mon monstre
             </Button>
