@@ -668,8 +668,8 @@ function drawEquippedAccessories (
       drawPurchasedHat(ctx, accessoryId, bodyY, pixelSize, frame)
     } else if (accessoryId.startsWith('glasses-')) {
       drawPurchasedGlasses(ctx, accessoryId, bodyY, pixelSize)
-    } else if (accessoryId.startsWith('necklace-')) {
-      drawPurchasedNecklace(ctx, accessoryId, bodyY, pixelSize)
+    } else if (accessoryId.startsWith('shoes-')) {
+      drawPurchasedShoes(ctx, accessoryId, bodyY, pixelSize)
     } else if (accessoryId.startsWith('effect-')) {
       drawPurchasedEffect(ctx, accessoryId, bodyY, pixelSize, frame)
     } else if (accessoryId.startsWith('bg-')) {
@@ -789,33 +789,73 @@ function drawPurchasedGlasses (
 }
 
 /**
- * Dessine un collier acheté sur le monstre
+ * Dessine des chaussures achetées sur le monstre
  */
-function drawPurchasedNecklace (
+function drawPurchasedShoes (
   ctx: CanvasRenderingContext2D,
-  necklaceId: string,
+  shoesId: string,
   bodyY: number,
   pixelSize: number
 ): void {
-  switch (necklaceId) {
-    case 'necklace-heart': {
-      // Collier cœur
-      ctx.fillStyle = '#FF69B4'
-      ctx.fillRect(75, bodyY + 48, pixelSize * 2, pixelSize * 2)
-      ctx.fillRect(72, bodyY + 51, pixelSize, pixelSize)
-      ctx.fillRect(81, bodyY + 51, pixelSize, pixelSize)
+  switch (shoesId) {
+    case 'shoes-sneakers': {
+      // Baskets rouges
+      // Semelle gauche
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(45, bodyY + 84, pixelSize * 4, pixelSize)
+      // Basket gauche (rouge)
+      ctx.fillStyle = '#FF4444'
+      ctx.fillRect(45, bodyY + 78, pixelSize * 4, pixelSize * 2)
+      // Lacets
+      ctx.fillStyle = '#2C2C2C'
+      ctx.fillRect(48, bodyY + 81, pixelSize / 2, pixelSize / 2)
+      ctx.fillRect(54, bodyY + 81, pixelSize / 2, pixelSize / 2)
+      // Étoile blanche
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(51, bodyY + 78, pixelSize, pixelSize)
+
+      // Semelle droite
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(111, bodyY + 84, pixelSize * 4, pixelSize)
+      // Basket droite (rouge)
+      ctx.fillStyle = '#FF4444'
+      ctx.fillRect(111, bodyY + 78, pixelSize * 4, pixelSize * 2)
+      // Lacets
+      ctx.fillStyle = '#2C2C2C'
+      ctx.fillRect(114, bodyY + 81, pixelSize / 2, pixelSize / 2)
+      ctx.fillRect(120, bodyY + 81, pixelSize / 2, pixelSize / 2)
+      // Étoile blanche
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(117, bodyY + 78, pixelSize, pixelSize)
       break
     }
-    case 'necklace-diamond': {
-      // Collier diamant
-      ctx.fillStyle = '#00CED1'
-      ctx.fillRect(75, bodyY + 48, pixelSize * 2, pixelSize)
-      ctx.fillRect(72, bodyY + 51, pixelSize, pixelSize)
-      ctx.fillRect(81, bodyY + 51, pixelSize, pixelSize)
-      ctx.fillRect(75, bodyY + 54, pixelSize * 2, pixelSize)
-      // Brillance
-      ctx.fillStyle = '#FFFFFF'
-      ctx.fillRect(75, bodyY + 48, pixelSize / 2, pixelSize / 2)
+    case 'shoes-boots': {
+      // Bottes marron
+      // Botte gauche
+      ctx.fillStyle = '#8B4513'
+      ctx.fillRect(45, bodyY + 66, pixelSize * 4, pixelSize * 6)
+      // Semelle épaisse
+      ctx.fillStyle = '#2C2C2C'
+      ctx.fillRect(45, bodyY + 84, pixelSize * 4, pixelSize * 2)
+      // Boucle argentée
+      ctx.fillStyle = '#C0C0C0'
+      ctx.fillRect(48, bodyY + 75, pixelSize * 2, pixelSize)
+      // Reflet sur le cuir
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
+      ctx.fillRect(48, bodyY + 69, pixelSize, pixelSize * 2)
+
+      // Botte droite
+      ctx.fillStyle = '#8B4513'
+      ctx.fillRect(111, bodyY + 66, pixelSize * 4, pixelSize * 6)
+      // Semelle épaisse
+      ctx.fillStyle = '#2C2C2C'
+      ctx.fillRect(111, bodyY + 84, pixelSize * 4, pixelSize * 2)
+      // Boucle argentée
+      ctx.fillStyle = '#C0C0C0'
+      ctx.fillRect(114, bodyY + 75, pixelSize * 2, pixelSize)
+      // Reflet sur le cuir
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'
+      ctx.fillRect(114, bodyY + 69, pixelSize, pixelSize * 2)
       break
     }
   }

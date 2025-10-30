@@ -150,7 +150,7 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
               <option value='all'>Toutes</option>
               <option value='hat'>Chapeaux</option>
               <option value='glasses'>Lunettes</option>
-              <option value='necklace'>Colliers</option>
+              <option value='shoes'>Chaussures</option>
               <option value='background'>Arrière-plans</option>
               <option value='effect'>Effets</option>
             </select>

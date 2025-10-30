@@ -8,7 +8,7 @@
 /**
  * Categories of accessories available in the shop
  */
-export type AccessoryCategory = 'hat' | 'glasses' | 'necklace' | 'background' | 'effect'
+export type AccessoryCategory = 'hat' | 'glasses' | 'shoes' | 'background' | 'effect'
 
 /**
  * Rarity levels for accessories (affects price)

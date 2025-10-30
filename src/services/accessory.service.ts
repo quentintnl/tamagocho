@@ -91,26 +91,26 @@ export function getAvailableAccessories (): Accessory[] {
       icon: '🤓',
       effect: 'Augmente l\'XP de +5%'
     },
-    // Colliers
+    // Chaussures
     {
-      id: 'necklace-heart',
-      name: 'Collier Cœur',
-      description: 'Montre ton amour',
-      category: 'necklace',
+      id: 'shoes-sneakers',
+      name: 'Baskets Cool',
+      description: 'Pour être à la mode',
+      category: 'shoes',
       rarity: 'common',
       price: BASE_PRICE * getRarityMultiplier('common'),
-      icon: '💝',
-      effect: 'Augmente le bonheur de +5%'
+      icon: '👟',
+      effect: 'Augmente la vitesse de +5%'
     },
     {
-      id: 'necklace-diamond',
-      name: 'Collier de Diamant',
-      description: 'Luxe et élégance',
-      category: 'necklace',
+      id: 'shoes-boots',
+      name: 'Bottes de Cuir',
+      description: 'Style aventurier',
+      category: 'shoes',
       rarity: 'epic',
       price: BASE_PRICE * getRarityMultiplier('epic'),
-      icon: '💎',
-      effect: 'Augmente tous les gains de +15%'
+      icon: '🥾',
+      effect: 'Augmente la défense de +15%'
     },
     // Arrière-plans
     {

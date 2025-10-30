@@ -46,7 +46,7 @@ const CATEGORIES: Array<{ value: AccessoryCategory | 'all', label: string, icon:
   { value: 'all', label: 'Tout', icon: '🎯' },
   { value: 'hat', label: 'Chapeaux', icon: '🎩' },
   { value: 'glasses', label: 'Lunettes', icon: '👓' },
-  { value: 'necklace', label: 'Colliers', icon: '📿' },
+  { value: 'shoes', label: 'Chaussures', icon: '👟' },
   { value: 'background', label: 'Fonds', icon: '🖼️' },
   { value: 'effect', label: 'Effets', icon: '✨' }
 ]

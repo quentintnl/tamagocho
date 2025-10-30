@@ -12,9 +12,9 @@ export type { GlassesType } from './glasses-generator'
 export { generateHat, generatePartyHat, generateCrown, generateWizardHat } from './hat-generator'
 export type { HatType } from './hat-generator'
 
-// Necklaces
-export { generateNecklace, generateHeartNecklace, generateDiamondNecklace } from './necklace-generator'
-export type { NecklaceType } from './necklace-generator'
+// Shoes
+export { generateShoes, generateSneakers, generateBoots } from './shoes-generator'
+export type { ShoesType } from './shoes-generator'
 
 // Effects
 export { generateEffect, generateSparkles, generateFire } from './effect-generator'

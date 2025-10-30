@@ -69,8 +69,8 @@ function getCategoryLabel (category: string): string {
       return 'Chapeau'
     case 'glasses':
       return 'Lunettes'
-    case 'necklace':
-      return 'Collier'
+    case 'shoes':
+      return 'Chaussures'
     case 'background':
       return 'Arrière-plan'
     case 'effect':

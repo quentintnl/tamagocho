@@ -12,7 +12,7 @@
 
 import { generateHat, type HatType } from './hat-generator'
 import { generateGlasses, type GlassesType } from './glasses-generator'
-import { generateNecklace, type NecklaceType } from './necklace-generator'
+import { generateShoes, type ShoesType } from './shoes-generator'
 import { generateEffect, type EffectType } from './effect-generator'
 import { generateBackground, type BackgroundType } from './background-generator'
 import type { AccessoryCategory } from '@/types/accessory'
@@ -30,9 +30,9 @@ const ACCESSORY_TYPE_MAP: Record<string, { category: AccessoryCategory, type: st
   'glasses-cool': { category: 'glasses', type: 'sunglasses' },
   'glasses-nerd': { category: 'glasses', type: 'nerd' },
 
-  // Necklaces
-  'necklace-heart': { category: 'necklace', type: 'heart' },
-  'necklace-diamond': { category: 'necklace', type: 'diamond' },
+  // Shoes
+  'shoes-sneakers': { category: 'shoes', type: 'sneakers' },
+  'shoes-boots': { category: 'shoes', type: 'boots' },
 
   // Backgrounds
   'bg-stars': { category: 'background', type: 'stars' },
@@ -74,8 +74,8 @@ export function generateAccessoryByCategory (category: AccessoryCategory, type: 
     case 'glasses':
       return generateGlasses(type as GlassesType)
 
-    case 'necklace':
-      return generateNecklace(type as NecklaceType)
+    case 'shoes':
+      return generateShoes(type as ShoesType)
 
     case 'effect':
       return generateEffect(type as EffectType)
