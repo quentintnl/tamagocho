@@ -13,7 +13,7 @@
 /**
  * Type d'effet disponible
  */
-export type EffectType = 'sparkles' | 'fire'
+export type EffectType = 'sparkles' | 'fire' | 'hearts' | 'bubbles' | 'lightning' | 'divine'
 
 /**
  * Configuration pour les paillettes
@@ -31,6 +31,42 @@ interface FireConfig {
   flameColors: string[]
   intensity: number
   animated: boolean
+}
+
+/**
+ * Configuration pour les cœurs flottants
+ */
+interface HeartsConfig {
+  heartColor: string
+  heartCount: number
+  animated: boolean
+}
+
+/**
+ * Configuration pour les bulles magiques
+ */
+interface BubblesConfig {
+  bubbleColor: string
+  bubbleCount: number
+  hasShine: boolean
+}
+
+/**
+ * Configuration pour les éclairs électriques
+ */
+interface LightningConfig {
+  boltColor: string
+  intensity: number
+  animated: boolean
+}
+
+/**
+ * Configuration pour l'aura divine
+ */
+interface DivineConfig {
+  glowColor: string
+  ringCount: number
+  hasWings: boolean
 }
 
 /**
@@ -273,6 +309,348 @@ export function generateFire (config: FireConfig = {
 }
 
 /**
+ * Generate hearts effect SVG
+ *
+ * @param config - Configuration des cœurs
+ * @returns SVG string
+ */
+export function generateHearts (config: HeartsConfig = {
+  heartColor: '#FF69B4',
+  heartCount: 10,
+  animated: true
+}): string {
+  const { heartColor, heartCount, animated } = config
+
+  const hearts = Array.from({ length: heartCount }, (_, i) => {
+    const angle = (i / heartCount) * Math.PI * 2
+    const radius = 50 + Math.random() * 30
+    const x = 100 + Math.cos(angle) * radius
+    const y = 100 + Math.sin(angle) * radius
+    const size = 0.6 + Math.random() * 0.6
+    const rotation = Math.random() * 360
+
+    return { x, y, size, rotation, delay: i * 0.15 }
+  })
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      ${hearts.map((h, i) => `
+        <g transform="translate(${h.x}, ${h.y}) rotate(${h.rotation}) scale(${h.size})">
+          <path
+            d="M 0,-6 C -8,-14 -18,-14 -18,-6 C -18,2 -8,10 0,16 C 8,10 18,2 18,-6 C 18,-14 8,-14 0,-6 Z"
+            fill="${heartColor}"
+            opacity="0.8"
+            stroke="#FF1493"
+            stroke-width="0.5"
+          >
+            ${animated ? `
+            <animate
+              attributeName="opacity"
+              values="0.3;0.8;0.3"
+              dur="${2 + Math.random()}s"
+              begin="${h.delay}s"
+              repeatCount="indefinite"
+            />
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; 0,-3; 0,0"
+              dur="${1.5 + Math.random()}s"
+              begin="${h.delay}s"
+              repeatCount="indefinite"
+            />
+            ` : ''}
+          </path>
+        </g>
+      `).join('')}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate bubbles effect SVG
+ *
+ * @param config - Configuration des bulles
+ * @returns SVG string
+ */
+export function generateBubbles (config: BubblesConfig = {
+  bubbleColor: '#00BFFF',
+  bubbleCount: 15,
+  hasShine: true
+}): string {
+  const { bubbleColor, bubbleCount, hasShine } = config
+
+  const bubbles = Array.from({ length: bubbleCount }, () => ({
+    x: 20 + Math.random() * 160,
+    y: 30 + Math.random() * 140,
+    size: 5 + Math.random() * 15
+  }))
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <radialGradient id="bubble-gradient">
+          <stop offset="0%" style="stop-color:white;stop-opacity:0.8" />
+          <stop offset="70%" style="stop-color:${bubbleColor};stop-opacity:0.4" />
+          <stop offset="100%" style="stop-color:${bubbleColor};stop-opacity:0.2" />
+        </radialGradient>
+      </defs>
+
+      ${bubbles.map((b, i) => `
+        <g>
+          <circle
+            cx="${b.x}"
+            cy="${b.y}"
+            r="${b.size}"
+            fill="url(#bubble-gradient)"
+            stroke="${bubbleColor}"
+            stroke-width="1"
+            opacity="0.7"
+          />
+          ${hasShine ? `
+          <ellipse
+            cx="${b.x - b.size * 0.3}"
+            cy="${b.y - b.size * 0.3}"
+            rx="${b.size * 0.3}"
+            ry="${b.size * 0.2}"
+            fill="white"
+            opacity="0.6"
+          />
+          ` : ''}
+        </g>
+      `).join('')}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate lightning effect SVG
+ *
+ * @param config - Configuration des éclairs
+ * @returns SVG string
+ */
+export function generateLightning (config: LightningConfig = {
+  boltColor: '#FFD700',
+  intensity: 3,
+  animated: true
+}): string {
+  const { boltColor, intensity, animated } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <radialGradient id="lightning-glow">
+          <stop offset="0%" style="stop-color:${boltColor};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:${boltColor};stop-opacity:0" />
+        </radialGradient>
+      </defs>
+
+      <!-- Éclair principal gauche -->
+      <g>
+        <path
+          d="M 60,40 L 55,80 L 65,85 L 50,140"
+          fill="none"
+          stroke="${boltColor}"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          ${animated ? `
+          <animate
+            attributeName="opacity"
+            values="0;1;0"
+            dur="0.3s"
+            repeatCount="indefinite"
+          />
+          ` : ''}
+        </path>
+        <path
+          d="M 60,40 L 55,80 L 65,85 L 50,140"
+          fill="none"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          opacity="0.8"
+        />
+      </g>
+
+      <!-- Éclair principal droit -->
+      <g>
+        <path
+          d="M 140,40 L 145,80 L 135,85 L 150,140"
+          fill="none"
+          stroke="${boltColor}"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          ${animated ? `
+          <animate
+            attributeName="opacity"
+            values="0;1;0"
+            dur="0.3s"
+            begin="0.15s"
+            repeatCount="indefinite"
+          />
+          ` : ''}
+        </path>
+        <path
+          d="M 140,40 L 145,80 L 135,85 L 150,140"
+          fill="none"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          opacity="0.8"
+        />
+      </g>
+
+      <!-- Halos électriques -->
+      <circle cx="60" cy="40" r="15" fill="url(#lightning-glow)" opacity="0.5" />
+      <circle cx="140" cy="40" r="15" fill="url(#lightning-glow)" opacity="0.5" />
+      <circle cx="50" cy="140" r="12" fill="url(#lightning-glow)" opacity="0.5" />
+      <circle cx="150" cy="140" r="12" fill="url(#lightning-glow)" opacity="0.5" />
+
+      <!-- Étincelles -->
+      ${Array.from({ length: intensity * 3 }, () => {
+        const x = 40 + Math.random() * 120
+        const y = 40 + Math.random() * 100
+        return `<circle cx="${x}" cy="${y}" r="2" fill="${boltColor}" opacity="0.7" />`
+      }).join('')}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate divine effect SVG
+ *
+ * @param config - Configuration de l'aura divine
+ * @returns SVG string
+ */
+export function generateDivine (config: DivineConfig = {
+  glowColor: '#FFD700',
+  ringCount: 3,
+  hasWings: true
+}): string {
+  const { glowColor, ringCount, hasWings } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <radialGradient id="divine-glow">
+          <stop offset="0%" style="stop-color:${glowColor};stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:${glowColor};stop-opacity:0" />
+        </radialGradient>
+        <linearGradient id="wing-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:white;stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:${glowColor};stop-opacity:0.6" />
+        </linearGradient>
+      </defs>
+
+      <!-- Aura centrale -->
+      <circle cx="100" cy="100" r="60" fill="url(#divine-glow)" opacity="0.6" />
+
+      <!-- Anneaux de lumière -->
+      ${Array.from({ length: ringCount }, (_, i) => {
+        const radius = 30 + (i * 15)
+        return `
+          <circle
+            cx="100"
+            cy="100"
+            r="${radius}"
+            fill="none"
+            stroke="${glowColor}"
+            stroke-width="2"
+            opacity="${0.8 - (i * 0.2)}"
+          >
+            <animate
+              attributeName="r"
+              values="${radius};${radius + 10};${radius}"
+              dur="${2 + i}s"
+              repeatCount="indefinite"
+            />
+            <animate
+              attributeName="opacity"
+              values="${0.8 - (i * 0.2)};${0.4 - (i * 0.1)};${0.8 - (i * 0.2)}"
+              dur="${2 + i}s"
+              repeatCount="indefinite"
+            />
+          </circle>
+        `
+      }).join('')}
+
+      ${hasWings ? `
+      <!-- Aile gauche -->
+      <g transform="translate(40, 100)">
+        <ellipse cx="-20" cy="-10" rx="35" ry="20" fill="url(#wing-gradient)" opacity="0.7" transform="rotate(-30)" />
+        <ellipse cx="-15" cy="5" rx="30" ry="18" fill="url(#wing-gradient)" opacity="0.6" transform="rotate(-20)" />
+        <ellipse cx="-10" cy="15" rx="25" ry="15" fill="url(#wing-gradient)" opacity="0.5" transform="rotate(-10)" />
+      </g>
+
+      <!-- Aile droite -->
+      <g transform="translate(160, 100)">
+        <ellipse cx="20" cy="-10" rx="35" ry="20" fill="url(#wing-gradient)" opacity="0.7" transform="rotate(30)" />
+        <ellipse cx="15" cy="5" rx="30" ry="18" fill="url(#wing-gradient)" opacity="0.6" transform="rotate(20)" />
+        <ellipse cx="10" cy="15" rx="25" ry="15" fill="url(#wing-gradient)" opacity="0.5" transform="rotate(10)" />
+      </g>
+      ` : ''}
+
+      <!-- Halo -->
+      <ellipse
+        cx="100"
+        cy="30"
+        rx="40"
+        ry="8"
+        fill="none"
+        stroke="${glowColor}"
+        stroke-width="3"
+        opacity="0.8"
+      >
+        <animate
+          attributeName="opacity"
+          values="0.5;0.9;0.5"
+          dur="2s"
+          repeatCount="indefinite"
+        />
+      </ellipse>
+
+      <!-- Particules de lumière -->
+      ${Array.from({ length: 20 }, () => {
+        const angle = Math.random() * Math.PI * 2
+        const radius = 40 + Math.random() * 30
+        const x = 100 + Math.cos(angle) * radius
+        const y = 100 + Math.sin(angle) * radius
+        return `
+          <circle cx="${x}" cy="${y}" r="2" fill="${glowColor}" opacity="0.7">
+            <animate
+              attributeName="opacity"
+              values="0.3;0.9;0.3"
+              dur="${1 + Math.random() * 2}s"
+              repeatCount="indefinite"
+            />
+          </circle>
+        `
+      }).join('')}
+    </svg>
+  `.trim()
+}
+
+/**
  * Generate effect by type
  *
  * @param type - Type d'effet à générer
@@ -284,6 +662,14 @@ export function generateEffect (type: EffectType): string {
       return generateSparkles()
     case 'fire':
       return generateFire()
+    case 'hearts':
+      return generateHearts()
+    case 'bubbles':
+      return generateBubbles()
+    case 'lightning':
+      return generateLightning()
+    case 'divine':
+      return generateDivine()
     default:
       return generateSparkles()
   }

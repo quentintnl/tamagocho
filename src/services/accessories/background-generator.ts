@@ -13,7 +13,7 @@
 /**
  * Type d'arrière-plan disponible
  */
-export type BackgroundType = 'stars' | 'rainbow'
+export type BackgroundType = 'stars' | 'rainbow' | 'clouds' | 'sunset' | 'galaxy' | 'aurora'
 
 /**
  * Configuration pour le fond étoilé
@@ -31,6 +31,42 @@ interface RainbowBackgroundConfig {
   colors: string[]
   hasClouds: boolean
   arcHeight: number
+}
+
+/**
+ * Configuration pour les nuages
+ */
+interface CloudsBackgroundConfig {
+  skyColor: string
+  cloudColor: string
+  cloudCount: number
+}
+
+/**
+ * Configuration pour le coucher de soleil
+ */
+interface SunsetBackgroundConfig {
+  horizonColors: string[]
+  hasSun: boolean
+  hasBirds: boolean
+}
+
+/**
+ * Configuration pour la galaxie
+ */
+interface GalaxyBackgroundConfig {
+  spaceColor: string
+  nebulaColors: string[]
+  starDensity: number
+}
+
+/**
+ * Configuration pour l'aurore boréale
+ */
+interface AuroraBackgroundConfig {
+  skyColor: string
+  auroraColors: string[]
+  hasStars: boolean
 }
 
 /**
@@ -289,6 +325,258 @@ export function generateRainbowBackground (config: RainbowBackgroundConfig = {
 }
 
 /**
+ * Generate clouds background SVG
+ *
+ * @param config - Configuration du fond nuageux
+ * @returns SVG string
+ */
+export function generateCloudsBackground (config: CloudsBackgroundConfig = {
+  skyColor: '#87CEEB',
+  cloudColor: '#FFFFFF',
+  cloudCount: 6
+}): string {
+  const { skyColor, cloudColor, cloudCount } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <radialGradient id="sky-radial">
+          <stop offset="0%" style="stop-color:#B0E0E6;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:${skyColor};stop-opacity:1" />
+        </radialGradient>
+      </defs>
+
+      <!-- Ciel -->
+      <rect x="0" y="0" width="200" height="200" fill="url(#sky-radial)" />
+
+      <!-- Nuages -->
+      ${Array.from({ length: cloudCount }, (_, i) => {
+        const x = (i % 3) * 70 + 30
+        const y = Math.floor(i / 3) * 80 + 40
+        const scale = 0.8 + Math.random() * 0.4
+        return `
+          <g transform="translate(${x}, ${y}) scale(${scale})">
+            <ellipse cx="0" cy="0" rx="20" ry="12" fill="${cloudColor}" opacity="0.9" />
+            <ellipse cx="15" cy="-3" rx="18" ry="14" fill="${cloudColor}" opacity="0.9" />
+            <ellipse cx="30" cy="0" rx="16" ry="11" fill="${cloudColor}" opacity="0.9" />
+            <ellipse cx="15" cy="5" rx="22" ry="10" fill="${cloudColor}" opacity="0.9" />
+          </g>
+        `
+      }).join('')}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate sunset background SVG
+ *
+ * @param config - Configuration du coucher de soleil
+ * @returns SVG string
+ */
+export function generateSunsetBackground (config: SunsetBackgroundConfig = {
+  horizonColors: ['#FF6B35', '#FF8C42', '#FFA07A', '#FFB6C1', '#DDA0DD'],
+  hasSun: true,
+  hasBirds: true
+}): string {
+  const { horizonColors, hasSun, hasBirds } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <linearGradient id="sunset-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          ${horizonColors.map((color, i) => {
+            const offset = (i / (horizonColors.length - 1)) * 100
+            return `<stop offset="${offset}%" style="stop-color:${color};stop-opacity:1" />`
+          }).join('')}
+        </linearGradient>
+      </defs>
+
+      <!-- Ciel dégradé -->
+      <rect x="0" y="0" width="200" height="200" fill="url(#sunset-gradient)" />
+
+      ${hasSun ? `
+      <!-- Soleil couchant -->
+      <g transform="translate(100, 140)">
+        <circle cx="0" cy="0" r="35" fill="#FFD700" opacity="0.3" />
+        <circle cx="0" cy="0" r="25" fill="#FF8C00" opacity="0.8" />
+        <circle cx="0" cy="0" r="20" fill="#FF6347" />
+      </g>
+
+      <!-- Reflets sur l'eau -->
+      <ellipse cx="100" cy="160" rx="60" ry="10" fill="#FF8C00" opacity="0.4" />
+      <ellipse cx="100" cy="175" rx="40" ry="8" fill="#FF8C00" opacity="0.3" />
+      ` : ''}
+
+      ${hasBirds ? `
+      <!-- Oiseaux -->
+      <g transform="translate(50, 60)">
+        <path d="M 0,0 Q -5,-3 -10,0" fill="none" stroke="#2C2C2C" stroke-width="1.5" stroke-linecap="round" />
+        <path d="M 0,0 Q 5,-3 10,0" fill="none" stroke="#2C2C2C" stroke-width="1.5" stroke-linecap="round" />
+      </g>
+      <g transform="translate(140, 50)">
+        <path d="M 0,0 Q -4,-2 -8,0" fill="none" stroke="#2C2C2C" stroke-width="1.2" stroke-linecap="round" />
+        <path d="M 0,0 Q 4,-2 8,0" fill="none" stroke="#2C2C2C" stroke-width="1.2" stroke-linecap="round" />
+      </g>
+      <g transform="translate(120, 70)">
+        <path d="M 0,0 Q -3,-2 -6,0" fill="none" stroke="#2C2C2C" stroke-width="1" stroke-linecap="round" />
+        <path d="M 0,0 Q 3,-2 6,0" fill="none" stroke="#2C2C2C" stroke-width="1" stroke-linecap="round" />
+      </g>
+      ` : ''}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate galaxy background SVG
+ *
+ * @param config - Configuration de la galaxie
+ * @returns SVG string
+ */
+export function generateGalaxyBackground (config: GalaxyBackgroundConfig = {
+  spaceColor: '#0a0a2e',
+  nebulaColors: ['#8B00FF', '#FF00FF', '#00BFFF'],
+  starDensity: 80
+}): string {
+  const { spaceColor, nebulaColors, starDensity } = config
+
+  const stars = Array.from({ length: starDensity }, () => ({
+    x: Math.random() * 200,
+    y: Math.random() * 200,
+    size: 0.5 + Math.random() * 2,
+    opacity: 0.3 + Math.random() * 0.7
+  }))
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        ${nebulaColors.map((color, i) => `
+          <radialGradient id="nebula-${i}">
+            <stop offset="0%" style="stop-color:${color};stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:${color};stop-opacity:0" />
+          </radialGradient>
+        `).join('')}
+      </defs>
+
+      <!-- Espace profond -->
+      <rect x="0" y="0" width="200" height="200" fill="${spaceColor}" />
+
+      <!-- Nébuleuses -->
+      <ellipse cx="60" cy="70" rx="50" ry="40" fill="url(#nebula-0)" />
+      <ellipse cx="140" cy="120" rx="60" ry="45" fill="url(#nebula-1)" />
+      <ellipse cx="100" cy="50" rx="40" ry="30" fill="url(#nebula-2)" />
+
+      <!-- Étoiles -->
+      ${stars.map(s => `
+        <circle cx="${s.x}" cy="${s.y}" r="${s.size}" fill="white" opacity="${s.opacity}" />
+      `).join('')}
+
+      <!-- Galaxie spirale -->
+      <g transform="translate(100, 100)">
+        <ellipse cx="0" cy="0" rx="40" ry="15" fill="white" opacity="0.3" transform="rotate(30)" />
+        <ellipse cx="0" cy="0" rx="35" ry="12" fill="white" opacity="0.4" transform="rotate(30)" />
+        <ellipse cx="0" cy="0" rx="25" ry="8" fill="white" opacity="0.6" transform="rotate(30)" />
+        <circle cx="0" cy="0" r="8" fill="#FFD700" opacity="0.8" />
+      </g>
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate aurora background SVG
+ *
+ * @param config - Configuration de l'aurore boréale
+ * @returns SVG string
+ */
+export function generateAuroraBackground (config: AuroraBackgroundConfig = {
+  skyColor: '#001a33',
+  auroraColors: ['#00FF88', '#00FFFF', '#00AAFF'],
+  hasStars: true
+}): string {
+  const { skyColor, auroraColors, hasStars } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        ${auroraColors.map((color, i) => `
+          <linearGradient id="aurora-${i}" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:${color};stop-opacity:0" />
+            <stop offset="50%" style="stop-color:${color};stop-opacity:0.7" />
+            <stop offset="100%" style="stop-color:${color};stop-opacity:0" />
+          </linearGradient>
+        `).join('')}
+      </defs>
+
+      <!-- Ciel nocturne -->
+      <rect x="0" y="0" width="200" height="200" fill="${skyColor}" />
+
+      ${hasStars ? `
+      <!-- Étoiles -->
+      ${Array.from({ length: 40 }, () => {
+        const x = Math.random() * 200
+        const y = Math.random() * 150
+        const size = 0.5 + Math.random() * 1.5
+        return `<circle cx="${x}" cy="${y}" r="${size}" fill="white" opacity="${0.5 + Math.random() * 0.5}" />`
+      }).join('')}
+      ` : ''}
+
+      <!-- Aurores boréales ondulantes -->
+      <path
+        d="M 0,80 Q 50,60 100,70 T 200,80"
+        fill="url(#aurora-0)"
+        opacity="0.6"
+      />
+      <path
+        d="M 0,100 Q 50,85 100,95 T 200,100"
+        fill="url(#aurora-1)"
+        opacity="0.7"
+      />
+      <path
+        d="M 0,120 Q 50,105 100,115 T 200,120"
+        fill="url(#aurora-2)"
+        opacity="0.5"
+      />
+
+      <!-- Rideaux verticaux d'aurore -->
+      ${Array.from({ length: 8 }, (_, i) => {
+        const x = i * 25 + 10
+        return `
+          <path
+            d="M ${x},60 Q ${x + 5},90 ${x},120 T ${x},180"
+            fill="none"
+            stroke="${auroraColors[i % auroraColors.length]}"
+            stroke-width="3"
+            opacity="0.3"
+          />
+        `
+      }).join('')}
+
+      <!-- Horizon montagneux -->
+      <path
+        d="M 0,180 L 40,160 L 80,170 L 120,150 L 160,165 L 200,155 L 200,200 L 0,200 Z"
+        fill="#000a1a"
+        opacity="0.8"
+      />
+    </svg>
+  `.trim()
+}
+
+/**
  * Generate background by type
  *
  * @param type - Type d'arrière-plan à générer
@@ -300,6 +588,14 @@ export function generateBackground (type: BackgroundType): string {
       return generateStarsBackground()
     case 'rainbow':
       return generateRainbowBackground()
+    case 'clouds':
+      return generateCloudsBackground()
+    case 'sunset':
+      return generateSunsetBackground()
+    case 'galaxy':
+      return generateGalaxyBackground()
+    case 'aurora':
+      return generateAuroraBackground()
     default:
       return generateStarsBackground()
   }

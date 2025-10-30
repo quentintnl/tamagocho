@@ -39,7 +39,7 @@ const BASE_PRICE = 50
  */
 export function getAvailableAccessories (): Accessory[] {
   return [
-    // Chapeaux
+    // Chapeaux (6 items - tous les niveaux de rareté)
     {
       id: 'hat-party',
       name: 'Chapeau de Fête',
@@ -48,6 +48,24 @@ export function getAvailableAccessories (): Accessory[] {
       rarity: 'common',
       price: BASE_PRICE * getRarityMultiplier('common'),
       icon: '🎉'
+    },
+    {
+      id: 'hat-baseball',
+      name: 'Casquette de Base-ball',
+      description: 'Style sportif décontracté',
+      category: 'hat',
+      rarity: 'common',
+      price: BASE_PRICE * getRarityMultiplier('common'),
+      icon: '🧢'
+    },
+    {
+      id: 'hat-cowboy',
+      name: 'Chapeau de Cowboy',
+      description: 'Yeehaw ! Pour les aventuriers',
+      category: 'hat',
+      rarity: 'rare',
+      price: BASE_PRICE * getRarityMultiplier('rare'),
+      icon: '🤠'
     },
     {
       id: 'hat-crown',
@@ -59,6 +77,15 @@ export function getAvailableAccessories (): Accessory[] {
       icon: '👑'
     },
     {
+      id: 'hat-top',
+      name: 'Haut-de-forme',
+      description: 'Élégance et distinction',
+      category: 'hat',
+      rarity: 'epic',
+      price: BASE_PRICE * getRarityMultiplier('epic'),
+      icon: '🎩'
+    },
+    {
       id: 'hat-wizard',
       name: 'Chapeau de Sorcier',
       description: 'Pouvoirs magiques inclus !',
@@ -67,7 +94,8 @@ export function getAvailableAccessories (): Accessory[] {
       price: BASE_PRICE * getRarityMultiplier('legendary'),
       icon: '🧙'
     },
-    // Lunettes
+
+    // Lunettes (6 items - tous les niveaux de rareté)
     {
       id: 'glasses-cool',
       name: 'Lunettes de Soleil',
@@ -78,6 +106,15 @@ export function getAvailableAccessories (): Accessory[] {
       icon: '😎'
     },
     {
+      id: 'glasses-reading',
+      name: 'Lunettes de Lecture',
+      description: 'Pour les intellectuels',
+      category: 'glasses',
+      rarity: 'common',
+      price: BASE_PRICE * getRarityMultiplier('common'),
+      icon: '👓'
+    },
+    {
       id: 'glasses-nerd',
       name: 'Lunettes de Génie',
       description: 'Intelligence maximale',
@@ -86,7 +123,35 @@ export function getAvailableAccessories (): Accessory[] {
       price: BASE_PRICE * getRarityMultiplier('rare'),
       icon: '🤓'
     },
-    // Chaussures
+    {
+      id: 'glasses-monocle',
+      name: 'Monocle Raffiné',
+      description: 'Sophistication à l\'extrême',
+      category: 'glasses',
+      rarity: 'rare',
+      price: BASE_PRICE * getRarityMultiplier('rare'),
+      icon: '🧐'
+    },
+    {
+      id: 'glasses-cyber',
+      name: 'Lunettes Cybernétiques',
+      description: 'Vision augmentée du futur',
+      category: 'glasses',
+      rarity: 'epic',
+      price: BASE_PRICE * getRarityMultiplier('epic'),
+      icon: '🕶️'
+    },
+    {
+      id: 'glasses-laser',
+      name: 'Lunettes Laser',
+      description: 'Avec rayon laser intégré !',
+      category: 'glasses',
+      rarity: 'legendary',
+      price: BASE_PRICE * getRarityMultiplier('legendary'),
+      icon: '👁️'
+    },
+
+    // Chaussures (6 items - tous les niveaux de rareté)
     {
       id: 'shoes-sneakers',
       name: 'Baskets Cool',
@@ -97,6 +162,24 @@ export function getAvailableAccessories (): Accessory[] {
       icon: '👟'
     },
     {
+      id: 'shoes-sandals',
+      name: 'Sandales d\'Été',
+      description: 'Confort et décontraction',
+      category: 'shoes',
+      rarity: 'common',
+      price: BASE_PRICE * getRarityMultiplier('common'),
+      icon: '🩴'
+    },
+    {
+      id: 'shoes-heels',
+      name: 'Talons Hauts',
+      description: 'Élégance et glamour',
+      category: 'shoes',
+      rarity: 'rare',
+      price: BASE_PRICE * getRarityMultiplier('rare'),
+      icon: '👠'
+    },
+    {
       id: 'shoes-boots',
       name: 'Bottes de Cuir',
       description: 'Style aventurier',
@@ -105,7 +188,44 @@ export function getAvailableAccessories (): Accessory[] {
       price: BASE_PRICE * getRarityMultiplier('epic'),
       icon: '🥾'
     },
-    // Arrière-plans
+    {
+      id: 'shoes-rollers',
+      name: 'Rollers Turbo',
+      description: 'Vitesse maximale garantie',
+      category: 'shoes',
+      rarity: 'epic',
+      price: BASE_PRICE * getRarityMultiplier('epic'),
+      icon: '🛼'
+    },
+    {
+      id: 'shoes-rocket',
+      name: 'Bottes Fusées',
+      description: 'Pour voler dans les airs !',
+      category: 'shoes',
+      rarity: 'legendary',
+      price: BASE_PRICE * getRarityMultiplier('legendary'),
+      icon: '🚀'
+    },
+
+    // Arrière-plans (6 items - tous les niveaux de rareté)
+    {
+      id: 'bg-clouds',
+      name: 'Nuages Paisibles',
+      description: 'Un ciel doux et apaisant',
+      category: 'background',
+      rarity: 'common',
+      price: BASE_PRICE * getRarityMultiplier('common'),
+      icon: '☁️'
+    },
+    {
+      id: 'bg-sunset',
+      name: 'Coucher de Soleil',
+      description: 'Un magnifique crépuscule',
+      category: 'background',
+      rarity: 'common',
+      price: BASE_PRICE * getRarityMultiplier('common'),
+      icon: '🌅'
+    },
     {
       id: 'bg-stars',
       name: 'Fond Étoilé',
@@ -124,7 +244,44 @@ export function getAvailableAccessories (): Accessory[] {
       price: BASE_PRICE * getRarityMultiplier('epic'),
       icon: '🌈'
     },
-    // Effets spéciaux
+    {
+      id: 'bg-galaxy',
+      name: 'Galaxie Cosmique',
+      description: 'L\'univers à portée de main',
+      category: 'background',
+      rarity: 'epic',
+      price: BASE_PRICE * getRarityMultiplier('epic'),
+      icon: '🌌'
+    },
+    {
+      id: 'bg-aurora',
+      name: 'Aurore Boréale',
+      description: 'Lumières magiques du nord',
+      category: 'background',
+      rarity: 'legendary',
+      price: BASE_PRICE * getRarityMultiplier('legendary'),
+      icon: '🌠'
+    },
+
+    // Effets spéciaux (6 items - tous les niveaux de rareté)
+    {
+      id: 'effect-hearts',
+      name: 'Cœurs Flottants',
+      description: 'Amour et tendresse',
+      category: 'effect',
+      rarity: 'common',
+      price: BASE_PRICE * getRarityMultiplier('common'),
+      icon: '💕'
+    },
+    {
+      id: 'effect-bubbles',
+      name: 'Bulles Magiques',
+      description: 'Des bulles qui ne se cassent jamais',
+      category: 'effect',
+      rarity: 'common',
+      price: BASE_PRICE * getRarityMultiplier('common'),
+      icon: '🫧'
+    },
     {
       id: 'effect-sparkles',
       name: 'Paillettes Magiques',
@@ -135,13 +292,31 @@ export function getAvailableAccessories (): Accessory[] {
       icon: '✨'
     },
     {
+      id: 'effect-lightning',
+      name: 'Éclairs Électriques',
+      description: 'Pouvoir de la foudre',
+      category: 'effect',
+      rarity: 'rare',
+      price: BASE_PRICE * getRarityMultiplier('rare'),
+      icon: '⚡'
+    },
+    {
       id: 'effect-fire',
       name: 'Aura de Feu',
       description: 'Une aura enflammée',
       category: 'effect',
+      rarity: 'epic',
+      price: BASE_PRICE * getRarityMultiplier('epic'),
+      icon: '🔥'
+    },
+    {
+      id: 'effect-divine',
+      name: 'Aura Divine',
+      description: 'Le pouvoir des dieux !',
+      category: 'effect',
       rarity: 'legendary',
       price: BASE_PRICE * getRarityMultiplier('legendary'),
-      icon: '🔥'
+      icon: '✨'
     }
   ]
 }

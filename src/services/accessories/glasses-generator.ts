@@ -14,7 +14,7 @@
 /**
  * Type de lunettes disponibles
  */
-export type GlassesType = 'sunglasses' | 'nerd'
+export type GlassesType = 'sunglasses' | 'nerd' | 'reading' | 'monocle' | 'cyber' | 'laser'
 
 /**
  * Configuration pour les lunettes de soleil
@@ -32,6 +32,42 @@ interface NerdGlassesConfig {
   frameColor: string
   lensOpacity: number
   hasTape: boolean
+}
+
+/**
+ * Configuration pour les lunettes de lecture
+ */
+interface ReadingGlassesConfig {
+  frameColor: string
+  lensOpacity: number
+  hasChain: boolean
+}
+
+/**
+ * Configuration pour le monocle
+ */
+interface MonocleConfig {
+  frameColor: string
+  glassOpacity: number
+  hasChain: boolean
+}
+
+/**
+ * Configuration pour les lunettes cybernétiques
+ */
+interface CyberGlassesConfig {
+  frameColor: string
+  glowColor: string
+  hasHUD: boolean
+}
+
+/**
+ * Configuration pour les lunettes laser
+ */
+interface LaserGlassesConfig {
+  frameColor: string
+  laserColor: string
+  isActive: boolean
 }
 
 /**
@@ -299,6 +335,320 @@ export function generateNerdGlasses (config: NerdGlassesConfig = {
 }
 
 /**
+ * Generate reading glasses SVG
+ *
+ * @param config - Configuration des lunettes de lecture
+ * @returns SVG string
+ */
+export function generateReadingGlasses (config: ReadingGlassesConfig = {
+  frameColor: '#8B4513',
+  lensOpacity: 0.15,
+  hasChain: true
+}): string {
+  const { frameColor, lensOpacity, hasChain } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 100" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <!-- Verre gauche oval -->
+      <ellipse 
+        cx="50" 
+        cy="35" 
+        rx="30" 
+        ry="25" 
+        fill="white"
+        opacity="${lensOpacity}"
+        stroke="${frameColor}"
+        stroke-width="2.5"
+      />
+      
+      <!-- Verre droit oval -->
+      <ellipse 
+        cx="150" 
+        cy="35" 
+        rx="30" 
+        ry="25" 
+        fill="white"
+        opacity="${lensOpacity}"
+        stroke="${frameColor}"
+        stroke-width="2.5"
+      />
+      
+      <!-- Pont -->
+      <path 
+        d="M 80 35 Q 100 30 120 35"
+        fill="none"
+        stroke="${frameColor}"
+        stroke-width="2.5"
+      />
+      
+      <!-- Branches -->
+      <line x1="20" y1="35" x2="5" y2="35" stroke="${frameColor}" stroke-width="2" />
+      <line x1="180" y1="35" x2="195" y2="35" stroke="${frameColor}" stroke-width="2" />
+      
+      ${hasChain ? `
+      <!-- Chaînette -->
+      <path 
+        d="M 5 35 Q 5 60 15 70"
+        fill="none"
+        stroke="#C0C0C0"
+        stroke-width="1"
+        stroke-dasharray="2,2"
+      />
+      <path 
+        d="M 195 35 Q 195 60 185 70"
+        fill="none"
+        stroke="#C0C0C0"
+        stroke-width="1"
+        stroke-dasharray="2,2"
+      />
+      <line x1="15" y1="70" x2="185" y2="70" stroke="#C0C0C0" stroke-width="1" stroke-dasharray="2,2" />
+      ` : ''}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate monocle SVG
+ *
+ * @param config - Configuration du monocle
+ * @returns SVG string
+ */
+export function generateMonocle (config: MonocleConfig = {
+  frameColor: '#FFD700',
+  glassOpacity: 0.1,
+  hasChain: true
+}): string {
+  const { frameColor, glassOpacity, hasChain } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 150" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <!-- Verre unique -->
+      <circle 
+        cx="100" 
+        cy="60" 
+        r="35" 
+        fill="white"
+        opacity="${glassOpacity}"
+        stroke="${frameColor}"
+        stroke-width="3"
+      />
+      
+      <!-- Reflet sur le verre -->
+      <ellipse 
+        cx="90" 
+        cy="50" 
+        rx="12" 
+        ry="15" 
+        fill="white"
+        opacity="0.4"
+      />
+      
+      ${hasChain ? `
+      <!-- Anneau d'attache -->
+      <circle 
+        cx="135" 
+        cy="60" 
+        r="5" 
+        fill="none"
+        stroke="${frameColor}"
+        stroke-width="2"
+      />
+      
+      <!-- Chaînette dorée -->
+      <path 
+        d="M 140 60 Q 160 80 160 110"
+        fill="none"
+        stroke="${frameColor}"
+        stroke-width="1.5"
+      />
+      <circle cx="160" cy="115" r="4" fill="${frameColor}" />
+      ` : ''}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate cyber glasses SVG
+ *
+ * @param config - Configuration des lunettes cybernétiques
+ * @returns SVG string
+ */
+export function generateCyberGlasses (config: CyberGlassesConfig = {
+  frameColor: '#00FFFF',
+  glowColor: '#00FFFF',
+  hasHUD: true
+}): string {
+  const { frameColor, glowColor, hasHUD } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 80" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <linearGradient id="cyber-glow" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:${glowColor};stop-opacity:0.8" />
+          <stop offset="100%" style="stop-color:${glowColor};stop-opacity:0.3" />
+        </linearGradient>
+        <filter id="cyber-blur">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+        </filter>
+      </defs>
+
+      <!-- Verre gauche futuriste -->
+      <rect 
+        x="15" 
+        y="25" 
+        width="70" 
+        height="35" 
+        rx="3"
+        fill="url(#cyber-glow)"
+        stroke="${frameColor}"
+        stroke-width="2"
+      />
+      
+      <!-- Verre droit futuriste -->
+      <rect 
+        x="115" 
+        y="25" 
+        width="70" 
+        height="35" 
+        rx="3"
+        fill="url(#cyber-glow)"
+        stroke="${frameColor}"
+        stroke-width="2"
+      />
+      
+      <!-- Pont technologique -->
+      <rect 
+        x="85" 
+        y="40" 
+        width="30" 
+        height="5" 
+        fill="${frameColor}"
+      />
+      
+      ${hasHUD ? `
+      <!-- Affichage HUD gauche -->
+      <g opacity="0.9">
+        <line x1="25" y1="35" x2="75" y2="35" stroke="${glowColor}" stroke-width="0.5" />
+        <line x1="25" y1="40" x2="60" y2="40" stroke="${glowColor}" stroke-width="0.5" />
+        <line x1="25" y1="45" x2="70" y2="45" stroke="${glowColor}" stroke-width="0.5" />
+        <text x="28" y="52" font-family="monospace" font-size="6" fill="${glowColor}">SCANNING...</text>
+      </g>
+      
+      <!-- Affichage HUD droit -->
+      <g opacity="0.9">
+        <line x1="125" y1="35" x2="175" y2="35" stroke="${glowColor}" stroke-width="0.5" />
+        <line x1="125" y1="40" x2="160" y2="40" stroke="${glowColor}" stroke-width="0.5" />
+        <circle cx="170" cy="45" r="8" fill="none" stroke="${glowColor}" stroke-width="0.5" />
+        <circle cx="170" cy="45" r="5" fill="none" stroke="${glowColor}" stroke-width="0.5" />
+      </g>
+      ` : ''}
+      
+      <!-- Branches futuristes -->
+      <line x1="15" y1="42" x2="0" y2="42" stroke="${frameColor}" stroke-width="3" />
+      <line x1="185" y1="42" x2="200" y2="42" stroke="${frameColor}" stroke-width="3" />
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate laser glasses SVG
+ *
+ * @param config - Configuration des lunettes laser
+ * @returns SVG string
+ */
+export function generateLaserGlasses (config: LaserGlassesConfig = {
+  frameColor: '#FF0000',
+  laserColor: '#FF0000',
+  isActive: true
+}): string {
+  const { frameColor, laserColor, isActive } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 100" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <radialGradient id="laser-glow">
+          <stop offset="0%" style="stop-color:${laserColor};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:${laserColor};stop-opacity:0" />
+        </radialGradient>
+      </defs>
+
+      <!-- Monture gauche -->
+      <rect 
+        x="20" 
+        y="30" 
+        width="60" 
+        height="30" 
+        rx="5"
+        fill="#1A1A1A"
+        stroke="${frameColor}"
+        stroke-width="2.5"
+      />
+      
+      <!-- Monture droite -->
+      <rect 
+        x="120" 
+        y="30" 
+        width="60" 
+        height="30" 
+        rx="5"
+        fill="#1A1A1A"
+        stroke="${frameColor}"
+        stroke-width="2.5"
+      />
+      
+      <!-- Pont renforcé -->
+      <rect 
+        x="80" 
+        y="42" 
+        width="40" 
+        height="8" 
+        fill="${frameColor}"
+      />
+      
+      ${isActive ? `
+      <!-- Rayons laser gauche -->
+      <g opacity="0.8">
+        <line x1="50" y1="45" x2="50" y2="80" stroke="${laserColor}" stroke-width="2" />
+        <circle cx="50" cy="80" r="3" fill="url(#laser-glow)" />
+        <ellipse cx="50" cy="80" rx="8" ry="4" fill="${laserColor}" opacity="0.3" />
+      </g>
+      
+      <!-- Rayons laser droit -->
+      <g opacity="0.8">
+        <line x1="150" y1="45" x2="150" y2="80" stroke="${laserColor}" stroke-width="2" />
+        <circle cx="150" cy="80" r="3" fill="url(#laser-glow)" />
+        <ellipse cx="150" cy="80" rx="8" ry="4" fill="${laserColor}" opacity="0.3" />
+      </g>
+      
+      <!-- LEDs d'activation -->
+      <circle cx="75" cy="35" r="2" fill="#00FF00" />
+      <circle cx="125" cy="35" r="2" fill="#00FF00" />
+      ` : ''}
+      
+      <!-- Branches -->
+      <line x1="20" y1="45" x2="5" y2="45" stroke="${frameColor}" stroke-width="3" />
+      <line x1="180" y1="45" x2="195" y2="45" stroke="${frameColor}" stroke-width="3" />
+    </svg>
+  `.trim()
+}
+
+/**
  * Generate glasses by type
  *
  * @param type - Type de lunettes à générer
@@ -310,6 +660,14 @@ export function generateGlasses (type: GlassesType): string {
       return generateSunglasses()
     case 'nerd':
       return generateNerdGlasses()
+    case 'reading':
+      return generateReadingGlasses()
+    case 'monocle':
+      return generateMonocle()
+    case 'cyber':
+      return generateCyberGlasses()
+    case 'laser':
+      return generateLaserGlasses()
     default:
       return generateSunglasses()
   }

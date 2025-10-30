@@ -15,7 +15,7 @@
 /**
  * Type de chapeau disponible
  */
-export type HatType = 'party' | 'crown' | 'wizard'
+export type HatType = 'party' | 'crown' | 'wizard' | 'baseball' | 'cowboy' | 'top'
 
 /**
  * Configuration pour les chapeaux de fête
@@ -42,6 +42,33 @@ interface WizardHatConfig {
   hatColor: string
   starColor: string
   hasMoon: boolean
+}
+
+/**
+ * Configuration pour les casquettes de baseball
+ */
+interface BaseballCapConfig {
+  capColor: string
+  logoColor: string
+  hasLogo: boolean
+}
+
+/**
+ * Configuration pour les chapeaux de cowboy
+ */
+interface CowboyHatConfig {
+  hatColor: string
+  bandColor: string
+  hasStar: boolean
+}
+
+/**
+ * Configuration pour les hauts-de-forme
+ */
+interface TopHatConfig {
+  hatColor: string
+  bandColor: string
+  hasRibbon: boolean
 }
 
 /**
@@ -312,6 +339,267 @@ export function generateWizardHat (config: WizardHatConfig = {
 }
 
 /**
+ * Generate baseball cap SVG
+ *
+ * @param config - Configuration de la casquette
+ * @returns SVG string
+ */
+export function generateBaseballCap (config: BaseballCapConfig = {
+  capColor: '#FF0000',
+  logoColor: '#FFFFFF',
+  hasLogo: true
+}): string {
+  const { capColor, logoColor, hasLogo } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <linearGradient id="cap-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:${capColor};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#AA0000;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+
+      <!-- Visière -->
+      <ellipse
+        cx="100"
+        cy="120"
+        rx="70"
+        ry="20"
+        fill="#2C2C2C"
+        stroke="#1A1A1A"
+        stroke-width="2"
+      />
+
+      <!-- Partie principale de la casquette -->
+      <ellipse
+        cx="100"
+        cy="90"
+        rx="50"
+        ry="40"
+        fill="url(#cap-gradient)"
+        stroke="#AA0000"
+        stroke-width="2"
+      />
+
+      <!-- Bouton au sommet -->
+      <circle
+        cx="100"
+        cy="60"
+        r="5"
+        fill="${capColor}"
+        stroke="#AA0000"
+        stroke-width="1.5"
+      />
+
+      ${hasLogo ? `
+      <!-- Logo -->
+      <text
+        x="100"
+        y="95"
+        font-family="Arial, sans-serif"
+        font-size="24"
+        font-weight="bold"
+        text-anchor="middle"
+        fill="${logoColor}"
+      >M</text>
+      ` : ''}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate cowboy hat SVG
+ *
+ * @param config - Configuration du chapeau de cowboy
+ * @returns SVG string
+ */
+export function generateCowboyHat (config: CowboyHatConfig = {
+  hatColor: '#8B4513',
+  bandColor: '#654321',
+  hasStar: true
+}): string {
+  const { hatColor, bandColor, hasStar } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <linearGradient id="cowboy-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#A0522D;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:${hatColor};stop-opacity:1" />
+        </linearGradient>
+      </defs>
+
+      <!-- Grand bord -->
+      <ellipse
+        cx="100"
+        cy="130"
+        rx="80"
+        ry="20"
+        fill="url(#cowboy-gradient)"
+        stroke="${bandColor}"
+        stroke-width="3"
+      />
+
+      <!-- Courbe du bord relevé -->
+      <path
+        d="M 30 130 Q 50 110 80 115"
+        fill="url(#cowboy-gradient)"
+        stroke="${bandColor}"
+        stroke-width="2"
+      />
+      <path
+        d="M 170 130 Q 150 110 120 115"
+        fill="url(#cowboy-gradient)"
+        stroke="${bandColor}"
+        stroke-width="2"
+      />
+
+      <!-- Couronne du chapeau -->
+      <ellipse
+        cx="100"
+        cy="90"
+        rx="40"
+        ry="35"
+        fill="url(#cowboy-gradient)"
+        stroke="${bandColor}"
+        stroke-width="2"
+      />
+
+      <!-- Dent au sommet -->
+      <path
+        d="M 90 70 Q 100 60 110 70"
+        fill="${hatColor}"
+        stroke="${bandColor}"
+        stroke-width="2"
+      />
+
+      <!-- Bande décorative -->
+      <ellipse
+        cx="100"
+        cy="110"
+        rx="42"
+        ry="8"
+        fill="${bandColor}"
+        stroke="#4A3020"
+        stroke-width="2"
+      />
+
+      ${hasStar ? `
+      <!-- Étoile de shérif -->
+      <g transform="translate(100, 110)">
+        <path
+          d="M 0,-5 L 1.5,-1.5 L 5.5,-1 L 2.7,1.5 L 3.4,5.5 L 0,3.5 L -3.4,5.5 L -2.7,1.5 L -5.5,-1 L -1.5,-1.5 Z"
+          fill="#FFD700"
+          stroke="#DAA520"
+          stroke-width="1"
+        />
+      </g>
+      ` : ''}
+    </svg>
+  `.trim()
+}
+
+/**
+ * Generate top hat SVG
+ *
+ * @param config - Configuration du haut-de-forme
+ * @returns SVG string
+ */
+export function generateTopHat (config: TopHatConfig = {
+  hatColor: '#1A1A1A',
+  bandColor: '#8B0000',
+  hasRibbon: true
+}): string {
+  const { hatColor, bandColor, hasRibbon } = config
+
+  return `
+    <svg 
+      viewBox="0 0 200 200" 
+      xmlns="http://www.w3.org/2000/svg"
+      style="width: 100%; height: auto;"
+    >
+      <defs>
+        <linearGradient id="tophat-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:${hatColor};stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#333333;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+
+      <!-- Bord du chapeau -->
+      <ellipse
+        cx="100"
+        cy="130"
+        rx="70"
+        ry="15"
+        fill="url(#tophat-gradient)"
+        stroke="#000000"
+        stroke-width="3"
+      />
+
+      <!-- Cylindre principal -->
+      <rect
+        x="60"
+        y="50"
+        width="80"
+        height="80"
+        rx="5"
+        fill="url(#tophat-gradient)"
+        stroke="#000000"
+        stroke-width="3"
+      />
+
+      <!-- Sommet du chapeau -->
+      <ellipse
+        cx="100"
+        cy="50"
+        rx="40"
+        ry="10"
+        fill="${hatColor}"
+        stroke="#000000"
+        stroke-width="2"
+      />
+
+      ${hasRibbon ? `
+      <!-- Ruban décoratif -->
+      <rect
+        x="60"
+        y="105"
+        width="80"
+        height="15"
+        fill="${bandColor}"
+        stroke="#660000"
+        stroke-width="2"
+      />
+      <!-- Nœud du ruban -->
+      <circle cx="140" cy="112" r="8" fill="${bandColor}" stroke="#660000" stroke-width="2" />
+      <circle cx="152" cy="112" r="8" fill="${bandColor}" stroke="#660000" stroke-width="2" />
+      <rect x="144" y="108" width="4" height="8" fill="${bandColor}" />
+      ` : ''}
+
+      <!-- Reflet -->
+      <ellipse
+        cx="80"
+        cy="75"
+        rx="8"
+        ry="20"
+        fill="white"
+        opacity="0.2"
+      />
+    </svg>
+  `.trim()
+}
+
+/**
  * Generate hat by type
  *
  * @param type - Type de chapeau à générer
@@ -325,6 +613,12 @@ export function generateHat (type: HatType): string {
       return generateCrown()
     case 'wizard':
       return generateWizardHat()
+    case 'baseball':
+      return generateBaseballCap()
+    case 'cowboy':
+      return generateCowboyHat()
+    case 'top':
+      return generateTopHat()
     default:
       return generatePartyHat()
   }

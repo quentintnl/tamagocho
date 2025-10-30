@@ -21,26 +21,45 @@ import type { AccessoryCategory } from '@/types/accessory'
  * Mapping d'ID d'accessoire vers son type spécifique
  */
 const ACCESSORY_TYPE_MAP: Record<string, { category: AccessoryCategory, type: string }> = {
-  // Hats
+  // Hats (6 items)
   'hat-party': { category: 'hat', type: 'party' },
+  'hat-baseball': { category: 'hat', type: 'baseball' },
+  'hat-cowboy': { category: 'hat', type: 'cowboy' },
   'hat-crown': { category: 'hat', type: 'crown' },
+  'hat-top': { category: 'hat', type: 'top' },
   'hat-wizard': { category: 'hat', type: 'wizard' },
 
-  // Glasses
+  // Glasses (6 items)
   'glasses-cool': { category: 'glasses', type: 'sunglasses' },
+  'glasses-reading': { category: 'glasses', type: 'reading' },
   'glasses-nerd': { category: 'glasses', type: 'nerd' },
+  'glasses-monocle': { category: 'glasses', type: 'monocle' },
+  'glasses-cyber': { category: 'glasses', type: 'cyber' },
+  'glasses-laser': { category: 'glasses', type: 'laser' },
 
-  // Shoes
+  // Shoes (6 items)
   'shoes-sneakers': { category: 'shoes', type: 'sneakers' },
+  'shoes-sandals': { category: 'shoes', type: 'sandals' },
+  'shoes-heels': { category: 'shoes', type: 'heels' },
   'shoes-boots': { category: 'shoes', type: 'boots' },
+  'shoes-rollers': { category: 'shoes', type: 'rollers' },
+  'shoes-rocket': { category: 'shoes', type: 'rocket' },
 
-  // Backgrounds
+  // Backgrounds (6 items)
+  'bg-clouds': { category: 'background', type: 'clouds' },
+  'bg-sunset': { category: 'background', type: 'sunset' },
   'bg-stars': { category: 'background', type: 'stars' },
   'bg-rainbow': { category: 'background', type: 'rainbow' },
+  'bg-galaxy': { category: 'background', type: 'galaxy' },
+  'bg-aurora': { category: 'background', type: 'aurora' },
 
-  // Effects
+  // Effects (6 items)
+  'effect-hearts': { category: 'effect', type: 'hearts' },
+  'effect-bubbles': { category: 'effect', type: 'bubbles' },
   'effect-sparkles': { category: 'effect', type: 'sparkles' },
-  'effect-fire': { category: 'effect', type: 'fire' }
+  'effect-lightning': { category: 'effect', type: 'lightning' },
+  'effect-fire': { category: 'effect', type: 'fire' },
+  'effect-divine': { category: 'effect', type: 'divine' }
 }
 
 /**
