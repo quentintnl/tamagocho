@@ -17,8 +17,8 @@
 
 'use client'
 
-import { useState } from 'react'
-import type { Accessory, AccessoryCategory } from '@/types/accessory'
+import { useState, useMemo } from 'react'
+import type { Accessory } from '@/types/accessory'
 import { AccessoryCard } from './accessory-card'
 import { CategoryFilter } from './category-filter'
 import { FeedbackMessage } from './feedback-message'
@@ -42,13 +42,10 @@ interface AccessoryShopProps {
 /**
  * Options de filtrage par catégorie
  */
-const CATEGORIES: Array<{ value: AccessoryCategory | 'all', label: string, icon: string }> = [
+const CATEGORIES: Array<{ value: 'all' | 'accessories' | 'backgrounds', label: string, icon: string }> = [
   { value: 'all', label: 'Tout', icon: '🎯' },
-  { value: 'hat', label: 'Chapeaux', icon: '🎩' },
-  { value: 'glasses', label: 'Lunettes', icon: '👓' },
-  { value: 'shoes', label: 'Chaussures', icon: '👟' },
-  { value: 'background', label: 'Fonds', icon: '🖼️' },
-  { value: 'effect', label: 'Effets', icon: '✨' }
+  { value: 'accessories', label: 'Accessoires', icon: '🎨' },
+  { value: 'backgrounds', label: 'Arrière-plans', icon: '🖼️' }
 ]
 
 /**
@@ -70,7 +67,7 @@ const CATEGORIES: Array<{ value: AccessoryCategory | 'all', label: string, icon:
  * />
  */
 export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [], onPurchaseSuccess }: AccessoryShopProps): React.ReactNode {
-  const [selectedCategory, setSelectedCategory] = useState<AccessoryCategory | 'all'>('all')
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'accessories' | 'backgrounds'>('all')
 
   // Hooks pour la gestion de l'état
   const { wallet, refresh: refreshWallet } = useWallet()
@@ -79,9 +76,26 @@ export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [],
   /**
    * Filtre les accessoires selon la catégorie sélectionnée
    */
-  const filteredAccessories = selectedCategory === 'all'
-    ? accessories
-    : accessories.filter(acc => acc.category === selectedCategory)
+  const filteredAccessories = useMemo(() => {
+    if (selectedCategory === 'all') {
+      return accessories
+    } else if (selectedCategory === 'accessories') {
+      return accessories.filter(acc => acc.category !== 'background')
+    } else {
+      return accessories.filter(acc => acc.category === 'background')
+    }
+  }, [accessories, selectedCategory])
+
+  /**
+   * Compte les accessoires par catégorie
+   */
+  const counts = useMemo(() => {
+    return {
+      all: accessories.length,
+      accessories: accessories.filter(acc => acc.category !== 'background').length,
+      backgrounds: accessories.filter(acc => acc.category === 'background').length
+    }
+  }, [accessories])
 
   /**
    * Gère l'achat d'un accessoire
@@ -106,7 +120,7 @@ export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [],
       {/* Header */}
       <div className='mb-6'>
         <h2 className='text-3xl font-bold text-foreground mb-2 flex items-center gap-2'>
-          🏪 Boutique d'Accessoires
+          🏪 Boutique
         </h2>
         <p className='text-foreground/70'>
           Équipez votre monstre avec des accessoires uniques !
@@ -123,6 +137,7 @@ export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [],
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         categories={CATEGORIES}
+        counts={counts}
       />
 
       {/* Grille d'accessoires */}

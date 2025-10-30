@@ -15,13 +15,12 @@
  */
 
 import type React from 'react'
-import type { AccessoryCategory } from '@/types/accessory'
 
 /**
  * Option de catégorie pour le filtre
  */
 interface CategoryOption {
-  value: AccessoryCategory | 'all'
+  value: 'all' | 'accessories' | 'backgrounds'
   label: string
   icon: string
 }
@@ -31,11 +30,13 @@ interface CategoryOption {
  */
 interface CategoryFilterProps {
   /** Catégorie actuellement sélectionnée */
-  selectedCategory: AccessoryCategory | 'all'
+  selectedCategory: 'all' | 'accessories' | 'backgrounds'
   /** Callback appelé lors du changement de catégorie */
-  onCategoryChange: (category: AccessoryCategory | 'all') => void
+  onCategoryChange: (category: 'all' | 'accessories' | 'backgrounds') => void
   /** Liste des catégories disponibles */
   categories: CategoryOption[]
+  /** Compteurs optionnels pour chaque catégorie */
+  counts?: Record<'all' | 'accessories' | 'backgrounds', number>
 }
 
 /**
@@ -57,11 +58,12 @@ interface CategoryFilterProps {
 export function CategoryFilter ({
   selectedCategory,
   onCategoryChange,
-  categories
+  categories,
+  counts
 }: CategoryFilterProps): React.ReactNode {
   return (
     <div className='mb-6'>
-      <div className='flex flex-wrap gap-2'>
+      <div className='flex flex-wrap gap-2 justify-center'>
         {categories.map(category => (
           <button
             key={category.value}
@@ -73,8 +75,24 @@ export function CategoryFilter ({
             }`}
             aria-pressed={selectedCategory === category.value}
           >
-            <span className='mr-1' aria-hidden='true'>{category.icon}</span>
-            {category.label}
+            <div className='flex items-center gap-2'>
+              <span aria-hidden='true'>{category.icon}</span>
+              <span>{category.label}</span>
+              {counts !== undefined && (
+                <span
+                  className={`
+                    inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold
+                    ${
+                      selectedCategory === category.value
+                        ? 'bg-white/20 text-white'
+                        : 'bg-lochinvar-200 text-lochinvar-800'
+                    }
+                  `}
+                >
+                  {counts[category.value]}
+                </span>
+              )}
+            </div>
           </button>
         ))}
       </div>

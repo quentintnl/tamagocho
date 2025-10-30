@@ -7,13 +7,14 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { AccessoriesList } from '@/components/wallet/accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
 import { getUserOwnedAccessoryIds, purchaseAccessoryOnly } from '@/actions/accessory.actions'
 import { useWallet } from '@/hooks/useWallet'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { PurchaseConfirmationModal } from '@/components/accessories/purchase-confirmation-modal'
+import { ShopTabs, type ShopTab } from '@/components/shop/shop-tabs'
 import { toast } from 'react-toastify'
 import type { Accessory } from '@/types/accessory'
 
@@ -33,7 +34,27 @@ export default function ShopPage (): React.ReactNode {
   const [ownedAccessoryIds, setOwnedAccessoryIds] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
+  const [activeTab, setActiveTab] = useState<ShopTab>('accessories')
   const { wallet } = useWallet()
+
+  // Filtrer les accessoires selon l'onglet actif
+  const filteredAccessories = useMemo(() => {
+    if (activeTab === 'accessories') {
+      // Tout sauf les backgrounds
+      return accessories.filter(acc => acc.category !== 'background')
+    } else {
+      // Seulement les backgrounds
+      return accessories.filter(acc => acc.category === 'background')
+    }
+  }, [accessories, activeTab])
+
+  // Compter les accessoires par catégorie
+  const counts = useMemo(() => {
+    return {
+      accessories: accessories.filter(acc => acc.category !== 'background').length,
+      backgrounds: accessories.filter(acc => acc.category === 'background').length
+    }
+  }, [accessories])
 
   // Charger les accessoires disponibles et possédés au montage
   useEffect(() => {
@@ -85,7 +106,6 @@ export default function ShopPage (): React.ReactNode {
 
       if (result.success) {
         toast.success(result.message, {
-          icon: '✨',
           autoClose: 5000
         })
 
@@ -143,7 +163,7 @@ export default function ShopPage (): React.ReactNode {
             Boutique d&apos;Accessoires
           </h1>
           <p className='text-lg text-slate-600 max-w-2xl mx-auto'>
-            Personnalisez vos monstres avec style ! Découvrez notre collection exclusive d&apos;accessoires pour rendre vos compagnons uniques.
+            Personnalisez vos monstres avec style ! Découvrez notre collection exclusive d&apos;accessoires et d&apos;arrière-plans pour rendre vos compagnons uniques.
           </p>
         </div>
 
@@ -163,9 +183,27 @@ export default function ShopPage (): React.ReactNode {
           </div>
         </div>
 
+        {/* Onglets de navigation */}
+        <ShopTabs
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          accessoriesCount={counts.accessories}
+          backgroundsCount={counts.backgrounds}
+        />
+
+        {/* En-tête de section */}
+        <div className='mb-6'>
+          <h2 className='text-2xl font-semibold text-slate-900'>
+            {activeTab === 'accessories' ? '🎨 Accessoires' : '🖼️ Arrière-plans'}
+          </h2>
+          <p className='mt-2 text-sm text-slate-600'>
+            {filteredAccessories.length} {activeTab === 'accessories' ? 'accessoires' : 'arrière-plans'} disponibles
+          </p>
+        </div>
+
         {/* Liste des accessoires */}
         <AccessoriesList
-          accessories={accessories}
+          accessories={filteredAccessories}
           onPurchase={handlePurchase}
           ownedAccessoryIds={ownedAccessoryIds}
         />

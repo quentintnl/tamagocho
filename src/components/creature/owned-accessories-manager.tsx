@@ -22,6 +22,7 @@
 
 'use client'
 
+import { useState, useMemo } from 'react'
 import type { OwnedAccessory } from '@/types/accessory'
 import type { Accessory } from '@/types/accessory'
 import { getAccessoryById } from '@/services/accessory.service'
@@ -176,9 +177,41 @@ export function OwnedAccessoriesManager ({
   onAccessoryChange,
   refreshTrigger
 }: OwnedAccessoriesManagerProps): React.ReactNode {
+  // État pour le filtre de catégorie
+  const [activeTab, setActiveTab] = useState<'accessories' | 'backgrounds'>('accessories')
+
   // Hooks personnalisés pour la gestion de l'état
   const { ownedAccessories, loading, refresh } = useOwnedAccessories(refreshTrigger)
   const { processingId, message, toggleEquip } = useAccessoryEquipment()
+
+  // Filtrer les accessoires selon l'onglet actif
+  const filteredOwnedAccessories = useMemo(() => {
+    return ownedAccessories.filter((ownedAcc) => {
+      const accessory = getAccessoryById(ownedAcc.accessoryId)
+      if (accessory === null) return false
+
+      if (activeTab === 'accessories') {
+        return accessory.category !== 'background'
+      } else {
+        return accessory.category === 'background'
+      }
+    })
+  }, [ownedAccessories, activeTab])
+
+  // Compter les accessoires par catégorie
+  const counts = useMemo(() => {
+    const accessoriesCount = ownedAccessories.filter((ownedAcc) => {
+      const accessory = getAccessoryById(ownedAcc.accessoryId)
+      return accessory !== null && accessory.category !== 'background'
+    }).length
+
+    const backgroundsCount = ownedAccessories.filter((ownedAcc) => {
+      const accessory = getAccessoryById(ownedAcc.accessoryId)
+      return accessory !== null && accessory.category === 'background'
+    }).length
+
+    return { accessoriesCount, backgroundsCount }
+  }, [ownedAccessories])
 
   /**
    * Vérifie si un accessoire est équipé sur le monstre
@@ -221,9 +254,71 @@ export function OwnedAccessoriesManager ({
         <FeedbackMessage type={message.type} text={message.text} />
       )}
 
+      {/* Onglets de navigation */}
+      <div className='flex justify-center mb-6'>
+        <div className='inline-flex bg-slate-100 rounded-xl p-1'>
+          <button
+            onClick={() => { setActiveTab('accessories') }}
+            className={`
+              px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300
+              ${
+                activeTab === 'accessories'
+                  ? 'bg-white text-slate-900 shadow-md'
+                  : 'text-slate-600 hover:text-slate-900'
+              }
+            `}
+          >
+            <div className='flex items-center gap-2'>
+              <span className='text-lg'>🎨</span>
+              <span>Accessoires</span>
+              <span
+                className={`
+                  inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold
+                  ${
+                    activeTab === 'accessories'
+                      ? 'bg-lochinvar-100 text-lochinvar-700'
+                      : 'bg-slate-200 text-slate-600'
+                  }
+                `}
+              >
+                {counts.accessoriesCount}
+              </span>
+            </div>
+          </button>
+          <button
+            onClick={() => { setActiveTab('backgrounds') }}
+            className={`
+              px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300
+              ${
+                activeTab === 'backgrounds'
+                  ? 'bg-white text-slate-900 shadow-md'
+                  : 'text-slate-600 hover:text-slate-900'
+              }
+            `}
+          >
+            <div className='flex items-center gap-2'>
+              <span className='text-lg'>🖼️</span>
+              <span>Arrière-plans</span>
+              <span
+                className={`
+                  inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold
+                  ${
+                    activeTab === 'backgrounds'
+                      ? 'bg-lochinvar-100 text-lochinvar-700'
+                      : 'bg-slate-200 text-slate-600'
+                  }
+                `}
+              >
+                {counts.backgroundsCount}
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+
       {/* Grille des accessoires */}
-      <AccessoriesGrid isLoading={loading} count={ownedAccessories.length}>
-        {ownedAccessories.map((ownedAccessory) => {
+      <AccessoriesGrid isLoading={loading} count={filteredOwnedAccessories.length}>
+        {filteredOwnedAccessories.map((ownedAccessory) => {
           const accessory = getAccessoryById(ownedAccessory.accessoryId)
           if (accessory === null) return null
 

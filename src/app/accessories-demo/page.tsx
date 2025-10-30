@@ -54,7 +54,6 @@ export default function AccessoriesDemoPage (): React.ReactNode {
 
       if (result.success) {
         toast.success(result.message, {
-          icon: '✨',
           autoClose: 5000
         })
 
