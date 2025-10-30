@@ -1,4 +1,4 @@
-import { getPublicMonsters } from '@/actions/monsters.actions'
+import { getPublicMonsters } from '@/actions/monsters'
 import { GalleryPageClient } from '@/components/gallery/gallery-page-client'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 

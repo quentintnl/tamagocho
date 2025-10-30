@@ -1,4 +1,4 @@
-import { getMonsters } from '@/actions/monsters.actions'
+import { getMonsters } from '@/actions/monsters'
 import MonstersPageContent from '@/components/monsters/monsters-page-content'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'

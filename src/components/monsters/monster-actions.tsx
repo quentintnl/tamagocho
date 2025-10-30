@@ -1,6 +1,6 @@
 'use client'
 
-import { doActionOnMonster } from '@/actions/monsters.actions'
+import { doActionOnMonster } from '@/actions/monsters'
 import { useMonsterAction, type MonsterAction } from '@/hooks/monsters'
 import { toast } from 'react-toastify'
 import { getRewardMessage } from '@/config/rewards'

@@ -1,4 +1,4 @@
-import { getMonsterById } from '@/actions/monsters.actions'
+import { getMonsterById } from '@/actions/monsters'
 import ErrorClient from '@/components/error-client'
 import { CreaturePageClient } from '@/components/creature/creature-page-client'
 

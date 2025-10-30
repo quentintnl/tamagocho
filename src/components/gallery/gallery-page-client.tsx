@@ -15,7 +15,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { getPublicMonsters, type GalleryFilters, type GalleryResult } from '@/actions/monsters.actions'
+import { getPublicMonsters, type GalleryFilters, type GalleryResult } from '@/actions/monsters'
 import { GalleryFilters as GalleryFiltersComponent } from './gallery-filters'
 import { PublicMonsterCard } from './public-monster-card'
 import { GalleryPagination } from './gallery-pagination'

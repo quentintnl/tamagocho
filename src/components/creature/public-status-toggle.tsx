@@ -15,7 +15,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { toggleMonsterPublicStatus } from '@/actions/monsters.actions'
+import { toggleMonsterPublicStatus } from '@/actions/monsters'
 
 /**
  * Props pour le composant PublicStatusToggle

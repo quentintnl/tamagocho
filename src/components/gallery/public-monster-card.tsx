@@ -17,7 +17,7 @@
 import { PixelMonster } from '@/components/monsters'
 import { MonsterStateBadge, isMonsterState } from '@/components/monsters/monster-state-badge'
 import { parseMonsterTraits, formatAdoptionDate } from '@/lib/utils'
-import type { PublicMonsterWithOwner } from '@/actions/monsters.actions'
+import type { PublicMonsterWithOwner } from '@/actions/monsters'
 
 /**
  * Props pour le composant PublicMonsterCard

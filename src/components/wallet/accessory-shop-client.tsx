@@ -19,7 +19,7 @@ import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { AccessoriesList } from './accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
 import { getUserOwnedAccessoryIds, purchaseAccessory } from '@/actions/accessory.actions'
-import { getMonsters } from '@/actions/monsters.actions'
+import { getMonsters } from '@/actions/monsters'
 import type { AccessoryCategory, AccessoryRarity } from '@/types/accessory'
 
 interface AccessoryShopClientProps {

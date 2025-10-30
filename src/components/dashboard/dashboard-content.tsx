@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { authClient } from '@/lib/auth-client'
-import { createMonster } from '@/actions/monsters.actions'
+import { createMonster } from '@/actions/monsters'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
 import type {PopulatedMonster} from '@/types/monster'
 import {

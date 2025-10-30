@@ -1,0 +1,115 @@
+'use server'
+
+import { connectMongooseToDatabase } from '@/db'
+import Monster from '@/db/models/monster.model'
+import '@/db/models/xp-level.model'
+import { auth } from '@/lib/auth'
+import type { PopulatedMonster } from '@/types/monster'
+import { Types } from 'mongoose'
+import { headers } from 'next/headers'
+
+/**
+ * Récupère tous les monstres de l'utilisateur authentifié
+ *
+ * Cette server action :
+ * 1. Vérifie l'authentification de l'utilisateur
+ * 2. Récupère tous les monstres appartenant à l'utilisateur
+ * 3. Popule les données de niveau XP
+ * 4. Retourne un tableau vide en cas d'erreur (résilience)
+ *
+ * Responsabilité unique : récupérer la liste complète des monstres
+ * de l'utilisateur depuis la base de données.
+ *
+ * @async
+ * @returns {Promise<PopulatedMonster[]>} Liste des monstres ou tableau vide en cas d'erreur
+ *
+ * @example
+ * const monsters = await getMonsters()
+ * // [{ _id: "...", name: "Pikachu", level_id: { level: 1, ... }, ... }, ...]
+ */
+export async function getMonsters (): Promise<PopulatedMonster[]> {
+  try {
+    // Connexion à la base de données
+    await connectMongooseToDatabase()
+
+    // Vérification de l'authentification
+    const session = await auth.api.getSession({
+      headers: await headers()
+    })
+    if (session === null || session === undefined) {
+      throw new Error('User not authenticated')
+    }
+
+    const { user } = session
+
+    // Récupération des monstres de l'utilisateur avec population du level_id
+    const monsters = await Monster.find({ ownerId: user.id }).populate('level_id').exec()
+
+    // Sérialisation JSON pour éviter les problèmes de typage Next.js
+    return JSON.parse(JSON.stringify(monsters))
+  } catch (error) {
+    console.error('Error fetching monsters:', error)
+    return []
+  }
+}
+
+/**
+ * Récupère un monstre spécifique par son identifiant
+ *
+ * Cette server action :
+ * 1. Vérifie l'authentification de l'utilisateur
+ * 2. Valide le format de l'identifiant MongoDB
+ * 3. Récupère le monstre s'il appartient à l'utilisateur
+ * 4. Popule les données de niveau XP
+ * 5. Retourne null si le monstre n'existe pas ou n'appartient pas à l'utilisateur
+ *
+ * Responsabilité unique : récupérer un monstre spécifique
+ * en garantissant la propriété et l'existence.
+ *
+ * @async
+ * @param {string} id - Identifiant du monstre (premier élément du tableau de route dynamique)
+ * @returns {Promise<PopulatedMonster | null>} Le monstre trouvé ou null
+ * @throws {Error} Si l'utilisateur n'est pas authentifié
+ *
+ * @example
+ * const monster = await getMonsterById("507f1f77bcf86cd799439011")
+ * // { _id: "507f1f77bcf86cd799439011", name: "Pikachu", level_id: { level: 2, ... }, ... }
+ *
+ * const notFound = await getMonsterById("invalid-id")
+ * // null
+ */
+export async function getMonsterById (id: string): Promise<PopulatedMonster | null> {
+  try {
+    // Connexion à la base de données
+    await connectMongooseToDatabase()
+
+    // Vérification de l'authentification
+    const session = await auth.api.getSession({
+      headers: await headers()
+    })
+    if (session === null || session === undefined) {
+      throw new Error('User not authenticated')
+    }
+
+    const { user } = session
+
+    // Extraction de l'ID depuis le tableau de route dynamique
+    const _id = id
+
+    // Validation du format ObjectId MongoDB
+    if (!Types.ObjectId.isValid(_id)) {
+      console.error('Invalid monster ID format')
+      return null
+    }
+
+    // Récupération du monstre avec vérification de propriété et population du level_id
+    const monster = await Monster.findOne({ ownerId: user.id, _id }).populate('level_id').exec()
+
+    // Sérialisation JSON pour éviter les problèmes de typage Next.js
+    return JSON.parse(JSON.stringify(monster))
+  } catch (error) {
+    console.error('Error fetching monster by ID:', error)
+    return null
+  }
+}
+
