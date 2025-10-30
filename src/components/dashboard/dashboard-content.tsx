@@ -22,6 +22,7 @@ import { MoodTipSection } from './mood-tip-section'
 import MonstersList from '../monsters/monsters-list'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { MonstersAutoUpdater } from '@/components/monsters/auto-updater'
+import { QuestsAutoRenewer } from '@/components/quests/auto-renewer'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -103,6 +104,15 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
         maxInterval={180000} // 3 minutes
         enabled={true}
         verbose={true}
+        showIndicator={false}
+      />
+
+      {/* Système de renouvellement automatique des quêtes à minuit */}
+      <QuestsAutoRenewer
+        userId={session.user.id}
+        enabled={true}
+        verbose={true}
+        refreshOnRenew={true}
         showIndicator={false}
       />
 
