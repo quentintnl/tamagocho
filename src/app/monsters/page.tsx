@@ -15,9 +15,7 @@ import { headers } from 'next/headers'
  * avec protection d'authentification.
  *
  * @async
- * @returns {Promise<React.ReactNode>} Le contenu de la page monstres ou une redirection vers la page de connexion
- *
- * @throws Redirige vers /sign-in si l'utilisateur n'est pas authentifié
+ * @returns {Promise<React.ReactNode>} Le contenu de la page monstres ou redirection vers /sign-in
  *
  * @example
  * // Accès direct à la route

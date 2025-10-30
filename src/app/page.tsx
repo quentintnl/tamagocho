@@ -7,6 +7,9 @@ import ActionsSection from '@/components/actions-section'
 import NewsletterSection from '@/components/newsletter-section'
 import Footer from '@/components/footer'
 import { Metadata } from 'next'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export const metadata: Readonly<Metadata> = {
   title: 'Tamagotcho - Adopte et prends soin de ton compagnon virtuel',
@@ -23,7 +26,19 @@ export const metadata: Readonly<Metadata> = {
 }
 
 // Single Responsibility: Home page orchestrates the layout of sections
-export default function Home (): React.ReactNode {
+// and handles redirect logic for authenticated users
+export default async function Home (): Promise<React.ReactNode> {
+  // Vérification de la session utilisateur via Better Auth
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  // Redirection intelligente : si connecté, rediriger vers le dashboard
+  if (session !== null && session !== undefined) {
+    redirect('/dashboard')
+  }
+
+  // Landing page pour les utilisateurs non connectés
   return (
     <div className='font-sans'>
       <Header />

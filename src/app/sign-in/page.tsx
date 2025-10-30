@@ -1,8 +1,22 @@
 import AuthFormContent from '@/components/forms/auth-form-content'
 import { connectToDatabase } from '@/db'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 async function SignInPage (): Promise<React.ReactNode> {
   await connectToDatabase()
+
+  // Vérification de la session utilisateur via Better Auth
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  // Si déjà connecté, rediriger vers le dashboard
+  if (session !== null && session !== undefined) {
+    redirect('/dashboard')
+  }
+
   return (
     <div className='min-h-screen bg-gradient-to-br from-moccaccino-50 via-fuchsia-blue-50 to-lochinvar-50 flex items-center justify-center p-4 relative overflow-hidden'>
       {/* Animated floating monsters */}

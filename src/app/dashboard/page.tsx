@@ -2,7 +2,7 @@ import { getMonsters } from '@/actions/monsters.actions'
 import DashboardContent from '@/components/dashboard/dashboard-content'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import {headers} from "next/headers";
+import { headers } from 'next/headers'
 
 /**
  * Page principale du tableau de bord utilisateur
@@ -12,9 +12,7 @@ import {headers} from "next/headers";
  * du dashboard via le composant client DashboardContent.
  *
  * @async
- * @returns {Promise<React.ReactNode>} Le contenu du dashboard ou une redirection vers la page de connexion
- *
- * @throws Redirige vers /sign-in si l'utilisateur n'est pas authentifié
+ * @returns {Promise<React.ReactNode>} Le contenu du dashboard ou redirection vers /sign-in
  *
  * @example
  * // Accès direct à la route
@@ -26,13 +24,13 @@ async function DashboardPage (): Promise<React.ReactNode> {
     headers: await headers()
   })
 
-  // Récupération de tous les monstres appartenant à l'utilisateur connecté
-  const monsters = await getMonsters()
-
   // Protection de la route : redirection si non authentifié
   if (session === null || session === undefined) {
     redirect('/sign-in')
   }
+
+  // Récupération de tous les monstres appartenant à l'utilisateur connecté
+  const monsters = await getMonsters()
 
   return (
     <DashboardContent session={session} monsters={monsters} />
