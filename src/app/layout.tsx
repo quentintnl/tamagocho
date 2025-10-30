@@ -3,6 +3,7 @@ import { Jersey_10, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
+import { WalletProvider } from '@/contexts/wallet-context'
 
 const jersey10 = Jersey_10({
   variable: '--font-jersey10',
@@ -40,7 +41,9 @@ export default function RootLayout ({
       <body
         className={`${jersey10.variable} ${geistMono.variable} antialiased font-sans`}
       >
-        {children}
+        <WalletProvider>
+          {children}
+        </WalletProvider>
         <ToastContainer
           position='top-right'
           autoClose={4000}

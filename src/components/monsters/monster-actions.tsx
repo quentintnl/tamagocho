@@ -2,6 +2,9 @@
 
 import { doActionOnMonster } from '@/actions/monsters.actions'
 import { useMonsterAction, type MonsterAction } from '@/hooks/monsters'
+import { toast } from 'react-toastify'
+import { getRewardMessage } from '@/config/rewards'
+import { useWalletContext } from '@/contexts/wallet-context'
 
 /**
  * Props pour le composant MonsterActions
@@ -119,14 +122,52 @@ function ActionButton ({
  */
 export function MonsterActions ({ onAction, monsterId, onActionComplete }: MonsterActionsProps): React.ReactNode {
   const { activeAction, triggerAction } = useMonsterAction()
+  const { refreshWallet } = useWalletContext()
 
   /**
-     * Gère le déclenchement d'une action
-     * @param {MonsterAction} action - Action à déclencher
-     */
+   * Gère le déclenchement d'une action
+   * @param {MonsterAction} action - Action à déclencher
+   */
   const handleAction = async (action: MonsterAction): Promise<void> => {
     triggerAction(action, onAction)
-    await doActionOnMonster(monsterId, action)
+
+    // Exécution de l'action sur le serveur
+    const result = await doActionOnMonster(monsterId, action)
+
+    // Affichage de la notification de gain de Koins
+    if (result.success && result.koinsEarned > 0) {
+      const message = getRewardMessage(result.action, result.koinsEarned, result.isCorrectAction)
+
+      // Toast de succès avec style personnalisé
+      toast.success(message, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      })
+
+      // Toast supplémentaire pour une action parfaite
+      if (result.isCorrectAction) {
+        toast.info('Ton monstre est heureux ! 🎉', {
+          position: 'top-right',
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        })
+      }
+
+      // Rafraîchir le wallet pour mettre à jour l'affichage
+      await refreshWallet()
+    } else if (!result.success && result.error !== undefined) {
+      toast.error(`Erreur : ${result.error}`, {
+        position: 'top-right',
+        autoClose: 3000
+      })
+    }
 
     // Appeler le callback de rafraîchissement après l'action
     if (onActionComplete !== undefined && onActionComplete !== null) {

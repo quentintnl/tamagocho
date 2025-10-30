@@ -13,7 +13,7 @@
 
 'use client'
 
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 
 interface WalletDisplayProps {
   variant?: 'default' | 'compact'
@@ -28,7 +28,7 @@ interface WalletDisplayProps {
 export default function WalletDisplay ({
   variant = 'default'
 }: WalletDisplayProps): React.ReactNode {
-  const { wallet, isLoading, error } = useWallet()
+  const { wallet, isLoading, error } = useWalletContext()
 
   // Loading state
   if (isLoading) {

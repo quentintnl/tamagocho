@@ -12,6 +12,8 @@ import { revalidatePath } from 'next/cache'
 import { Types } from 'mongoose'
 import { MonsterAction } from '@/hooks/monsters'
 import {headers} from "next/headers";
+import { getActionReward, type MonsterActionType } from '@/config/rewards'
+import { addCoins } from '@/services/wallet.service'
 
 /**
  * Crée un nouveau monstre pour l'utilisateur authentifié
@@ -176,6 +178,18 @@ export async function getMonsterById (id: string): Promise<PopulatedMonster | nu
     }
 }
 
+/**
+ * Résultat d'une action sur un monstre
+ * Contient les informations de récompense pour afficher les notifications
+ */
+export interface ActionResult {
+  success: boolean
+  koinsEarned: number
+  isCorrectAction: boolean
+  action: MonsterActionType
+  error?: string
+}
+
 const actionsStatesMap: Record<Exclude<MonsterAction, null>, string> = {
   feed: 'hungry',
   comfort: 'angry',
@@ -183,7 +197,25 @@ const actionsStatesMap: Record<Exclude<MonsterAction, null>, string> = {
   wake: 'sleepy'
 }
 
-export async function doActionOnMonster (id: string, action: MonsterAction): Promise<void> {
+/**
+ * Effectue une action sur un monstre
+ *
+ * Cette server action :
+ * 1. Vérifie l'authentification
+ * 2. Récupère le monstre
+ * 3. Met à jour l'état du monstre
+ * 4. Calcule et ajoute l'XP
+ * 5. Calcule et ajoute les Koins gagnés
+ * 6. Retourne les informations de récompense
+ *
+ * Responsabilité unique : Orchestrer l'exécution d'une action sur un monstre
+ * et coordonner les systèmes de récompenses (XP + Koins).
+ *
+ * @param id - Identifiant du monstre
+ * @param action - Action à effectuer
+ * @returns Résultat de l'action avec les informations de récompense
+ */
+export async function doActionOnMonster (id: string, action: MonsterAction): Promise<ActionResult> {
   try {
     // Connexion à la base de données
     await connectMongooseToDatabase()
@@ -213,11 +245,13 @@ export async function doActionOnMonster (id: string, action: MonsterAction): Pro
     // Mise à jour de l'état du monstre en fonction de l'action
     if (action !== null && action !== undefined && action in actionsStatesMap) {
       let xpGained = XP_GAIN_INCORRECT_ACTION
+      let isCorrectAction = false
 
       // Si l'action correspond à l'état actuel, c'est une action correcte
       if (monster.state === actionsStatesMap[action]) {
         monster.state = 'happy'
         xpGained = XP_GAIN_CORRECT_ACTION
+        isCorrectAction = true
       }
 
       // Calcul de l'XP total en additionnant l'XP de tous les niveaux précédents
@@ -264,11 +298,41 @@ export async function doActionOnMonster (id: string, action: MonsterAction): Pro
       monster.markModified('xp')
       monster.markModified('level_id')
       await monster.save()
+
+      // Calcul et attribution des Koins
+      const koinsEarned = getActionReward(action as MonsterActionType, isCorrectAction)
+      await addCoins({
+        ownerId: user.id,
+        amount: koinsEarned
+      })
+
+      // Revalidation du cache pour rafraîchir la page
+      revalidatePath(`/creature/${id}`)
+      revalidatePath('/wallet')
+
+      return {
+        success: true,
+        koinsEarned,
+        isCorrectAction,
+        action: action as MonsterActionType
+      }
     }
 
-    // Revalidation du cache pour rafraîchir la page
-    revalidatePath(`/creature/${id}`)
+    return {
+      success: false,
+      koinsEarned: 0,
+      isCorrectAction: false,
+      action: action as MonsterActionType,
+      error: 'Invalid action'
+    }
   } catch (error) {
     console.error('Error updating monster state:', error)
+    return {
+      success: false,
+      koinsEarned: 0,
+      isCorrectAction: false,
+      action: action as MonsterActionType,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }
   }
 }
