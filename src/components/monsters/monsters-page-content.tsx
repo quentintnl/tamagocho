@@ -58,16 +58,6 @@ export default function MonstersPageContent ({
   }, [router])
 
   /**
-   * Message d'en-tête mémorisé
-   */
-  const headerMessage = useMemo(() => {
-    if (monsters.length === 0) {
-      return 'Adoptez votre premier compagnon pour commencer l\'aventure zen !'
-    }
-    return `Vous avez ${monsters.length} créature${monsters.length > 1 ? 's' : ''} dans votre petit paradis`
-  }, [monsters.length])
-
-  /**
    * Grille de monstres mémorisée pour éviter les re-rendus inutiles
    */
   const monstersGrid = useMemo(() => (
@@ -88,69 +78,91 @@ export default function MonstersPageContent ({
   ), [monsters])
 
   return (
-    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50'>
+    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-meadow-50 via-sky-50 to-lavender-100'>
       {/* Système de mise à jour automatique des monstres */}
       <MonstersAutoUpdater
         userId={session.user.id}
       />
 
       {/* Header avec wallet */}
-      <PageHeaderWithWallet title='Mes Créatures' />
+      <PageHeaderWithWallet title='Ma Collection' />
+
+      {/* Motifs décoratifs de fond animés - thème fruits & légumes */}
+      <div className='pointer-events-none absolute -right-20 top-40 h-96 w-96 rounded-full bg-gradient-to-br from-sunset-200/40 via-gold-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '8s' }} />
+      <div className='pointer-events-none absolute -left-24 bottom-40 h-96 w-96 rounded-full bg-gradient-to-tr from-meadow-200/50 via-forest-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '10s' }} />
+      <div className='pointer-events-none absolute right-1/3 top-1/3 h-80 w-80 rounded-full bg-gradient-to-bl from-lavender-200/40 via-sky-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '12s' }} />
 
       {/* Contenu principal */}
-      <main className='container relative mx-auto px-4 py-8 sm:px-6 lg:px-8'>
-        {/* Décoration de fond - thème nature */}
-        <div
-          className='pointer-events-none absolute left-1/4 top-20 h-96 w-96 rounded-full bg-meadow-200/30 blur-3xl'
-          aria-hidden='true'
-        />
-        <div
-          className='pointer-events-none absolute bottom-40 right-1/4 h-96 w-96 rounded-full bg-lavender-200/30 blur-3xl'
-          aria-hidden='true'
-        />
-        <div
-          className='pointer-events-none absolute top-1/2 left-1/2 h-80 w-80 rounded-full bg-sky-200/20 blur-3xl'
-          aria-hidden='true'
-        />
-
-        {/* Section de bienvenue */}
-        <div className='relative mb-8 text-center'>
-          <h1 className='mb-2 text-4xl font-bold text-forest-800 sm:text-5xl'>
-            🌸 Ma Collection de Créatures
-          </h1>
-          <p className='text-lg text-forest-600 leading-relaxed'>
-            {headerMessage}
-          </p>
-        </div>
+      <main className='container relative z-10 mx-auto px-4 py-8 sm:px-6 lg:px-8 pb-24'>
 
         {/* Grille de monstres ou état vide */}
         {monsters.length === 0
           ? (
-            <div className='relative flex min-h-[500px] flex-col items-center justify-center gap-6'>
+            <div className='relative flex min-h-[400px] flex-col items-center justify-center'>
               <EmptyMonstersState />
-              <Button
-                variant='primary'
-                size='lg'
-                onClick={handleCreateMonster}
-              >
-                ➕ Créer mon premier monstre
-              </Button>
             </div>
             )
-          : monstersGrid}
+          : (
+            <>
+              {/* Statistiques rapides */}
+              <div className='mb-8 grid grid-cols-2 md:grid-cols-4 gap-4'>
+                <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-meadow-100 via-white to-forest-50 p-5 shadow-lg border-2 border-meadow-200/80 hover:shadow-xl transition-all'>
+                  <div className='absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+                  <div className='relative flex items-center gap-3'>
+                    <div className='flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-meadow-400 to-forest-500 shadow-lg text-xl border-2 border-white/80'>
+                      🌱
+                    </div>
+                    <div>
+                      <p className='text-2xl font-black text-forest-800'>{monsters.length}</p>
+                      <p className='text-xs font-bold text-meadow-700'>Total</p>
+                    </div>
+                  </div>
+                </div>
 
-        {/* Actions rapides */}
-        {monsters.length > 0 && (
-          <div className='relative mt-12 flex justify-center gap-4'>
-            <Button
-              variant='primary'
-              size='lg'
-              onClick={handleCreateMonster}
-            >
-              ➕ Créer un nouveau monstre
-            </Button>
-          </div>
-        )}
+                <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-sky-100 via-white to-lavender-50 p-5 shadow-lg border-2 border-sky-200/80 hover:shadow-xl transition-all'>
+                  <div className='absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+                  <div className='relative flex items-center gap-3'>
+                    <div className='flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-sky-400 to-lavender-500 shadow-lg text-xl border-2 border-white/80'>
+                      ⭐
+                    </div>
+                    <div>
+                      <p className='text-2xl font-black text-forest-800'>{Math.max(...monsters.map(m => m.level_id?.level ?? 1))}</p>
+                      <p className='text-xs font-bold text-sky-700'>Niveau Max</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-sunset-100 via-white to-gold-50 p-5 shadow-lg border-2 border-sunset-200/80 hover:shadow-xl transition-all'>
+                  <div className='absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+                  <div className='relative flex items-center gap-3'>
+                    <div className='flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-sunset-400 to-gold-500 shadow-lg text-xl border-2 border-white/80'>
+                      😊
+                    </div>
+                    <div>
+                      <p className='text-2xl font-black text-forest-800'>{monsters.filter(m => m.state === 'happy').length}</p>
+                      <p className='text-xs font-bold text-sunset-700'>Heureux</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-lavender-100 via-white to-fuchsia-blue-50 p-5 shadow-lg border-2 border-lavender-200/80 hover:shadow-xl transition-all'>
+                  <div className='absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+                  <div className='relative flex items-center gap-3'>
+                    <div className='flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-lavender-400 to-fuchsia-blue-500 shadow-lg text-xl border-2 border-white/80'>
+                      😴
+                    </div>
+                    <div>
+                      <p className='text-2xl font-black text-forest-800'>{monsters.filter(m => m.state === 'sleepy').length}</p>
+                      <p className='text-xs font-bold text-lavender-700'>Endormis</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Grille de monstres */}
+              {monstersGrid}
+            </>
+            )}
       </main>
     </div>
   )

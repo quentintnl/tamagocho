@@ -14,31 +14,32 @@ import PageHeaderWithWallet from '@/components/page-header-with-wallet'
  * @returns {React.ReactNode} Skeleton d'une carte de monstre
  */
 function MonsterCardSkeleton (): React.ReactNode {
-  const decorativeBubbleClass = 'pointer-events-none absolute rounded-full blur-3xl'
-
   return (
-    <article className='relative flex flex-col gap-5 overflow-hidden rounded-3xl bg-gradient-to-br from-white/95 via-white to-meadow-50/60 p-6 shadow-[0_20px_54px_rgba(22,101,52,0.12)] ring-2 ring-meadow-200/60 backdrop-blur'>
-      <div
-        className={`${decorativeBubbleClass} -right-16 top-20 h-40 w-40 bg-lavender-100/40`}
-        aria-hidden='true'
-      />
-      <div
-        className={`${decorativeBubbleClass} -left-20 -top-16 h-48 w-48 bg-sky-100/40`}
-        aria-hidden='true'
-      />
+    <article className='relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-white via-sky-50/30 to-meadow-50/40 p-6 shadow-xl border-4 border-white/90 backdrop-blur animate-pulse'>
+      {/* Motifs décoratifs */}
+      <div className='absolute -right-12 top-16 h-32 w-32 rounded-full bg-lavender-200/20 blur-2xl' aria-hidden='true' />
+      <div className='absolute -left-12 -top-12 h-36 w-36 rounded-full bg-sunset-200/15 blur-2xl' aria-hidden='true' />
 
-      <div className='flex flex-col gap-5'>
-        <div className='flex items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-meadow-50/50 to-sky-50/50 p-4 ring-1 ring-meadow-200/50 shadow-inner'>
-          <div className='h-48 w-full animate-pulse rounded-2xl bg-gradient-to-br from-meadow-100 to-sky-100' />
+      <div className='relative flex flex-col gap-5'>
+        {/* Zone de rendu du monstre skeleton */}
+        <div className='flex items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-meadow-50 via-white to-sky-50 p-6 border-3 border-meadow-200/50 shadow-inner'>
+          <div className='h-48 w-48 rounded-2xl bg-gradient-to-br from-meadow-100 to-sky-100' />
         </div>
 
-        <div className='flex flex-1 flex-col gap-4'>
+        {/* Informations skeleton */}
+        <div className='flex flex-col gap-4'>
           <div className='flex items-start justify-between gap-3'>
             <div className='flex-1 space-y-2'>
-              <div className='h-6 w-32 animate-pulse rounded-lg bg-forest-200/50' />
-              <div className='h-4 w-24 animate-pulse rounded-lg bg-forest-100/50' />
+              <div className='h-7 w-32 rounded-lg bg-forest-200/50' />
+              <div className='h-4 w-24 rounded-lg bg-forest-100/50' />
             </div>
-            <div className='h-8 w-20 animate-pulse rounded-full bg-sunset-100/50' />
+            <div className='h-9 w-24 rounded-2xl bg-gold-200/50' />
+          </div>
+          {/* Barre de progression skeleton */}
+          <div className='flex gap-1'>
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className='h-1.5 flex-1 rounded-full bg-forest-100/50' />
+            ))}
           </div>
         </div>
       </div>
@@ -53,21 +54,40 @@ function MonsterCardSkeleton (): React.ReactNode {
  */
 function MonstersLoadingSkeleton (): React.ReactNode {
   return (
-    <div className='min-h-screen bg-gradient-to-b from-lochinvar-50 to-fuchsia-blue-50'>
+    <div className='min-h-screen bg-gradient-to-br from-meadow-50 via-sky-50 to-lavender-100'>
       <PageHeaderWithWallet />
 
-      <div className='py-12'>
-        <div className='container mx-auto px-4'>
-          <div className='mb-8 space-y-4'>
-            <div className='h-10 w-64 animate-pulse rounded-lg bg-slate-200' />
-            <div className='h-6 w-96 animate-pulse rounded-lg bg-slate-100' />
+      <div className='container mx-auto px-4 py-8 sm:px-6 lg:px-8'>
+        {/* En-tête skeleton */}
+        <div className='mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-meadow-100 via-white to-sky-100 p-8 shadow-xl border-4 border-white/80 animate-pulse'>
+          <div className='text-center space-y-4'>
+            <div className='h-12 w-48 mx-auto rounded-full bg-white/50' />
+            <div className='h-12 w-96 max-w-full mx-auto rounded-lg bg-forest-200/30' />
+            <div className='h-6 w-64 max-w-full mx-auto rounded-lg bg-forest-100/30' />
+            <div className='h-12 w-64 mx-auto rounded-xl bg-meadow-200/30' />
           </div>
+        </div>
 
-          <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>
-            {[...Array(6)].map((_, i) => (
-              <MonsterCardSkeleton key={i} />
-            ))}
-          </div>
+        {/* Stats skeleton */}
+        <div className='mb-8 grid grid-cols-2 md:grid-cols-4 gap-4'>
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className='rounded-2xl bg-white/60 p-5 shadow-lg border-2 border-meadow-200/50 animate-pulse'>
+              <div className='flex items-center gap-3'>
+                <div className='h-12 w-12 rounded-xl bg-meadow-200/50' />
+                <div className='space-y-2'>
+                  <div className='h-8 w-12 rounded bg-forest-200/50' />
+                  <div className='h-3 w-16 rounded bg-forest-100/50' />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Grille skeleton */}
+        <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+          {[...Array(8)].map((_, i) => (
+            <MonsterCardSkeleton key={i} />
+          ))}
         </div>
       </div>
     </div>
