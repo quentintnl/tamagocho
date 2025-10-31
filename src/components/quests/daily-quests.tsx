@@ -18,7 +18,9 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { getUserDailyQuests, claimQuestRewardAction } from '@/actions/quest.actions'
 import type { DailyQuest } from '@/types/quest'
 import Button from '@/components/button'
-import { QuestsSkeleton } from './quest-skeleton'
+import { QuestSkeleton } from './quest-skeleton'
+import { QuestsHeader } from './quests-header'
+import { QuestsFooter } from './quests-footer'
 
 interface DailyQuestsProps {
   onQuestComplete?: () => void
@@ -114,9 +116,6 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
     }
   }
 
-  if (loading) {
-    return <QuestsSkeleton />
-  }
 
   if (error != null) {
     return (
@@ -133,22 +132,34 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">Quêtes du Jour</h2>
-        <Button onClick={loadQuests} size="sm" variant="ghost">
-          🔄 Actualiser
-        </Button>
-      </div>
+      {/* Header avec skeleton */}
+      <QuestsHeader
+        title={loading ? null : 'Quêtes du Jour'}
+        onRefresh={loadQuests}
+        isLoading={loading}
+      />
 
-      {quests.length === 0 ? (
-        <div className="text-center p-8 bg-gray-50 rounded-lg">
-          <p className="text-gray-600">Aucune quête disponible pour le moment</p>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {quests.map(quest => {
-            const progressPercentage = getProgressPercentage(quest)
-            const isCompleted = quest.status === 'completed'
+      {/* Contenu principal */}
+      {quests.length === 0 && !loading
+        ? (
+          <div className="text-center p-8 bg-gray-50 rounded-lg">
+            <p className="text-gray-600">Aucune quête disponible pour le moment</p>
+          </div>
+          )
+        : (
+          <div className="grid gap-4">
+            {loading
+              ? (
+                // Skeleton des cartes
+                [...Array(5)].map((_, index) => (
+                  <QuestSkeleton key={index} />
+                ))
+                )
+              : (
+                // Vraies cartes de quêtes
+                quests.map(quest => {
+                  const progressPercentage = getProgressPercentage(quest)
+                  const isCompleted = quest.status === 'completed'
             const canClaim = isCompleted && quest.currentProgress >= quest.targetCount
 
             return (
@@ -225,14 +236,13 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
                 </div>
               </div>
             )
-          })}
-        </div>
-      )}
+          })
+                )}
+          </div>
+          )}
 
-      {/* Info Footer */}
-      <div className="text-center text-sm text-gray-500 mt-6">
-        <p>Les quêtes se renouvellent à minuit 🌙</p>
-      </div>
+      {/* Info Footer avec skeleton */}
+      <QuestsFooter text={loading ? null : 'Les quêtes se renouvellent à minuit 🌙'} />
     </div>
   )
 }
