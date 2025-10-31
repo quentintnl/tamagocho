@@ -30,7 +30,7 @@ export default async function QuestsPage (): Promise<React.ReactNode> {
 
   return (
     <QuestsLayout>
-      <QuestsDescription text="Complétez vos quêtes pour gagner des Koins et de l'XP !" />
+      <QuestsDescription text="Complétez vos quêtes pour gagner des Tomatokens et de l'XP !" />
 
       <div className="mt-8">
         <DailyQuests />

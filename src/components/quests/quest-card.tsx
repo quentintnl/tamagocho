@@ -23,7 +23,7 @@ interface QuestCardProps {
 
 export default function QuestCard ({ quest, compact = false }: QuestCardProps): React.ReactNode {
   const progressPercentage = Math.min((quest.currentProgress / quest.targetCount) * 100, 100)
-  const isCompleted = quest.status === 'completed'
+  const isCompleted = quest.status === 'completed' || quest.status === 'claimed'
 
   const getDifficultyColor = (difficulty: string): string => {
     switch (difficulty) {

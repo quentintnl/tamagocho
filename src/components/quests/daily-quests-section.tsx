@@ -131,9 +131,23 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
     void loadQuests()
   }, [loadQuests])
 
+  // Trier les quêtes : actives en premier, puis complétées/réclamées
+  const sortedQuests = [...quests].sort((a, b) => {
+    const aCompleted = a.status === 'completed' || a.status === 'claimed'
+    const bCompleted = b.status === 'completed' || b.status === 'claimed'
+
+    // Si a est active et b complétée, a vient en premier (retourner -1)
+    if (!aCompleted && bCompleted) return -1
+    // Si a est complétée et b active, b vient en premier (retourner 1)
+    if (aCompleted && !bCompleted) return 1
+    // Sinon, garder l'ordre original
+    return 0
+  })
+
   // Calculer les statistiques
   const totalQuests = quests.length
-  const completedQuests = quests.filter(q => q.status === 'completed').length
+  // Compter les quêtes terminées (complétées OU réclamées)
+  const completedQuests = quests.filter(q => q.status === 'completed' || q.status === 'claimed').length
   const activeQuests = quests.filter(q => q.status === 'active').length
 
   // Afficher le skeleton pendant le chargement
@@ -209,7 +223,7 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
             </div>
           ) : (
             <div className='mt-6 max-h-[600px] space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-lochinvar-300 scrollbar-track-slate-100 hover:scrollbar-thumb-lochinvar-400'>
-              {quests.map((quest) => (
+              {sortedQuests.map((quest) => (
                 <DailyQuestCard
                   key={quest._id}
                   quest={quest}
