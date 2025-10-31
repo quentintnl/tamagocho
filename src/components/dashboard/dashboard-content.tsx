@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useCallback, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
@@ -48,6 +48,7 @@ type Session = typeof authClient.$Infer.Session
 function DashboardContent ({ session, monsters: initialMonsters }: { session: Session, monsters: PopulatedMonster[] }): React.ReactNode {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   // Hook pour le rafraîchissement automatique des monstres (toutes les minutes)
   const { monsters } = useMonsterRefresh(initialMonsters, 60000)
@@ -59,6 +60,19 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
   const stats = useMonsterStats(monsters)
   const latestAdoptionLabel = useLatestAdoptionLabel(stats.latestAdoption)
   const favoriteMoodMessage = useFavoriteMoodMessage(stats.favoriteMood, stats.totalMonsters)
+
+  /**
+   * Vérifie si le paramètre URL 'openModal=true' est présent
+   * et ouvre le modal automatiquement si c'est le cas
+   */
+  useEffect(() => {
+    const shouldOpenModal = searchParams.get('openModal') === 'true'
+    if (shouldOpenModal) {
+      setIsModalOpen(true)
+      // Nettoie l'URL pour éviter d'ouvrir le modal à chaque rechargement
+      router.replace('/dashboard')
+    }
+  }, [searchParams, router])
 
   /**
    * Déconnecte l'utilisateur et redirige vers la page de connexion

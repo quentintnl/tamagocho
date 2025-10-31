@@ -50,11 +50,11 @@ export default function MonstersPageContent ({
   const { monsters } = useMonsterRefresh(initialMonsters, 60000)
 
   /**
-   * Redirige vers la page de création de monstre
+   * Redirige vers la page de création de monstre avec ouverture automatique du modal
    * Mémorisée avec useCallback pour éviter les re-créations inutiles
    */
   const handleCreateMonster = useCallback((): void => {
-    router.push('/dashboard') // Redirige vers dashboard où se trouve le modal de création
+    router.push('/dashboard?openModal=true') // Redirige vers dashboard et ouvre le modal de création
   }, [router])
 
   /**

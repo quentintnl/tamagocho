@@ -22,18 +22,18 @@ import { headers } from 'next/headers'
  *
  * @async
  * @param {CreateMonsterFormValues} monsterData - Données validées du monstre à créer
- * @returns {Promise<void>} Promise résolue une fois le monstre créé
+ * @returns {Promise<string>} Promise résolue avec l'ID du monstre créé
  * @throws {Error} Si l'utilisateur n'est pas authentifié
  *
  * @example
- * await createMonster({
+ * const monsterId = await createMonster({
  *   name: "Pikachu",
  *   traits: '{"bodyColor": "#FFB5E8", ...}',
  *   state: "happy",
  *   level: 1
  * })
  */
-export async function createMonster (monsterData: CreateMonsterFormValues): Promise<void> {
+export async function createMonster (monsterData: CreateMonsterFormValues): Promise<string> {
   // Connexion à la base de données
   await connectMongooseToDatabase()
 
@@ -69,5 +69,8 @@ export async function createMonster (monsterData: CreateMonsterFormValues): Prom
   // Revalidation du cache pour rafraîchir le dashboard
   revalidatePath('/dashboard')
   revalidatePath('/monsters')
+
+  // Retourne l'ID du monstre créé
+  return monster._id.toString()
 }
 
