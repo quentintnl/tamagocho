@@ -15,6 +15,7 @@ import { useWallet } from '@/hooks/useWallet'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { PurchaseConfirmationModal } from '@/components/accessories/purchase-confirmation-modal'
 import { ShopTabs, type ShopTab } from '@/components/shop/shop-tabs'
+import { ShopSkeleton } from '@/components/shop/shop-skeleton'
 import { toast } from 'react-toastify'
 import type { Accessory } from '@/types/accessory'
 
@@ -133,14 +134,7 @@ export default function ShopPage (): React.ReactNode {
   }
 
   if (isLoading) {
-    return (
-      <div className='min-h-screen bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50 flex items-center justify-center'>
-        <div className='text-center'>
-          <div className='text-6xl mb-4'>🛍️</div>
-          <p className='text-xl font-medium text-forest-700'>Chargement de la boutique...</p>
-        </div>
-      </div>
-    )
+    return <ShopSkeleton />
   }
 
   return (
@@ -154,19 +148,7 @@ export default function ShopPage (): React.ReactNode {
       <div className='pointer-events-none absolute right-1/3 top-1/2 h-64 w-64 rounded-full bg-sky-200/30 blur-3xl' aria-hidden='true' />
 
       {/* Contenu principal */}
-      <main className='relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 pt-24'>
-        {/* En-tête de la boutique */}
-        <div className='mb-8 text-center'>
-          <div className='inline-block mb-4'>
-            <div className='text-7xl animate-bounce'>🛍️</div>
-          </div>
-          <h1 className='text-4xl font-bold text-forest-800 mb-3'>
-            Boutique Naturelle 🌿
-          </h1>
-          <p className='text-lg text-forest-600 max-w-2xl mx-auto leading-relaxed'>
-            Personnalisez vos compagnons avec style ! Découvrez notre collection d&apos;accessoires et d&apos;arrière-plans pour créer un petit paradis unique.
-          </p>
-        </div>
+      <main className='relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 pt-6'>
 
         {/* Statistiques de la boutique */}
         <div className='mb-8 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto'>
