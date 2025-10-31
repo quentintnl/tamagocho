@@ -12,17 +12,17 @@ async function updateMonsterState (monsterId?: string | null): Promise<void> {
   console.log(`Nouvel état du monstre : ${randomState}`)
 
   await connectMongooseToDatabase()
-  const result = await Monster.updateOne(
+  await Monster.updateOne(
     { _id: monsterId },
     { state: randomState }
   ).orFail()
-  console.log(`Résultat de la mise à jour en base de données : ${result}`)
+  console.log('État du monstre mis à jour avec succès')
 }
 
 export async function GET (request: NextRequest): Promise<Response> {
   const id = request.nextUrl.searchParams.get('id')
   try {
-    console.log(`Requête reçue pour mettre à jour l'état du monstre avec l'ID : ${id}`)
+    console.log(`Requête reçue pour mettre à jour l'état du monstre avec l'ID : ${id ?? 'non fourni'}`)
     await updateMonsterState(id)
   } catch (error) {
     console.error('Erreur lors de la mise à jour de l\'état du monstre :', error)

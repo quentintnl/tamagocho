@@ -100,7 +100,6 @@ export async function GET (request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     const duration = Date.now() - startTime
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    const errorStack = error instanceof Error ? error.stack : undefined
 
     return NextResponse.json(
       {

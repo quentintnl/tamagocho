@@ -11,7 +11,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { AccessoriesList } from '@/components/wallet/accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
 import { getUserOwnedAccessoryIds, purchaseAccessoryOnly } from '@/actions/accessory.actions'
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 import { PurchaseConfirmationModal } from '@/components/accessories/purchase-confirmation-modal'
 import { ShopTabs, type ShopTab } from '@/components/shop/shop-tabs'
 import { ShopTabsSkeleton } from '@/components/shop/shop-tabs-skeleton'
@@ -40,7 +40,7 @@ export default function ShopPage (): React.ReactNode {
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
   const [activeTab, setActiveTab] = useState<ShopTab>('accessories')
   const [hideOwned, setHideOwned] = useState(false)
-  const { wallet } = useWallet()
+  const { wallet, refreshWallet } = useWalletContext()
 
   // Filtrer les accessoires selon l'onglet actif et le statut de possession
   const filteredAccessories = useMemo(() => {
@@ -120,6 +120,9 @@ export default function ShopPage (): React.ReactNode {
 
       if (result.success) {
         showSuccessToast(result.message, { autoClose: 5000 })
+
+        // Rafraîchir le wallet pour afficher le nouveau solde
+        await refreshWallet()
 
         // Recharger les données pour afficher l'accessoire comme possédé
         const updatedOwnedIds = await getUserOwnedAccessoryIds()
