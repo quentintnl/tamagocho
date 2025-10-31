@@ -6,7 +6,7 @@ import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
 import type {PopulatedMonster} from '@/types/monster'
-import { showSuccessToast, showErrorToast, showLoadingToast, updateToast } from '@/lib/toast'
+import { showLoadingToast, updateToast } from '@/lib/toast'
 import {
   useUserDisplay,
   useMonsterStats,
@@ -134,7 +134,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
   }, [router])
 
   return (
-    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50'>
+    <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-meadow-50 via-sky-50 to-lavender-100'>
       {/* Système de mise à jour automatique des monstres */}
       <MonstersAutoUpdater
         userId={session.user.id}
@@ -155,87 +155,105 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
       />
 
       {/* Header avec wallet */}
-      <PageHeaderWithWallet title='Dashboard' />
+      <PageHeaderWithWallet title='Mon Jardin' />
 
-      {/* Bulles décoratives de fond - thème nature */}
-      <div className='pointer-events-none absolute -right-32 top-24 h-72 w-72 rounded-full bg-lavender-200/40 blur-3xl' aria-hidden='true' />
-      <div className='pointer-events-none absolute -left-32 bottom-24 h-80 w-80 rounded-full bg-meadow-200/50 blur-3xl' aria-hidden='true' />
-      <div className='pointer-events-none absolute right-1/3 top-1/3 h-64 w-64 rounded-full bg-sky-200/30 blur-3xl' aria-hidden='true' />
+      {/* Motifs décoratifs de fond - thème fruits & légumes */}
+      <div className='pointer-events-none absolute -right-20 top-32 h-96 w-96 rounded-full bg-gradient-to-br from-sunset-200/40 via-gold-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '8s' }} />
+      <div className='pointer-events-none absolute -left-24 bottom-32 h-96 w-96 rounded-full bg-gradient-to-tr from-meadow-200/50 via-forest-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '10s' }} />
+      <div className='pointer-events-none absolute right-1/4 top-1/4 h-72 w-72 rounded-full bg-gradient-to-bl from-lavender-200/40 via-sky-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '12s' }} />
 
-      <main className='relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 pt-20 sm:px-6 lg:px-8'>
-        {/* Section héro avec bienvenue et profil */}
-        <section className='relative overflow-hidden rounded-3xl bg-white/90 backdrop-blur-sm px-6 py-10 shadow-[0_20px_60px_rgba(22,101,52,0.15)] ring-1 ring-meadow-200/60 sm:px-10'>
-          {/* Bulles décoratives internes - thème nature */}
-          <div className='pointer-events-none absolute -right-28 -top-16 h-64 w-64 rounded-full bg-gradient-to-br from-meadow-200/70 via-sky-200/50 to-white/40 blur-3xl' aria-hidden='true' />
-          <div className='pointer-events-none absolute -left-32 bottom-0 h-64 w-64 translate-y-1/2 rounded-full bg-gradient-to-tr from-lavender-200/60 via-white/30 to-meadow-100/60 blur-3xl' aria-hidden='true' />
+      <main className='relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-20 sm:px-6 lg:px-8'>
+        {/* Section bienvenue compacte */}
+        <section className='mb-6'>
+          <WelcomeHero
+            userDisplay={userDisplay}
+            onCreateMonster={handleCreateMonster}
+            onLogout={handleLogout}
+          />
+        </section>
 
-          <div className='relative flex flex-col gap-10 lg:flex-row lg:items-center'>
-            {/* Message de bienvenue et actions principales */}
-            <WelcomeHero
-              userDisplay={userDisplay}
-              onCreateMonster={handleCreateMonster}
-              onLogout={handleLogout}
+        {/* Grid principal : Stats + Profil + Wallet */}
+        <div className='grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6'>
+          {/* Carte profil utilisateur */}
+          <div className='lg:col-span-4'>
+            <UserProfileCard userDisplay={userDisplay} />
+          </div>
+
+          {/* Grille de statistiques */}
+          <div className='lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-4'>
+            <StatsCard
+              title='Compagnons'
+              value={stats.totalMonsters}
+              description="Petits monstres"
+              color='lochinvar'
+              icon='🌱'
+            />
+            <StatsCard
+              title='Niveau Max'
+              value={stats.highestLevel}
+              description='Plus fort'
+              color='fuchsia-blue'
+              icon='⭐'
+            />
+            <StatsCard
+              title='Dernière Adoption'
+              value={latestAdoptionLabel}
+              description={stats.totalMonsters === 0 ? 'Aucune encore' : 'Nouveau membre'}
+              color='moccaccino'
+              icon='🎉'
             />
 
-            {/* Carte de profil et statistiques */}
-            <div className='flex flex-1 flex-col gap-4 rounded-3xl bg-gradient-to-br from-meadow-100/80 via-white to-sky-100/70 p-6 ring-1 ring-meadow-200/70 backdrop-blur shadow-lg'>
-              <UserProfileCard userDisplay={userDisplay} />
-
-              <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-                <StatsCard
-                  title='Compagnons'
-                  value={stats.totalMonsters}
-                  description="Monstres prêts pour l'aventure"
-                  color='lochinvar'
-                />
-                <StatsCard
-                  title='Niveau max'
-                  value={stats.highestLevel}
-                  description='Ton monstre le plus expérimenté'
-                  color='fuchsia-blue'
-                />
-                <StatsCard
-                  title='Dernière adoption'
-                  value={latestAdoptionLabel}
-                  description={stats.totalMonsters === 0 ? 'Ton prochain compagnon est à un clic !' : 'Continue de créer pour agrandir ta bande.'}
-                  color='moccaccino'
-                  fullWidth
-                />
-              </div>
-
-              {/* Lien vers la page wallet */}
+            {/* Wallet card intégré */}
+            <div className='col-span-2 md:col-span-3'>
               <button
                 onClick={handleGoToWallet}
-                className='mt-4 w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-sunset-50 to-sunset-100 rounded-2xl border-2 border-sunset-200 hover:border-sunset-300 hover:shadow-lg transition-all duration-200 group'
+                className='w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold-100 via-sunset-50 to-gold-100 p-6 shadow-lg border-2 border-gold-200/80 hover:border-gold-300 hover:shadow-xl transition-all duration-300 group'
               >
-                <div className='flex items-center gap-3'>
-                  <div className='flex items-center justify-center w-10 h-10 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
-                    <TomatokenIcon size='md' />
+                {/* Effet brillant animé */}
+                <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000' />
+
+                <div className='relative flex items-center justify-between'>
+                  <div className='flex items-center gap-4'>
+                    <div className='flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gold-400 to-sunset-500 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300'>
+                      <TomatokenIcon size='lg' />
+                    </div>
+                    <div className='text-left'>
+                      <p className='text-sm font-bold uppercase tracking-wider text-sunset-700'>Mon Wallet</p>
+                      <p className='text-2xl font-black text-forest-800'>Gérer mes pièces</p>
+                      <p className='text-xs text-forest-600 mt-1'>Tomatokens & Récompenses</p>
+                    </div>
                   </div>
-                  <div className='text-left'>
-                    <p className='text-sm font-medium text-forest-600'>Mon Wallet</p>
-                    <p className='text-lg font-bold text-forest-800'>Gérer mes pièces</p>
-                  </div>
+                  <svg className='w-8 h-8 text-sunset-500 group-hover:text-sunset-600 group-hover:translate-x-2 transition-all' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={3} d='M13 7l5 5m0 0l-5 5m5-5H6' />
+                  </svg>
                 </div>
-                <svg className='w-5 h-5 text-forest-400 group-hover:text-meadow-600 group-hover:translate-x-1 transition-all' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
-                </svg>
               </button>
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* Section grille principale : liste des monstres + sidebar */}
-        <section className='mt-12 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'>
-          <div>
+        {/* Section grille principale : Monstres + Sidebar (Quêtes + Mood) */}
+        <div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)]'>
+          {/* Liste des monstres */}
+          <div className='order-2 lg:order-1'>
+            <div className='mb-4 flex items-center justify-between'>
+              <h2 className='text-2xl font-black text-forest-800 flex items-center gap-3'>
+                <span className='text-3xl'>🏡</span>
+                Mes Petits Monstres
+              </h2>
+              <span className='px-4 py-2 rounded-full bg-meadow-100 text-meadow-700 font-bold text-sm border-2 border-meadow-200'>
+                {stats.totalMonsters} {stats.totalMonsters > 1 ? 'créatures' : 'créature'}
+              </span>
+            </div>
             <MonstersList monsters={monsters} className='mt-0' />
           </div>
 
-          <aside className='flex flex-col gap-6'>
+          {/* Sidebar : Quêtes + Mood */}
+          <aside className='order-1 lg:order-2 flex flex-col gap-6'>
             <DailyQuestsSection />
             <MoodTipSection message={favoriteMoodMessage} />
           </aside>
-        </section>
+        </div>
       </main>
 
       {/* Modal de création de monstre */}

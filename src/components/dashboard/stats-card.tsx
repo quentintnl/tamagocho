@@ -12,6 +12,8 @@ interface StatsCardProps {
   color: 'lochinvar' | 'fuchsia-blue' | 'moccaccino'
   /** Si true, la carte prend toute la largeur disponible */
   fullWidth?: boolean
+  /** Emoji icon pour la carte */
+  icon?: string
 }
 
 /**
@@ -29,6 +31,7 @@ interface StatsCardProps {
  *   value={5}
  *   description="Monstres prêts pour l'aventure"
  *   color="lochinvar"
+ *   icon="🌱"
  * />
  */
 export function StatsCard ({
@@ -36,36 +39,62 @@ export function StatsCard ({
   value,
   description,
   color,
-  fullWidth = false
+  fullWidth = false,
+  icon = '✨'
 }: StatsCardProps): React.ReactNode {
-  // Mapping des couleurs aux classes Tailwind - thème nature
-  const ringColorClass = {
-    lochinvar: 'ring-meadow-200/60',
-    'fuchsia-blue': 'ring-sky-200/60',
-    moccaccino: 'ring-lavender-200/60'
+  // Mapping des couleurs aux classes Tailwind - thème nature/fruits
+  const bgGradientClass = {
+    lochinvar: 'from-meadow-100 via-white to-forest-50',
+    'fuchsia-blue': 'from-sky-100 via-white to-lavender-50',
+    moccaccino: 'from-sunset-100 via-white to-gold-50'
+  }[color]
+
+  const borderColorClass = {
+    lochinvar: 'border-meadow-200/80',
+    'fuchsia-blue': 'border-sky-200/80',
+    moccaccino: 'border-sunset-200/80'
+  }[color]
+
+  const iconBgClass = {
+    lochinvar: 'from-meadow-400 to-forest-500',
+    'fuchsia-blue': 'from-sky-400 to-lavender-500',
+    moccaccino: 'from-sunset-400 to-gold-500'
   }[color]
 
   const textColorClass = {
-    lochinvar: 'text-meadow-600',
-    'fuchsia-blue': 'text-sky-600',
-    moccaccino: 'text-lavender-600'
+    lochinvar: 'text-meadow-700',
+    'fuchsia-blue': 'text-sky-700',
+    moccaccino: 'text-sunset-700'
   }[color]
 
-  const widthClass = fullWidth ? 'sm:col-span-2' : ''
+  const widthClass = fullWidth ? 'col-span-2 md:col-span-3' : ''
 
   return (
     <div
-      className={`rounded-2xl bg-white/90 backdrop-blur-sm p-4 shadow-[0_12px_30px_rgba(22,101,52,0.1)] ring-1 ${ringColorClass} hover:shadow-lg transition-shadow ${widthClass}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${bgGradientClass} p-5 shadow-lg border-2 ${borderColorClass} hover:shadow-xl hover:scale-105 transition-all duration-300 ${widthClass}`}
     >
-      <p className={`text-xs font-semibold uppercase tracking-wide ${textColorClass}`}>
-        {title}
-      </p>
-      <p className='mt-2 text-3xl font-black text-forest-800'>
-        {value}
-      </p>
-      <p className='text-xs text-forest-600'>
-        {description}
-      </p>
+      {/* Motif de fond subtil */}
+      <div className='absolute -right-6 -top-6 h-20 w-20 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+
+      <div className='relative flex items-start gap-4'>
+        {/* Icône */}
+        <div className={`flex items-center justify-center h-14 w-14 rounded-2xl bg-gradient-to-br ${iconBgClass} shadow-lg text-2xl border-2 border-white/80 transform hover:rotate-12 transition-transform`}>
+          {icon}
+        </div>
+
+        {/* Contenu */}
+        <div className='flex-1 min-w-0'>
+          <p className={`text-xs font-bold uppercase tracking-wider ${textColorClass}`}>
+            {title}
+          </p>
+          <p className='mt-1.5 text-3xl font-black text-forest-800 leading-none truncate'>
+            {value}
+          </p>
+          <p className='mt-1.5 text-xs text-forest-600 font-medium leading-tight'>
+            {description}
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
