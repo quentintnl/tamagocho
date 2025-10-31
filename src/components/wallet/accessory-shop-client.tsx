@@ -21,9 +21,12 @@ import { getAvailableAccessories } from '@/services/accessory.service'
 import { getUserOwnedAccessoryIds, purchaseAccessory } from '@/actions/accessory.actions'
 import { getMonsters } from '@/actions/monsters'
 import type { AccessoryCategory, AccessoryRarity } from '@/types/accessory'
+import type { authClient } from '@/lib/auth-client'
+
+type Session = typeof authClient.$Infer.Session
 
 interface AccessoryShopClientProps {
-  session: any
+  session: Session
 }
 
 /**

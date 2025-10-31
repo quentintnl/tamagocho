@@ -47,7 +47,7 @@ export function PublicMonsterCard ({ monster }: PublicMonsterCardProps): React.R
   // Parsing des traits et normalisation des données
   const traits = parseMonsterTraits(monster.traits)
   const adoptionDate = formatAdoptionDate(String(monster.createdAt))
-  const levelLabel = monster.level_id.level ?? 1
+    const levelLabel = monster.level_id?.level ?? 1
   const state = isMonsterState(monster.state) ? monster.state : 'happy'
 
   return (

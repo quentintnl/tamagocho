@@ -15,7 +15,7 @@
  */
 
 import Wallet from '@/db/models/wallet.model'
-import type { Wallet as WalletType, CreateWalletDTO, UpdateWalletBalanceDTO } from '@/types/wallet'
+import type { Wallet as WalletType, CreateWalletDTO, UpdateWalletBalanceDTO, WalletDocument } from '@/types/wallet'
 import { connectMongooseToDatabase } from '@/db'
 
 /**
@@ -25,14 +25,14 @@ import { connectMongooseToDatabase } from '@/db'
  * @param doc - Mongoose wallet document
  * @returns Plain wallet object
  */
-function serializeWallet (doc: any): WalletType {
+function serializeWallet (doc: WalletDocument): WalletType {
   const obj = doc.toObject()
   return {
-    _id: obj._id.toString(),
+    _id: String(obj._id),
     ownerId: obj.ownerId,
     coin: obj.coin,
-    createdAt: obj.createdAt instanceof Date ? obj.createdAt : new Date(obj.createdAt),
-    updatedAt: obj.updatedAt instanceof Date ? obj.updatedAt : new Date(obj.updatedAt)
+    createdAt: obj.createdAt,
+    updatedAt: obj.updatedAt
   }
 }
 

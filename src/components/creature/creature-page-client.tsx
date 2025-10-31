@@ -100,7 +100,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
             <div className='py-12'>
                 <div className='container mx-auto px-4 max-w-4xl'>
                     {/* En-tête avec nom et niveau */}
-                    <CreatureHeader name={currentMonster.name} level={currentMonster.level_id.level} />
+                    <CreatureHeader name={currentMonster.name} level={currentMonster.level_id?.level ?? 1} />
 
                 {/* Grille principale : monstre + informations */}
                 <div className='grid md:grid-cols-2 gap-8'>
@@ -108,7 +108,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                     <CreatureMonsterDisplay
                         traits={traits}
                         state={currentMonster.state}
-                        level={currentMonster.level_id.level}
+                        level={currentMonster.level_id?.level ?? 1}
                         currentAction={currentAction}
                         onAction={handleAction}
                         monsterId={currentMonster._id}
@@ -119,10 +119,10 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                     {/* Colonne droite : Panneaux d'informations */}
                     <div className='space-y-6'>
                         <CreatureStatsPanel
-                            level={currentMonster.level_id.level}
+                            level={currentMonster.level_id?.level ?? 1}
                             xp={currentMonster.xp}
                             xpToNextLevel={xpToNextLevel}
-                            isMaxLevel={currentMonster.level_id.isMaxLevel}
+                            isMaxLevel={currentMonster.level_id?.isMaxLevel ?? false}
                             state={currentMonster.state}
                             createdAt={currentMonster.createdAt}
                             updatedAt={currentMonster.updatedAt}

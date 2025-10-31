@@ -68,6 +68,42 @@ export interface DailyQuest {
 }
 
 /**
+ * Mongoose document type for Quest
+ */
+export interface QuestDocument {
+  _id: unknown
+  ownerId: string
+  type: QuestType
+  difficulty: QuestDifficulty
+  title: string
+  description: string
+  targetCount: number
+  currentProgress: number
+  coinReward: number
+  xpReward?: number
+  status: QuestStatus
+  expiresAt: Date
+  createdAt: Date
+  updatedAt: Date
+  toObject: () => {
+    _id: unknown
+    ownerId: string
+    type: QuestType
+    difficulty: QuestDifficulty
+    title: string
+    description: string
+    targetCount: number
+    currentProgress: number
+    coinReward: number
+    xpReward?: number
+    status: QuestStatus
+    expiresAt: Date
+    createdAt: Date
+    updatedAt: Date
+  }
+}
+
+/**
  * DTO for creating daily quests
  */
 export interface CreateDailyQuestDTO {

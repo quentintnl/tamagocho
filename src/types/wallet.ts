@@ -25,6 +25,24 @@ export interface CreateWalletDTO {
 }
 
 /**
+ * Mongoose document type for Wallet
+ */
+export interface WalletDocument {
+  _id: unknown
+  ownerId: string
+  coin: number
+  createdAt: Date
+  updatedAt: Date
+  toObject: () => {
+    _id: unknown
+    ownerId: string
+    coin: number
+    createdAt: Date
+    updatedAt: Date
+  }
+}
+
+/**
  * DTO for updating wallet balance
  */
 export interface UpdateWalletBalanceDTO {

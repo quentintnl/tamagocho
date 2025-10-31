@@ -48,7 +48,7 @@ function MonstersList ({ monsters, className }: MonstersListProps): React.ReactN
             name={monster.name}
             traits={monster.traits}
             state={monster.state}
-            level={monster.level_id.level}
+            level={monster.level_id?.level ?? 1}
             createdAt={String(monster.createdAt)}
             updatedAt={String(monster.updatedAt)}
             isPublic={monster.isPublic ?? false}

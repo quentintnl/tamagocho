@@ -58,3 +58,28 @@ export interface PopulatedMonster extends Omit<DBMonster, 'level_id'> {
   level_id: XpLevel
 }
 
+// Mongoose document type for Monster (for internal use in queries)
+export interface MonsterDocument {
+  _id: unknown
+  name: string
+  level_id: unknown | XpLevel
+  xp: number
+  traits: string
+  state: MonsterState
+  ownerId: string
+  isPublic: boolean
+  createdAt: Date
+  updatedAt: Date
+  toObject: () => {
+    _id: unknown
+    name: string
+    level_id: unknown | XpLevel
+    xp: number
+    traits: string
+    state: MonsterState
+    ownerId: string
+    isPublic: boolean
+    createdAt: Date
+    updatedAt: Date
+  }
+}

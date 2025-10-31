@@ -3,8 +3,9 @@
 import { connectMongooseToDatabase } from '@/db'
 import Monster from '@/db/models/monster.model'
 import '@/db/models/xp-level.model'
-import type { PopulatedMonster } from '@/types/monster'
+import type {MonsterDocument, PopulatedMonster} from '@/types/monster'
 import { getXpLevelByNumber } from '@/services/xp-level.service'
+import {FilterQuery, SortOrder} from "mongoose";
 
 /**
  * Filtres pour la galerie communautaire
@@ -75,7 +76,7 @@ export async function getPublicMonsters (
     await connectMongooseToDatabase()
 
     // Construction de la query MongoDB
-    const query: any = { isPublic: true }
+    const query: FilterQuery<MonsterDocument> = { isPublic: true }
 
     // Filtre par niveau
     if (filters.level !== undefined && filters.level !== null) {
@@ -98,7 +99,7 @@ export async function getPublicMonsters (
     // Configuration du tri
     const sortBy = filters.sortBy ?? 'createdAt'
     const sortOrder = filters.sortOrder ?? 'desc'
-    const sort: any = { [sortBy]: sortOrder === 'asc' ? 1 : -1 }
+    const sort: Record<string, SortOrder> = { [sortBy]: sortOrder === 'asc' ? 1 : -1 }
 
     // Compte total pour la pagination
     const totalCount = await Monster.countDocuments(query)
@@ -114,16 +115,18 @@ export async function getPublicMonsters (
 
     // Transformation des données avec anonymisation du créateur
     // Pour l'instant, on anonymise tous les créateurs car nous n'avons pas accès aux données utilisateur
-    const publicMonsters: PublicMonsterWithOwner[] = monsters.map((monster: any) => {
-      const monsterObj = monster.toObject()
-
+    const publicMonsters: PublicMonsterWithOwner[] = (monsters as unknown as PopulatedMonster[]).map((monster) => {
       // Anonymisation du propriétaire (on pourrait récupérer le vrai nom via better-auth si nécessaire)
       // Pour l'instant, on génère un nom anonymisé basé sur l'ID
-      const ownerIdStr = String(monsterObj.ownerId)
+      const ownerIdStr = String(monster.ownerId)
       const ownerName = `Dresseur-${ownerIdStr.slice(-6)}`
 
+      // S'assurer que level_id est présent et valide
+      const levelId = monster.level_id ?? { level: 1, xpRequired: 0, isMaxLevel: false, _id: '', createdAt: new Date(), updatedAt: new Date() }
+
       return {
-        ...monsterObj,
+        ...monster,
+        level_id: levelId,
         ownerName,
         ownerId: ownerIdStr
       }

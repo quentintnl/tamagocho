@@ -19,7 +19,8 @@ import type {
   DailyQuest as DailyQuestType,
   CreateDailyQuestDTO,
   UpdateQuestProgressDTO,
-  CompleteQuestDTO
+  CompleteQuestDTO,
+  QuestDocument
 } from '@/types/quest'
 import { connectMongooseToDatabase } from '@/db'
 import { getRandomQuestTemplates } from '@/config/quests'
@@ -34,10 +35,10 @@ const QUESTS_PER_DAY = 5
  * @param doc - Mongoose quest document
  * @returns Plain quest object
  */
-function serializeQuest (doc: any): DailyQuestType {
+function serializeQuest (doc: QuestDocument): DailyQuestType {
   const obj = doc.toObject()
   return {
-    _id: obj._id.toString(),
+    _id: String(obj._id),
     ownerId: obj.ownerId,
     type: obj.type,
     difficulty: obj.difficulty,
@@ -48,9 +49,9 @@ function serializeQuest (doc: any): DailyQuestType {
     coinReward: obj.coinReward,
     xpReward: obj.xpReward,
     status: obj.status,
-    expiresAt: obj.expiresAt instanceof Date ? obj.expiresAt : new Date(obj.expiresAt),
-    createdAt: obj.createdAt instanceof Date ? obj.createdAt : new Date(obj.createdAt),
-    updatedAt: obj.updatedAt instanceof Date ? obj.updatedAt : new Date(obj.updatedAt)
+    expiresAt: obj.expiresAt,
+    createdAt: obj.createdAt,
+    updatedAt: obj.updatedAt
   }
 }
 
