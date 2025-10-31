@@ -18,6 +18,7 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { getUserDailyQuests, claimQuestRewardAction } from '@/actions/quest.actions'
 import type { DailyQuest } from '@/types/quest'
 import Button from '@/components/button'
+import { QuestsSkeleton } from './quest-skeleton'
 
 interface DailyQuestsProps {
   onQuestComplete?: () => void
@@ -114,14 +115,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-moccaccino-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement des quêtes...</p>
-        </div>
-      </div>
-    )
+    return <QuestsSkeleton />
   }
 
   if (error != null) {
