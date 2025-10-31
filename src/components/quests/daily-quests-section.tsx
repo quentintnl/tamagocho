@@ -208,7 +208,7 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
               </p>
             </div>
           ) : (
-            <div className='mt-6 max-h-[600px] space-y-4 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-lochinvar-300 scrollbar-track-slate-100 hover:scrollbar-thumb-lochinvar-400'>
+            <div className='mt-6 space-y-4'>
               {quests.map((quest) => (
                 <DailyQuestCard
                   key={quest._id}
