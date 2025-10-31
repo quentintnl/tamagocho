@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
@@ -47,8 +47,8 @@ type Session = typeof authClient.$Infer.Session
 function DashboardContent ({ session, monsters: initialMonsters }: { session: Session, monsters: PopulatedMonster[] }): React.ReactNode {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Hook pour le rafraîchissement automatique des monstres
-  const { monsters } = useMonsterRefresh(initialMonsters, 1000)
+  // Hook pour le rafraîchissement automatique des monstres (toutes les minutes)
+  const { monsters } = useMonsterRefresh(initialMonsters, 60000)
 
   // Extraction des informations utilisateur
   const userDisplay = useUserDisplay(session)
@@ -60,36 +60,40 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
 
   /**
    * Déconnecte l'utilisateur et redirige vers la page de connexion
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
    */
-  const handleLogout = (): void => {
+  const handleLogout = useCallback((): void => {
     void authClient.signOut()
     window.location.href = '/sign-in'
-  }
+  }, [])
 
   /**
    * Ouvre le modal de création de monstre
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
    */
-  const handleCreateMonster = (): void => {
+  const handleCreateMonster = useCallback((): void => {
     setIsModalOpen(true)
-  }
+  }, [])
 
   /**
    * Ferme le modal de création de monstre
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
    */
-  const handleCloseModal = (): void => {
+  const handleCloseModal = useCallback((): void => {
     setIsModalOpen(false)
-  }
+  }, [])
 
   /**
    * Soumet le formulaire de création de monstre et recharge la page
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
    *
    * @param {CreateMonsterFormValues} values - Valeurs du formulaire
    */
-  const handleMonsterSubmit = (values: CreateMonsterFormValues): void => {
+  const handleMonsterSubmit = useCallback((values: CreateMonsterFormValues): void => {
     void createMonster(values).then(() => {
       window.location.reload()
     })
-  }
+  }, [])
 
   return (
     <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50'>

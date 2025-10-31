@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import Link from 'next/link'
 import { PixelMonster } from '@/components/monsters'
 import { MonsterStateBadge, isMonsterState } from './monster-state-badge'
@@ -38,6 +39,9 @@ interface MonsterCardProps {
  * - Le parsing des traits à parseMonsterTraits
  * - Le formatage de la date à formatAdoptionDate
  *
+ * Optimisé avec React.memo pour éviter les re-rendus inutiles
+ * lorsque les props ne changent pas.
+ *
  * @param {MonsterCardProps} props - Props du composant
  * @returns {React.ReactNode} Carte de monstre interactive
  *
@@ -52,7 +56,7 @@ interface MonsterCardProps {
  *   updatedAt="2025-10-27T12:00:00Z"
  * />
  */
-export function MonsterCard ({
+export const MonsterCard = memo(function MonsterCard ({
   id,
   name,
   traits: rawTraits,
@@ -133,4 +137,4 @@ export function MonsterCard ({
       </article>
     </Link>
   )
-}
+})

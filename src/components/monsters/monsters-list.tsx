@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import type { PopulatedMonster } from '@/types/monster'
 import { EmptyMonstersState } from './empty-monsters-state'
 import { MonsterCard } from './monster-card'
@@ -34,6 +35,29 @@ function MonstersList ({ monsters, className }: MonstersListProps): React.ReactN
     return <EmptyMonstersState className={className} />
   }
 
+  // Mémorisation de la grille de monstres pour éviter les re-rendus inutiles
+  const monstersGrid = useMemo(() => (
+    <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>
+      {monsters.map((monster) => {
+        const cardKey = monster._id
+
+        return (
+          <MonsterCard
+            key={cardKey}
+            id={cardKey}
+            name={monster.name}
+            traits={monster.traits}
+            state={monster.state}
+            level={monster.level_id.level}
+            createdAt={String(monster.createdAt)}
+            updatedAt={String(monster.updatedAt)}
+            isPublic={monster.isPublic ?? false}
+          />
+        )
+      })}
+    </div>
+  ), [monsters])
+
   return (
     <section className={`mt-12 w-full space-y-8 ${className ?? ''}`}>
       <header className='space-y-2'>
@@ -43,25 +67,7 @@ function MonstersList ({ monsters, className }: MonstersListProps): React.ReactN
         </p>
       </header>
 
-      <div className='grid gap-6 sm:grid-cols-2 xl:grid-cols-3'>
-        {monsters.map((monster) => {
-          const cardKey = monster._id
-
-          return (
-            <MonsterCard
-              key={cardKey}
-              id={cardKey}
-              name={monster.name}
-              traits={monster.traits}
-              state={monster.state}
-              level={monster.level_id.level}
-              createdAt={String(monster.createdAt)}
-              updatedAt={String(monster.updatedAt)}
-              isPublic={monster.isPublic ?? false}
-            />
-          )
-        })}
-      </div>
+      {monstersGrid}
     </section>
   )
 }

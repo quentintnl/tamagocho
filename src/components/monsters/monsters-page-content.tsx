@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo, useCallback } from 'react'
 import { authClient } from '@/lib/auth-client'
 import type { PopulatedMonster } from '@/types/monster'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
@@ -42,16 +43,46 @@ export default function MonstersPageContent ({
   session,
   monsters: initialMonsters
 }: MonstersPageContentProps): React.ReactNode {
-  // Hook pour le rafraîchissement automatique des monstres
-  const { monsters } = useMonsterRefresh(initialMonsters, 1000)
-
+  // Hook pour le rafraîchissement automatique des monstres (toutes les minutes)
+  const { monsters } = useMonsterRefresh(initialMonsters, 60000)
 
   /**
    * Redirige vers la page de création de monstre
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
    */
-  const handleCreateMonster = (): void => {
+  const handleCreateMonster = useCallback((): void => {
     window.location.href = '/sign-in' // ou la route de création appropriée
-  }
+  }, [])
+
+  /**
+   * Message d'en-tête mémorisé
+   */
+  const headerMessage = useMemo(() => {
+    if (monsters.length === 0) {
+      return 'Adoptez votre premier compagnon pour commencer l\'aventure zen !'
+    }
+    return `Vous avez ${monsters.length} créature${monsters.length > 1 ? 's' : ''} dans votre petit paradis`
+  }, [monsters.length])
+
+  /**
+   * Grille de monstres mémorisée pour éviter les re-rendus inutiles
+   */
+  const monstersGrid = useMemo(() => (
+    <div className='relative grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      {monsters.map((monster) => (
+        <MonsterCard
+          key={monster._id}
+          id={monster._id}
+          name={monster.name}
+          traits={monster.traits}
+          state={monster.state}
+          level={monster.level_id?.level ?? 1}
+          createdAt={String(monster.createdAt)}
+          updatedAt={String(monster.updatedAt)}
+        />
+      ))}
+    </div>
+  ), [monsters])
 
   return (
     <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50'>
@@ -85,9 +116,7 @@ export default function MonstersPageContent ({
             🌸 Ma Collection de Créatures
           </h1>
           <p className='text-lg text-forest-600 leading-relaxed'>
-            {monsters.length === 0
-              ? 'Adoptez votre premier compagnon pour commencer l\'aventure zen !'
-              : `Vous avez ${monsters.length} créature${monsters.length > 1 ? 's' : ''} dans votre petit paradis`}
+            {headerMessage}
           </p>
         </div>
 
@@ -105,22 +134,7 @@ export default function MonstersPageContent ({
               </Button>
             </div>
             )
-          : (
-            <div className='relative grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-              {monsters.map((monster) => (
-                <MonsterCard
-                  key={monster._id}
-                  id={monster._id}
-                  name={monster.name}
-                  traits={monster.traits}
-                  state={monster.state}
-                  level={monster.level_id?.level ?? 1}
-                  createdAt={String(monster.createdAt)}
-                  updatedAt={String(monster.updatedAt)}
-                />
-              ))}
-            </div>
-            )}
+          : monstersGrid}
 
         {/* Actions rapides */}
         {monsters.length > 0 && (

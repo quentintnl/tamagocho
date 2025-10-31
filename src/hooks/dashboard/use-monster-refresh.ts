@@ -15,7 +15,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import type { PopulatedMonster } from '@/types/monster'
 
 /**
@@ -30,25 +30,26 @@ interface UseMonsterRefreshReturn {
  * Hook personnalisé pour rafraîchir périodiquement les monstres
  *
  * Met en place un intervalle pour récupérer les monstres mis à jour
- * depuis le serveur toutes les secondes.
+ * depuis le serveur.
  *
  * @param {PopulatedMonster[]} initialMonsters - Liste initiale des monstres
- * @param {number} intervalMs - Intervalle de rafraîchissement en millisecondes (défaut: 1000)
+ * @param {number} intervalMs - Intervalle de rafraîchissement en millisecondes (défaut: 60000 = 1 minute)
  * @returns {UseMonsterRefreshReturn} Liste mise à jour des monstres
  *
  * @example
- * const { monsters } = useMonsterRefresh(initialMonsters, 1000)
+ * const { monsters } = useMonsterRefresh (initialMonsters, 60000)
  */
 export function useMonsterRefresh (
   initialMonsters: PopulatedMonster[],
-  intervalMs: number = 1000
+  intervalMs: number = 60000
 ): UseMonsterRefreshReturn {
   const [monsters, setMonsters] = useState<PopulatedMonster[]>(initialMonsters)
 
   /**
    * Récupère la liste mise à jour des monstres depuis le serveur
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
    */
-  const fetchMonsters = async (): Promise<void> => {
+  const fetchMonsters = useCallback(async (): Promise<void> => {
     try {
       const response = await fetch('/api/monsters')
       if (response.ok) {
@@ -58,7 +59,7 @@ export function useMonsterRefresh (
     } catch (error) {
       console.error('Erreur lors du rafraîchissement des monstres :', error)
     }
-  }
+  }, []) // Pas de dépendances car setMonsters est stable
 
   // Met en place l'intervalle de rafraîchissement
   useEffect(() => {
@@ -68,7 +69,7 @@ export function useMonsterRefresh (
 
     // Nettoyage de l'intervalle lors du démontage
     return () => clearInterval(interval)
-  }, [intervalMs])
+  }, [intervalMs, fetchMonsters]) // Ajout de fetchMonsters dans les dépendances
 
   return { monsters }
 }
