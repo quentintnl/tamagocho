@@ -13,12 +13,60 @@ const client = new MongoClient(uri, {
     }
 })
 
+/**
+ * Connexion Mongoose avec mise en cache
+ *
+ * Single Responsibility: Gère une connexion unique et réutilisable à MongoDB via Mongoose
+ *
+ * Optimisation:
+ * - En développement : utilise une variable globale pour persister entre HMR
+ * - En production : réutilise la connexion existante
+ * - Évite les multiples reconnexions qui ralentissent l'application
+ *
+ * États de connexion Mongoose :
+ * - 0 = disconnected
+ * - 1 = connected
+ * - 2 = connecting
+ * - 3 = disconnecting
+ */
+let mongoosePromise: Promise<typeof mongoose> | null = null
+
 async function connectMongooseToDatabase (): Promise<void> {
+    // Si déjà connecté, ne rien faire
+    if (mongoose.connection.readyState === mongoose.ConnectionStates.connected) {
+        return
+    }
+
+    // Si une connexion est en cours, attendre qu'elle se termine
+    if (mongoose.connection.readyState === mongoose.ConnectionStates.connecting) {
+        await mongoose.connection.asPromise()
+        return
+    }
+
+    // Utiliser le cache de connexion
+    if (process.env.NODE_ENV === 'development') {
+        const globalWithMongoose = global as typeof globalThis & {
+            _mongoosePromise?: Promise<typeof mongoose>
+        }
+
+        if (globalWithMongoose._mongoosePromise == null) {
+            globalWithMongoose._mongoosePromise = mongoose.connect(uri)
+        }
+        mongoosePromise = globalWithMongoose._mongoosePromise
+    } else {
+        if (mongoosePromise == null) {
+            mongoosePromise = mongoose.connect(uri)
+        }
+    }
+
     try {
-        await mongoose.connect(uri)
+        await mongoosePromise
+        // Log uniquement lors de la première connexion
         console.log('Mongoose connected to MongoDB database')
     } catch (error) {
         console.error('Error connecting to the database:', error)
+        mongoosePromise = null
+        throw error
     }
 }
 
