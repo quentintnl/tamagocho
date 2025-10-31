@@ -464,3 +464,25 @@ body {
   animation: slide-up 0.3s ease-out;
 }
 
+/* Scrollbar personnalisée */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-thumb-lochinvar-300::-webkit-scrollbar-thumb {
+  background-color: #7ee7ab;
+  border-radius: 9999px;
+}
+
+.scrollbar-track-slate-100::-webkit-scrollbar-track {
+  background-color: #f1f5f9;
+  border-radius: 9999px;
+}
+
+.hover\:scrollbar-thumb-lochinvar-400:hover::-webkit-scrollbar-thumb {
+  background-color: #3dd17e;
+}

@@ -27,6 +27,7 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { getUserDailyQuests, claimQuestRewardAction } from '@/actions/quest.actions'
 import type { DailyQuest } from '@/types/quest'
 import { DailyQuestCard } from './daily-quest-card'
+import { DailyQuestsSkeleton } from './daily-quests-skeleton'
 
 interface DailyQuestsSectionProps {
   /** Callback appelé après réclamation d'une récompense */
@@ -135,6 +136,11 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
   const completedQuests = quests.filter(q => q.status === 'completed').length
   const activeQuests = quests.filter(q => q.status === 'active').length
 
+  // Afficher le skeleton pendant le chargement
+  if (isLoading) {
+    return <DailyQuestsSkeleton />
+  }
+
   return (
     <div className='rounded-3xl bg-white/90 p-6 shadow-[0_20px_60px_rgba(22,101,52,0.15)] ring-1 ring-meadow-200/60 backdrop-blur'>
       {/* En-tête */}
@@ -148,15 +154,13 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
               Quêtes Quotidiennes
             </h2>
             <p className='text-sm text-slate-600'>
-              {isLoading
-                ? 'Chargement...'
-                : `${completedQuests}/${totalQuests} complétées`}
+              {`${completedQuests}/${totalQuests} complétées`}
             </p>
           </div>
         </div>
 
         {/* Badge de progression */}
-        {!isLoading && totalQuests > 0 && (
+        {totalQuests > 0 && (
           <div className='flex flex-col items-end gap-1'>
             <div className='flex items-center gap-2'>
               <span className='text-2xl'>{completedQuests === totalQuests ? '🏆' : '⚡'}</span>
@@ -173,19 +177,7 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
         )}
       </div>
 
-      {/* États de chargement et erreur */}
-      {isLoading && (
-        <div className='mt-6 flex items-center justify-center py-12'>
-          <div className='text-center'>
-            <svg className='mx-auto h-12 w-12 animate-spin text-lochinvar-500' viewBox='0 0 24 24'>
-              <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' fill='none' />
-              <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z' />
-            </svg>
-            <p className='mt-4 text-sm text-slate-600'>Chargement des quêtes...</p>
-          </div>
-        </div>
-      )}
-
+      {/* Erreur */}
       {error !== null && (
         <div className='mt-6 rounded-xl bg-red-50 p-4 ring-1 ring-red-200'>
           <div className='flex items-center gap-2'>
@@ -205,7 +197,7 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
       )}
 
       {/* Liste des quêtes */}
-      {!isLoading && error === null && (
+      {error === null && (
         <>
           {quests.length === 0 ? (
             <div className='mt-6 rounded-xl bg-slate-50 p-8 text-center ring-1 ring-slate-200'>
@@ -216,7 +208,7 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
               </p>
             </div>
           ) : (
-            <div className='mt-6 space-y-4'>
+            <div className='mt-6 max-h-[600px] space-y-4 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-lochinvar-300 scrollbar-track-slate-100 hover:scrollbar-thumb-lochinvar-400'>
               {quests.map((quest) => (
                 <DailyQuestCard
                   key={quest._id}
