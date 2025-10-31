@@ -70,10 +70,10 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
         })
 
         setQuests(sortedQuests)
+      } else {
         const errorMsg = result.error ?? 'Erreur inconnue'
         setError(errorMsg)
         showErrorToast(`Erreur lors du chargement des quêtes : ${errorMsg}`)
-        setError(result.error ?? 'Erreur inconnue')
       }
     } finally {
       setLoading(false)
@@ -116,10 +116,10 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
       if (onQuestComplete != null) {
         onQuestComplete()
       }
+    } else {
       const errorMsg = result.error ?? 'Erreur lors de la réclamation'
       setError(errorMsg)
       showErrorToast(errorMsg)
-      setError(result.error ?? 'Erreur lors de la réclamation')
     }
 
     setClaimingQuestId(null)
