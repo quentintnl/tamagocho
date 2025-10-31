@@ -173,7 +173,9 @@ export default function ShopPage (): React.ReactNode {
       {!isLoading && (
         <div className='mb-6 flex justify-end'>
           <button
-            onClick={() => { setHideOwned(!hideOwned) }}
+            onClick={() => {
+              setHideOwned(!hideOwned)
+            }}
             className={`
               px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg transition-all duration-200 border-2
               ${hideOwned
@@ -194,7 +196,7 @@ export default function ShopPage (): React.ReactNode {
         : (
           <AccessoriesList
             accessories={filteredAccessories}
-            onPurchase={handlePurchase}
+            onPurchase={(id) => { void handlePurchase(id) }}
             ownedAccessoryIds={ownedAccessoryIds}
           />
           )}
@@ -203,7 +205,7 @@ export default function ShopPage (): React.ReactNode {
       {selectedAccessory !== null && (
         <PurchaseConfirmationModal
           accessory={selectedAccessory}
-          onConfirm={handleConfirmPurchase}
+          onConfirm={() => { void handleConfirmPurchase() }}
           onCancel={handleCancelPurchase}
           currentBalance={wallet?.coin ?? 0}
         />
