@@ -17,7 +17,7 @@
 
 import { Types } from 'mongoose'
 import type { MonsterAction } from '@/hooks/monsters'
-import type { PopulatedMonster, XpLevel } from '@/types/monster'
+import type { PopulatedMonster, XpLevel, MonsterState } from '@/types/monster'
 import { isCorrectAction, getNextState, getActionConfig } from '@/config/actions.config'
 import { calculateLevelFromXp, getAllXpLevels } from './xp-level.service'
 
@@ -27,7 +27,7 @@ import { calculateLevelFromXp, getAllXpLevels } from './xp-level.service'
 export interface XpCalculationResult {
   xpGained: number
   isCorrectAction: boolean
-  nextState: string
+  nextState: MonsterState
 }
 
 /**
@@ -47,7 +47,7 @@ export interface ActionExecutionResult {
   koinsEarned: number
   isCorrectAction: boolean
   levelUp: boolean
-  newState: string
+  newState: MonsterState
 }
 
 /**
@@ -86,7 +86,7 @@ export function calculateXpGain (
   const isCorrect = isCorrectAction(action, monster.state)
   const config = getActionConfig(action)
   const xpGained = isCorrect ? config.xpGain.correct : config.xpGain.incorrect
-  const nextState = isCorrect ? getNextState(action) : monster.state
+  const nextState: MonsterState = isCorrect ? getNextState(action) : monster.state
 
   return {
     xpGained,
@@ -201,12 +201,13 @@ export async function executeMonsterAction (
   // 3. Calcul des Koins
   const koinsEarned = calculateKoinReward(action, xpResult.isCorrectAction)
 
+  // Type annotation ensures correct MonsterState inference
   return {
     xpGained: xpResult.xpGained,
     koinsEarned,
     isCorrectAction: xpResult.isCorrectAction,
     levelUp: levelResult.levelUp,
     newState: xpResult.nextState
-  }
+  } satisfies ActionExecutionResult
 }
 

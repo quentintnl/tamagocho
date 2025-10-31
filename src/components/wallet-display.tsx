@@ -8,31 +8,33 @@
  * - Handle loading state
  * - Handle error state
  *
- * Single Responsibility: Display wallet information in UI
+ * Single Responsibility Principle Applied:
+ * - Only displays wallet information
+ * - Navigation handled by parent component via onClick prop
  */
 
 'use client'
 
 import { useWalletContext } from '@/contexts/wallet-context'
-import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
 import TomatokenIcon from './tomatoken-icon'
 
 interface WalletDisplayProps {
   variant?: 'default' | 'compact'
+  onClick?: () => void
 }
 
 /**
  * Displays the user's wallet balance
  *
  * @param variant - Display variant (default: full display, compact: icon + number)
+ * @param onClick - Optional click handler (for navigation)
  * @returns Wallet display component
  */
 export default function WalletDisplay ({
-  variant = 'default'
+  variant = 'default',
+  onClick
 }: WalletDisplayProps): React.ReactNode {
   const { wallet, isLoading, error } = useWalletContext()
-  const router = useRouter()
 
   // Loading state
   if (isLoading) {
@@ -49,18 +51,11 @@ export default function WalletDisplay ({
     return null
   }
 
-  /**
-   * Redirige vers la page wallet (optimisé avec useCallback)
-   */
-  const handleClick = useCallback((): void => {
-    router.push('/wallet')
-  }, [router])
-
   // Compact variant
   if (variant === 'compact') {
     return (
       <button
-        onClick={handleClick}
+        onClick={onClick}
         className='flex items-center space-x-2 px-2 py-1 rounded-lg hover:bg-meadow-50 transition-all duration-200 cursor-pointer group'
         title='Gérer mon wallet'
       >
@@ -77,7 +72,7 @@ export default function WalletDisplay ({
   // Default variant
   return (
     <button
-      onClick={handleClick}
+      onClick={onClick}
       className='flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-sunset-50 to-sunset-100 rounded-2xl border-2 border-sunset-200 shadow-md hover:shadow-lg hover:border-sunset-300 transition-all duration-200 cursor-pointer group'
       title='Gérer mon wallet'
     >

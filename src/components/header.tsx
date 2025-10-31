@@ -1,32 +1,32 @@
+/**
+ * Header Component
+ *
+ * Presentation Layer: Navigation header
+ *
+ * Single Responsibility Principle Applied:
+ * - Only handles UI rendering
+ * - Navigation logic extracted to usePageTitle and useActiveRoute hooks
+ * - Wallet data retrieval delegated to useWallet hook
+ *
+ * Responsibilities:
+ * - Display page title
+ * - Render navigation buttons
+ * - Show wallet balance
+ */
+
 'use client'
 
-import { usePathname, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useWallet } from '@/hooks/useWallet'
 import { useCallback } from 'react'
 import TomatokenIcon from '@/components/tomatoken-icon'
+import { usePageTitle, useActiveRoute } from '@/hooks/useNavigation'
 
-// Single Responsibility: Header handles only navigation and page title display
 export default function Header (): React.ReactNode {
-  const pathname = usePathname()
   const router = useRouter()
   const { wallet } = useWallet()
-
-  // Déterminer le nom de la page actuelle
-  const getPageTitle = (): string => {
-    if (pathname === '/dashboard') return 'Dashboard'
-    if (pathname === '/monsters') return 'Mes Créatures'
-    if (pathname === '/shop') return 'Boutique'
-    if (pathname === '/wallet') return 'Mon Wallet'
-    if (pathname === '/gallery') return 'Galerie Communautaire'
-    if (pathname === '/quests') return 'Quêtes du Jour'
-    if (pathname?.startsWith('/creature/')) return 'Ma Créature'
-    return 'Tamagotcho'
-  }
-
-  // Déterminer si un bouton est actif
-  const isActive = (path: string): boolean => {
-    return pathname === path
-  }
+  const pageTitle = usePageTitle()
+  const isActive = useActiveRoute()
 
   // Navigation handlers optimisés avec useCallback et router.push
   const handleDashboard = useCallback((): void => {
@@ -60,7 +60,7 @@ export default function Header (): React.ReactNode {
           {/* Nom de la page à gauche */}
           <div className='flex-shrink-0'>
             <h1 className='text-2xl font-bold bg-gradient-to-r from-forest-700 to-meadow-600 bg-clip-text text-transparent'>
-              {getPageTitle()}
+              {pageTitle}
             </h1>
           </div>
 

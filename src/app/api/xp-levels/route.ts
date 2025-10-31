@@ -3,6 +3,9 @@ import XpLevel from '@/db/models/xp-level.model'
 import { NextRequest } from 'next/server'
 import { unstable_cache } from 'next/cache'
 
+// Force dynamic rendering because we use searchParams
+export const dynamic = 'force-dynamic'
+
 // Cache long pour les données statiques (les niveaux XP ne changent jamais)
 export const revalidate = 3600 // 1 heure
 

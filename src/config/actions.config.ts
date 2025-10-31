@@ -142,3 +142,47 @@ export function getNextState (action: Exclude<MonsterAction, null>): MonsterStat
   return config.nextState
 }
 
+/**
+ * Définition d'une action disponible avec métadonnées UI
+ * Used by UI components to display actions
+ */
+export interface AvailableAction {
+  /** Clé de l'action */
+  action: MonsterAction
+  /** Emoji représentant l'action */
+  emoji: string
+  /** Label textuel de l'action */
+  label: string
+}
+
+/**
+ * Métadonnées UI pour chaque action
+ * Open/Closed Principle: Add new actions here
+ */
+const ACTION_UI_METADATA: Record<Exclude<MonsterAction, null>, { emoji: string, label: string }> = {
+  feed: { emoji: '🍎', label: 'Nourrir' },
+  comfort: { emoji: '💙', label: 'Consoler' },
+  hug: { emoji: '🤗', label: 'Câliner' },
+  wake: { emoji: '⏰', label: 'Réveiller' }
+}
+
+/**
+ * Récupère toutes les actions disponibles avec leurs métadonnées UI
+ * Open/Closed Principle: Cette fonction génère automatiquement la liste
+ * depuis ACTIONS_CONFIG, donc ajouter une action ne nécessite pas de modifier
+ * le code des composants
+ *
+ * @returns Liste des actions disponibles
+ */
+export function getAvailableActions (): AvailableAction[] {
+  return Object.keys(ACTIONS_CONFIG).map((actionKey) => {
+    const action = actionKey as Exclude<MonsterAction, null>
+    const metadata = ACTION_UI_METADATA[action]
+    return {
+      action,
+      emoji: metadata.emoji,
+      label: metadata.label
+    }
+  })
+}
+

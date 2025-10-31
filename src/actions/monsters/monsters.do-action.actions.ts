@@ -1,13 +1,7 @@
 'use server'
 
-import { connectMongooseToDatabase } from '@/db'
-import Monster from '@/db/models/monster.model'
-import '@/db/models/xp-level.model'
-import { auth } from '@/lib/auth'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { Types } from 'mongoose'
 import { MonsterAction } from '@/hooks/monsters'
-import { headers } from 'next/headers'
 import type { MonsterActionType } from '@/config/rewards'
 import { addCoins } from '@/services/wallet.service'
 import { trackQuestProgress } from '@/services/daily-quest.service'
@@ -16,7 +10,8 @@ import {
   executeMonsterAction,
   updateMonsterLevel
 } from '@/services/monster-action.service'
-import type { PopulatedMonster } from '@/types/monster'
+import { authService, type IAuthService } from '@/services/auth.service'
+import { monsterRepository, type IMonsterRepository } from '@/repositories/monster.repository'
 
 /**
  * Résultat d'une action sur un monstre
@@ -35,75 +30,85 @@ export interface ActionResult {
  * Effectue une action sur un monstre
  *
  * Cette server action :
- * 1. Vérifie l'authentification
+ * 1. Vérifie l'authentification (délégué à authService)
  * 2. Valide l'action (délégué au service)
- * 3. Récupère le monstre
+ * 3. Récupère le monstre (délégué au repository)
  * 4. Exécute l'action (délégué au service)
- * 5. Sauvegarde les changements
- * 6. Attribue les récompenses
- * 7. Track les quêtes
+ * 5. Sauvegarde les changements (délégué au repository)
+ * 6. Attribue les récompenses (délégué au service)
+ * 7. Track les quêtes (délégué au service)
  * 8. Invalide le cache
  *
- * Responsabilité unique : Orchestrer l'action en coordonnant les services
+ * SOLID Principles Applied:
+ * - Single Responsibility: Orchestration only
+ * - Dependency Inversion: Depends on abstractions (authService, repositories)
  *
  * @param id - Identifiant du monstre
  * @param action - Action à effectuer
+ * @param auth - Service d'authentification (injectable for testing)
+ * @param repository - Repository des monstres (injectable for testing)
  * @returns Résultat de l'action avec les informations de récompense
  */
-export async function doActionOnMonster (id: string, action: MonsterAction): Promise<ActionResult> {
+export async function doActionOnMonster (
+  id: string,
+  action: MonsterAction,
+  auth: IAuthService = authService,
+  repository: IMonsterRepository = monsterRepository
+): Promise<ActionResult> {
   try {
     // 1. Validation de l'action
     validateMonsterAction(id, action)
 
-    // 2. Connexion à la base de données
-    await connectMongooseToDatabase()
-
-    // 3. Vérification de l'authentification
-    const session = await auth.api.getSession({
-      headers: await headers()
-    })
-    if (session === null || session === undefined) {
+    // 2. Vérification de l'authentification (DIP: use abstraction)
+    const user = await auth.getCurrentUser()
+    if (user === null) {
       throw new Error('User not authenticated')
     }
 
-    const { user } = session
+    // 3. Récupération du monstre (DIP: use repository abstraction)
+    const monster = await repository.findByIdAndOwner(id, user.id)
 
-    // 4. Récupération du monstre avec population du level
-    const monster = await Monster.findOne({ ownerId: user.id, _id: id }).populate('level_id').exec()
-
-    if (monster === null || monster === undefined) {
+    if (monster === null) {
       throw new Error('Monster not found')
     }
 
-    // 5. Exécution de l'action (logique métier déléguée au service)
+    // 4. Exécution de l'action (logique métier déléguée au service)
     const actionResult = await executeMonsterAction(
-      monster as unknown as PopulatedMonster,
+      monster,
       action as Exclude<MonsterAction, null>
     )
 
-    // 6. Mise à jour du niveau si nécessaire
+    // 5. Mise à jour du niveau si nécessaire
     if (actionResult.levelUp) {
       const levelResult = await updateMonsterLevel(
-        monster as unknown as PopulatedMonster,
+        monster,
         actionResult.xpGained
       )
 
       if (levelResult.levelUp && levelResult.newLevel !== undefined) {
-        monster.level_id = new Types.ObjectId(String(levelResult.newLevel._id))
-        monster.xp = levelResult.newXp
+        // Update via repository method (no type casting needed)
+        repository.updateMonsterData(monster, {
+          levelId: levelResult.newLevel._id,
+          xp: levelResult.newXp
+        })
       } else {
-        monster.xp = levelResult.newXp
+        repository.updateMonsterData(monster, {
+          xp: levelResult.newXp
+        })
       }
     } else {
-      monster.xp = (monster.xp ?? 0) + actionResult.xpGained
+      repository.updateMonsterData(monster, {
+        xp: (monster.xp ?? 0) + actionResult.xpGained
+      })
     }
 
-    // 7. Mise à jour de l'état du monstre
-    monster.state = actionResult.newState
-    monster.markModified('state')
-    monster.markModified('xp')
-    monster.markModified('level_id')
-    await monster.save()
+    // 6. Mise à jour de l'état du monstre (type-safe avec MonsterState)
+    repository.updateMonsterData(monster, {
+      state: actionResult.newState
+    })
+
+    // 7. Sauvegarde (DIP: use repository abstraction)
+    await repository.save(monster)
 
     // 8. Attribution des Koins
     await addCoins({

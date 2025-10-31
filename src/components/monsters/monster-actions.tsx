@@ -5,6 +5,7 @@ import { useMonsterAction, type MonsterAction } from '@/hooks/monsters'
 import { showSuccessToast, showInfoToast, showErrorToast } from '@/lib/toast'
 import { getRewardMessage } from '@/config/rewards'
 import { useWalletContext } from '@/contexts/wallet-context'
+import { getAvailableActions, type AvailableAction } from '@/config/actions.config'
 
 /**
  * Props pour le composant MonsterActions
@@ -19,26 +20,11 @@ interface MonsterActionsProps {
 }
 
 /**
- * Définition d'une action disponible sur un monstre
- */
-interface ActionDefinition {
-  /** Clé de l'action */
-  action: MonsterAction
-  /** Emoji représentant l'action */
-  emoji: string
-  /** Label textuel de l'action */
-  label: string
-}
-
-/**
  * Liste des actions disponibles pour interagir avec un monstre
+ * Open/Closed Principle: Cette liste est générée automatiquement depuis la config
+ * Ajouter une action dans actions.config.ts suffit, pas besoin de modifier ce composant
  */
-const AVAILABLE_ACTIONS: ActionDefinition[] = [
-  { action: 'feed', emoji: '🍎', label: 'Nourrir' },
-  { action: 'comfort', emoji: '💙', label: 'Consoler' },
-  { action: 'hug', emoji: '🤗', label: 'Câliner' },
-  { action: 'wake', emoji: '⏰', label: 'Réveiller' }
-]
+const AVAILABLE_ACTIONS: AvailableAction[] = getAvailableActions()
 
 /**
  * Props pour le composant ActionButton
