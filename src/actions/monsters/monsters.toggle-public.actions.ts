@@ -68,6 +68,7 @@ export async function toggleMonsterPublicStatus (id: string): Promise<{ success:
 
     // Invalidation du cache des monstres pour cet utilisateur
     revalidateTag(`monsters-${user.id}`)
+    revalidateTag(`monster-${id}`) // Invalide le cache du monstre spécifique
 
     // Revalidation du cache pour rafraîchir la page
     revalidatePath(`/creature/${id}`)

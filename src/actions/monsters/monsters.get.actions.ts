@@ -75,9 +75,12 @@ export async function getMonsters (): Promise<PopulatedMonster[]> {
  * Cette server action :
  * 1. Vérifie l'authentification de l'utilisateur
  * 2. Valide le format de l'identifiant MongoDB
- * 3. Récupère le monstre s'il appartient à l'utilisateur
+ * 3. Récupère le monstre s'il appartient à l'utilisateur (avec cache)
  * 4. Popule les données de niveau XP
  * 5. Retourne null si le monstre n'existe pas ou n'appartient pas à l'utilisateur
+ *
+ * Optimisation : Utilise un cache Next.js avec revalidation de 60 secondes
+ * pour éviter les requêtes DB répétées lors des navigations rapides.
  *
  * Responsabilité unique : récupérer un monstre spécifique
  * en garantissant la propriété et l'existence.
@@ -96,9 +99,6 @@ export async function getMonsters (): Promise<PopulatedMonster[]> {
  */
 export async function getMonsterById (id: string): Promise<PopulatedMonster | null> {
   try {
-    // Connexion à la base de données
-    await connectMongooseToDatabase()
-
     // Vérification de l'authentification
     const session = await auth.api.getSession({
       headers: await headers()
@@ -118,11 +118,26 @@ export async function getMonsterById (id: string): Promise<PopulatedMonster | nu
       return null
     }
 
-    // Récupération du monstre avec vérification de propriété et population du level_id
-    const monster = await Monster.findOne({ ownerId: user.id, _id }).populate('level_id').exec()
+    // Fonction cachée pour récupérer le monstre
+    const getCachedMonsterById = unstable_cache(
+      async (monsterId: string, userId: string) => {
+        // Connexion à la base de données
+        await connectMongooseToDatabase()
 
-    // Sérialisation JSON pour éviter les problèmes de typage Next.js
-    return JSON.parse(JSON.stringify(monster))
+        // Récupération du monstre avec vérification de propriété et population du level_id
+        const monster = await Monster.findOne({ ownerId: userId, _id: monsterId }).populate('level_id').exec()
+
+        // Sérialisation JSON pour éviter les problèmes de typage Next.js
+        return JSON.parse(JSON.stringify(monster))
+      },
+      [`monster-${_id}-${user.id}`], // Cache key unique par monstre et utilisateur
+      {
+        revalidate: 60, // Revalidation toutes les 60 secondes
+        tags: [`monster-${_id}`, `monsters-${user.id}`] // Tags pour invalidation ciblée
+      }
+    )
+
+    return await getCachedMonsterById(_id, user.id)
   } catch (error) {
     console.error('Error fetching monster by ID:', error)
     return null

@@ -72,7 +72,7 @@ export const MonsterCard = memo(function MonsterCard ({
   const levelLabel = level ?? 1
 
   return (
-    <Link href={`/creature/${id}`}>
+    <Link href={`/creature/${id}`} prefetch={true}>
       <article
         className='group relative flex flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-white/95 via-white to-meadow-50/60 p-6 shadow-[0_20px_54px_rgba(22,101,52,0.12)] ring-2 ring-meadow-200/60 backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_70px_rgba(22,101,52,0.18)] hover:ring-meadow-300/70'
       >

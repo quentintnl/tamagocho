@@ -1,10 +1,10 @@
 import { connectMongooseToDatabase } from '@/db'
 import XpLevel from '@/db/models/xp-level.model'
 import { NextRequest } from 'next/server'
+import { unstable_cache } from 'next/cache'
 
-// Désactiver le cache pour cette route
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// Cache long pour les données statiques (les niveaux XP ne changent jamais)
+export const revalidate = 3600 // 1 heure
 
 /**
  * API route pour récupérer un niveau XP spécifique
@@ -33,11 +33,22 @@ export async function GET (request: NextRequest): Promise<Response> {
       }, { status: 400 })
     }
 
-    // Connexion à la base de données
-    await connectMongooseToDatabase()
+    // Fonction cachée pour récupérer le niveau XP (cache très long car statique)
+    const getCachedXpLevel = unstable_cache(
+      async (level: number) => {
+        await connectMongooseToDatabase()
+        const xpLevel = await XpLevel.findOne({ level }).exec()
+        return JSON.parse(JSON.stringify(xpLevel))
+      },
+      [`xp-level-${levelNum}`],
+      {
+        revalidate: 3600, // 1 heure - les niveaux XP sont statiques
+        tags: [`xp-levels`]
+      }
+    )
 
     // Récupération du niveau XP
-    const xpLevel = await XpLevel.findOne({ level: levelNum }).exec()
+    const xpLevel = await getCachedXpLevel(levelNum)
 
     if (xpLevel === null || xpLevel === undefined) {
       return Response.json({
@@ -46,7 +57,7 @@ export async function GET (request: NextRequest): Promise<Response> {
       }, { status: 404 })
     }
 
-    return Response.json(JSON.parse(JSON.stringify(xpLevel)))
+    return Response.json(xpLevel)
   } catch (error) {
     console.error('Erreur lors de la récupération du niveau XP:', error)
     return Response.json({
