@@ -54,7 +54,20 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
       const result = await getUserDailyQuests()
 
       if (result.success && result.quests != null) {
-        setQuests(result.quests)
+        // Trier les quêtes : non complétées en premier, puis complétées
+        const sortedQuests = [...result.quests].sort((a, b) => {
+          const aCompleted = a.status === 'completed' || a.status === 'claimed'
+          const bCompleted = b.status === 'completed' || b.status === 'claimed'
+
+          // Si a est non complétée et b complétée, a vient en premier
+          if (!aCompleted && bCompleted) return -1
+          // Si a est complétée et b non complétée, b vient en premier
+          if (aCompleted && !bCompleted) return 1
+          // Sinon, garder l'ordre original
+          return 0
+        })
+
+        setQuests(sortedQuests)
       } else {
         setError(result.error ?? 'Erreur inconnue')
       }
@@ -75,9 +88,19 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
 
     if (result.success && result.quest != null) {
       // Update quest in list
-      setQuests(prev =>
-        prev.map(q => (q._id === questId ? result.quest! : q))
-      )
+      const updatedQuests = quests.map(q => (q._id === questId ? result.quest! : q))
+
+      // Re-trier les quêtes : non complétées en premier
+      const sortedQuests = [...updatedQuests].sort((a, b) => {
+        const aCompleted = a.status === 'completed' || a.status === 'claimed'
+        const bCompleted = b.status === 'completed' || b.status === 'claimed'
+
+        if (!aCompleted && bCompleted) return -1
+        if (aCompleted && !bCompleted) return 1
+        return 0
+      })
+
+      setQuests(sortedQuests)
 
       // Refresh wallet to show updated coins immediately
       await refreshWallet()
@@ -91,7 +114,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
     }
 
     setClaimingQuestId(null)
-  }, [onQuestComplete, refreshWallet])
+  }, [onQuestComplete, refreshWallet, quests])
 
   const getProgressPercentage = (quest: DailyQuest): number => {
     return Math.min((quest.currentProgress / quest.targetCount) * 100, 100)
