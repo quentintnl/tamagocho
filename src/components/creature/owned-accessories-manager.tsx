@@ -243,13 +243,17 @@ export function OwnedAccessoriesManager ({
           <div className='flex items-center justify-center h-12 w-12 rounded-2xl bg-gradient-to-br from-sky-400 to-lavender-500 shadow-lg border-2 border-white text-2xl'>
             👜
           </div>
-          <div>
+          <div className='flex-1'>
             <h2 className='text-2xl font-black text-forest-800'>
               Mes Accessoires
             </h2>
-            <p className='text-xs font-medium text-forest-600'>
-              {ownedAccessories.length} accessoire{ownedAccessories.length > 1 ? 's' : ''} possédé{ownedAccessories.length > 1 ? 's' : ''}
-            </p>
+            {loading ? (
+              <div className='h-3 bg-sky-200/50 rounded w-32 mt-1 animate-pulse' />
+            ) : (
+              <p className='text-xs font-medium text-forest-600'>
+                {ownedAccessories.length} accessoire{ownedAccessories.length > 1 ? 's' : ''} possédé{ownedAccessories.length > 1 ? 's' : ''}
+              </p>
+            )}
           </div>
         </div>
 
@@ -260,93 +264,129 @@ export function OwnedAccessoriesManager ({
           </div>
         )}
 
-        {/* Onglets de navigation */}
-        <div className='flex justify-center mb-6'>
-          <div className='inline-flex bg-white/90 backdrop-blur-md rounded-2xl p-1 shadow-lg border-2 border-white/80'>
-            <button
-              onClick={() => { setActiveTab('accessories') }}
-              className={`
-                relative px-3 py-1.5 rounded-xl font-bold text-xs transition-all duration-300
-                ${
-                  activeTab === 'accessories'
-                    ? 'bg-gradient-to-br from-sky-500 to-lavender-500 text-white shadow-md scale-105'
-                    : 'text-forest-600 hover:text-forest-800 hover:bg-sky-50 hover:scale-105'
-                }
-              `}
-            >
-              <div className='flex items-center gap-1.5'>
-                <span className='text-base'>🎨</span>
-                <span>Accessoires</span>
-                <span
+        {loading ? (
+          /* Skeleton de chargement */
+          <div className='space-y-6'>
+            {/* Skeleton des onglets */}
+            <div className='flex justify-center'>
+              <div className='inline-flex bg-white/90 backdrop-blur-md rounded-2xl p-1 shadow-lg border-2 border-white/80'>
+                <div className='h-9 w-36 bg-sky-200/50 rounded-xl animate-pulse' />
+                <div className='h-9 w-36 bg-sky-200/50 rounded-xl animate-pulse ml-1' />
+              </div>
+            </div>
+
+            {/* Skeleton de la grille */}
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+              {[...Array(3)].map((_, index) => (
+                <div key={index} className='relative flex flex-col overflow-hidden rounded-2xl p-4 shadow-lg bg-white border-2 border-slate-200 animate-pulse'>
+                  {/* Zone icône skeleton */}
+                  <div className='relative flex items-center justify-center rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 p-6 mb-3'>
+                    <div className='w-20 h-20 bg-slate-200 rounded-full' />
+                  </div>
+                  {/* Nom skeleton */}
+                  <div className='h-4 bg-slate-200 rounded w-3/4 mb-2' />
+                  {/* Bouton skeleton */}
+                  <div className='h-9 bg-slate-200 rounded-lg' />
+                </div>
+              ))}
+            </div>
+
+            {/* Footer skeleton */}
+            <div className='p-3 bg-lavender-50 rounded-xl border-2 border-lavender-200/60'>
+              <div className='h-3 bg-lavender-200/50 rounded w-full' />
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Onglets de navigation */}
+            <div className='flex justify-center mb-6'>
+              <div className='inline-flex bg-white/90 backdrop-blur-md rounded-2xl p-1 shadow-lg border-2 border-white/80'>
+                <button
+                  onClick={() => { setActiveTab('accessories') }}
                   className={`
-                    inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-lg text-xs font-black border
+                    relative px-3 py-1.5 rounded-xl font-bold text-xs transition-all duration-300
                     ${
                       activeTab === 'accessories'
-                        ? 'bg-white/20 text-white border-white/30'
-                        : 'bg-sky-100 text-forest-700 border-sky-200'
+                        ? 'bg-gradient-to-br from-sky-500 to-lavender-500 text-white shadow-md scale-105'
+                        : 'text-forest-600 hover:text-forest-800 hover:bg-sky-50 hover:scale-105'
                     }
                   `}
                 >
-                  {counts.accessoriesCount}
-                </span>
-              </div>
-            </button>
-            <button
-              onClick={() => { setActiveTab('backgrounds') }}
-              className={`
-                relative px-3 py-1.5 rounded-xl font-bold text-xs transition-all duration-300
-                ${
-                  activeTab === 'backgrounds'
-                    ? 'bg-gradient-to-br from-sky-500 to-lavender-500 text-white shadow-md scale-105'
-                    : 'text-forest-600 hover:text-forest-800 hover:bg-sky-50 hover:scale-105'
-                }
-              `}
-            >
-              <div className='flex items-center gap-1.5'>
-                <span className='text-base'>🖼️</span>
-                <span>Arrière-plans</span>
-                <span
+                  <div className='flex items-center gap-1.5'>
+                    <span className='text-base'>🎨</span>
+                    <span>Accessoires</span>
+                    <span
+                      className={`
+                        inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-lg text-xs font-black border
+                        ${
+                          activeTab === 'accessories'
+                            ? 'bg-white/20 text-white border-white/30'
+                            : 'bg-sky-100 text-forest-700 border-sky-200'
+                        }
+                      `}
+                    >
+                      {counts.accessoriesCount}
+                    </span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => { setActiveTab('backgrounds') }}
                   className={`
-                    inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-lg text-xs font-black border
+                    relative px-3 py-1.5 rounded-xl font-bold text-xs transition-all duration-300
                     ${
                       activeTab === 'backgrounds'
-                        ? 'bg-white/20 text-white border-white/30'
-                        : 'bg-sky-100 text-forest-700 border-sky-200'
+                        ? 'bg-gradient-to-br from-sky-500 to-lavender-500 text-white shadow-md scale-105'
+                        : 'text-forest-600 hover:text-forest-800 hover:bg-sky-50 hover:scale-105'
                     }
                   `}
                 >
-                  {counts.backgroundsCount}
-                </span>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='text-base'>🖼️</span>
+                    <span>Arrière-plans</span>
+                    <span
+                      className={`
+                        inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-lg text-xs font-black border
+                        ${
+                          activeTab === 'backgrounds'
+                            ? 'bg-white/20 text-white border-white/30'
+                            : 'bg-sky-100 text-forest-700 border-sky-200'
+                        }
+                      `}
+                    >
+                      {counts.backgroundsCount}
+                    </span>
+                  </div>
+                </button>
               </div>
-            </button>
-          </div>
-        </div>
+            </div>
 
-        {/* Grille des accessoires */}
-        <AccessoriesGrid isLoading={loading} count={filteredOwnedAccessories.length}>
-          {filteredOwnedAccessories.map((ownedAccessory) => {
-            const accessory = getAccessoryById(ownedAccessory.accessoryId)
-            if (accessory === null) return null
+            {/* Grille des accessoires */}
+            <AccessoriesGrid isLoading={loading} count={filteredOwnedAccessories.length}>
+              {filteredOwnedAccessories.map((ownedAccessory) => {
+                const accessory = getAccessoryById(ownedAccessory.accessoryId)
+                if (accessory === null) return null
 
-            return (
-              <OwnedAccessoryCard
-                key={ownedAccessory._id}
-                ownedAccessory={ownedAccessory}
-                accessory={accessory}
-                isEquipped={isAccessoryEquipped(ownedAccessory._id)}
-                onToggleEquip={handleToggleEquip}
-                isProcessing={processingId === ownedAccessory._id}
-              />
-            )
-          })}
-        </AccessoriesGrid>
+                return (
+                  <OwnedAccessoryCard
+                    key={ownedAccessory._id}
+                    ownedAccessory={ownedAccessory}
+                    accessory={accessory}
+                    isEquipped={isAccessoryEquipped(ownedAccessory._id)}
+                    onToggleEquip={handleToggleEquip}
+                    isProcessing={processingId === ownedAccessory._id}
+                  />
+                )
+              })}
+            </AccessoriesGrid>
 
-        {/* Info footer */}
-        <div className='mt-4 p-3 bg-lavender-50 rounded-xl border-2 border-lavender-200/60'>
-          <p className='text-xs text-lavender-800 font-medium'>
-            💡 <strong>Astuce :</strong> Cliquez sur "Équiper" pour voir l'accessoire sur votre monstre !
-          </p>
-        </div>
+            {/* Info footer */}
+            <div className='mt-4 p-3 bg-lavender-50 rounded-xl border-2 border-lavender-200/60'>
+              <p className='text-xs text-lavender-800 font-medium'>
+                💡 <strong>Astuce :</strong> Cliquez sur "Équiper" pour voir l'accessoire sur votre monstre !
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
