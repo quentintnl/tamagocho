@@ -104,7 +104,6 @@ export default function Header (): React.ReactNode {
                     : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
                 }
               `}
-              title='Découvrir les monstres publics de la communauté'
             >
               🌍 Monstres Publics
             </button>
@@ -120,7 +119,6 @@ export default function Header (): React.ReactNode {
                     : 'border-2 border-transparent text-forest-600 hover:border-meadow-300 hover:bg-meadow-50/30'
                 }
               `}
-              title='Complétez vos quêtes quotidiennes'
             >
               🎯 Quêtes
             </button>

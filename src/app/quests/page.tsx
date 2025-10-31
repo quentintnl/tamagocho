@@ -14,7 +14,6 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
-import Header from '@/components/header'
 import Footer from '@/components/footer'
 import { DailyQuests } from '@/components/quests'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
@@ -30,7 +29,6 @@ export default async function QuestsPage (): Promise<React.ReactNode> {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
         <PageHeaderWithWallet
