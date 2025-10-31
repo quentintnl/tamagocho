@@ -6,7 +6,7 @@
  * Single Responsibility Principle Applied:
  * - Only handles UI rendering
  * - Navigation logic extracted to usePageTitle and useActiveRoute hooks
- * - Wallet data retrieval delegated to useWallet hook
+ * - Wallet data retrieval delegated to useWalletContext hook
  *
  * Responsibilities:
  * - Display page title
@@ -17,14 +17,14 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 import { useCallback } from 'react'
 import TomatokenIcon from '@/components/tomatoken-icon'
 import { usePageTitle, useActiveRoute } from '@/hooks/useNavigation'
 
 export default function Header (): React.ReactNode {
   const router = useRouter()
-  const { wallet } = useWallet()
+  const { wallet } = useWalletContext()
   const pageTitle = usePageTitle()
   const isActive = useActiveRoute()
 

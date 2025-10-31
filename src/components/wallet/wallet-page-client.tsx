@@ -18,7 +18,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 import { usePaymentRedirect, useKoinsPurchase } from '@/hooks/wallet'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import SuccessModal from '@/components/wallet/success-modal'
@@ -52,7 +52,7 @@ interface WalletPageClientProps {
  */
 export default function WalletPageClient ({ session }: WalletPageClientProps): React.ReactNode {
   // Hooks pour la gestion de l'état
-  const { wallet, isLoading, refresh } = useWallet()
+  const { wallet, isLoading, refreshWallet } = useWalletContext()
   const { showSuccessModal, showErrorMessage, closeSuccessModal, onPaymentSuccess } = usePaymentRedirect()
   const { isProcessing, message, buyKoins } = useKoinsPurchase()
 
@@ -63,8 +63,8 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
    * Configure le rafraîchissement du wallet après un paiement réussi
    */
   useEffect(() => {
-    onPaymentSuccess(refresh)
-  }, [showSuccessModal])
+    onPaymentSuccess(refreshWallet)
+  }, [showSuccessModal, refreshWallet, onPaymentSuccess])
 
   /**
    * Affiche un toast lorsque le paiement est annulé

@@ -14,7 +14,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { AccessoriesList } from './accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
@@ -33,7 +33,7 @@ interface AccessoryShopClientProps {
  * Composant client de la boutique d'accessoires
  */
 export default function AccessoryShopClient ({ session }: AccessoryShopClientProps): React.ReactNode {
-  const { wallet, isLoading, refresh } = useWallet()
+  const { wallet, isLoading, refreshWallet } = useWalletContext()
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [categoryFilter, setCategoryFilter] = useState<AccessoryCategory | 'all'>('all')
   const [rarityFilter, setRarityFilter] = useState<AccessoryRarity | 'all'>('all')
@@ -101,7 +101,7 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
       if (result.success) {
         setMessage({ type: 'success', text: result.message })
         // Rafraîchir le wallet et les accessoires possédés
-        await refresh()
+        await refreshWallet()
         const updatedIds = await getUserOwnedAccessoryIds()
         setOwnedAccessoryIds(updatedIds)
       } else {

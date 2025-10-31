@@ -23,7 +23,7 @@ import { AccessoryCard } from './accessory-card'
 import { CategoryFilter } from './category-filter'
 import { FeedbackMessage } from './feedback-message'
 import { usePurchaseAccessory } from '@/hooks/accessories'
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 
 /**
  * Props pour le composant AccessoryShop
@@ -70,7 +70,7 @@ export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [],
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'accessories' | 'backgrounds'>('all')
 
   // Hooks pour la gestion de l'état
-  const { wallet, refresh: refreshWallet } = useWallet()
+  const { wallet, refreshWallet } = useWalletContext()
   const { purchasingId, message, handlePurchase } = usePurchaseAccessory()
 
   /**

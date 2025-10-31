@@ -25,6 +25,7 @@ import { MonstersAutoUpdater } from '@/components/monsters/auto-updater'
 import { QuestsAutoRenewer } from '@/components/quests/auto-renewer'
 import { DailyQuestsSection } from '@/components/quests/daily-quests-section'
 import TomatokenIcon from '@/components/tomatoken-icon'
+import { useWalletContext } from '@/contexts/wallet-context'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -54,6 +55,9 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
 
   // Hook pour le rafraîchissement automatique des monstres (toutes les minutes)
   const { monsters } = useMonsterRefresh(initialMonsters, 60000)
+
+  // Hook pour le wallet context
+  const { refreshWallet } = useWalletContext()
 
   // Extraction des informations utilisateur
   const userDisplay = useUserDisplay(session)
@@ -132,6 +136,14 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
   const handleGoToWallet = useCallback((): void => {
     router.push('/wallet')
   }, [router])
+
+  /**
+   * Rafraîchit le wallet après la réclamation d'une récompense de quête
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
+   */
+  const handleRewardClaimed = useCallback(async (): Promise<void> => {
+    await refreshWallet()
+  }, [refreshWallet])
 
   return (
     <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-meadow-50 via-sky-50 to-lavender-100'>
@@ -250,7 +262,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
 
           {/* Sidebar : Quêtes + Mood */}
           <aside className='order-1 lg:order-2 flex flex-col gap-6'>
-            <DailyQuestsSection />
+            <DailyQuestsSection onRewardClaimed={handleRewardClaimed} />
             <MoodTipSection message={favoriteMoodMessage} />
           </aside>
         </div>

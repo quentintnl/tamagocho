@@ -15,7 +15,7 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 import { useCallback } from 'react'
 import TomatokenIcon from '@/components/tomatoken-icon'
 
@@ -33,7 +33,7 @@ export default function PageHeaderWithWallet ({
 }: PageHeaderWithWalletProps): React.ReactNode {
   const pathname = usePathname()
   const router = useRouter()
-  const { wallet } = useWallet()
+  const { wallet } = useWalletContext()
 
   // Déterminer le nom de la page actuelle
   const getPageTitle = (): string => {

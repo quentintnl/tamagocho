@@ -131,16 +131,17 @@ export function MonsterActions ({ onAction, monsterId, onActionComplete }: Monst
       if (result.isCorrectAction) {
         showInfoToast('Ton monstre est heureux ! 🎉', { autoClose: 2500 })
       }
-
-      // Rafraîchir le wallet pour mettre à jour l'affichage
-      await refreshWallet()
     } else if (!result.success && result.error !== undefined) {
       showErrorToast(`Erreur : ${result.error}`)
     }
 
+    // Rafraîchir le wallet pour mettre à jour l'affichage (toujours, même sans récompense)
+    // Cela garantit la synchronisation après l'invalidation du cache côté serveur
+    await refreshWallet()
+
     // Appeler le callback de rafraîchissement après l'action
     if (onActionComplete !== undefined && onActionComplete !== null) {
-      onActionComplete()
+      await onActionComplete()
     }
   }
 
