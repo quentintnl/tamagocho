@@ -12,7 +12,7 @@ import { AccessoriesList } from '@/components/wallet/accessories-list'
 import { getAvailableAccessories } from '@/services/accessory.service'
 import { getUserOwnedAccessoryIds, purchaseAccessoryOnly } from '@/actions/accessory.actions'
 import { PurchaseConfirmationModal } from '@/components/accessories/purchase-confirmation-modal'
-import { useWallet } from '@/hooks/useWallet'
+import { useWalletContext } from '@/contexts/wallet-context'
 import { toast } from 'react-toastify'
 import type { Accessory } from '@/types/accessory'
 
@@ -20,7 +20,7 @@ export default function AccessoriesDemoPage (): React.ReactNode {
   const [accessories] = useState(getAvailableAccessories())
   const [ownedAccessoryIds, setOwnedAccessoryIds] = useState<string[]>([])
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
-  const { wallet } = useWallet()
+  const { wallet, refreshWallet } = useWalletContext()
 
   // Charger les accessoires possédés
   useEffect(() => {
@@ -56,6 +56,9 @@ export default function AccessoriesDemoPage (): React.ReactNode {
         toast.success(result.message, {
           autoClose: 5000
         })
+
+        // Rafraîchir le wallet pour afficher le nouveau solde
+        await refreshWallet()
 
         // Recharger les accessoires possédés
         const updatedOwnedIds = await getUserOwnedAccessoryIds()
@@ -104,7 +107,7 @@ export default function AccessoriesDemoPage (): React.ReactNode {
 
         <AccessoriesList
           accessories={accessories}
-          onPurchase={handlePurchase}
+          onPurchase={(id) => { void handlePurchase(id) }}
           ownedAccessoryIds={ownedAccessoryIds}
         />
       </main>
@@ -113,7 +116,7 @@ export default function AccessoriesDemoPage (): React.ReactNode {
       {selectedAccessory !== null && (
         <PurchaseConfirmationModal
           accessory={selectedAccessory}
-          onConfirm={handleConfirmPurchase}
+          onConfirm={() => { void handleConfirmPurchase() }}
           onCancel={handleCancelPurchase}
           currentBalance={wallet?.coin ?? 0}
         />
