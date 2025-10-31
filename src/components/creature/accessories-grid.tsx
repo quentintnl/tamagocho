@@ -66,10 +66,10 @@ export function AccessoriesGrid ({
     )
   }
 
-  // Grille avec scroll
+  // Grille avec 3 colonnes maximum et scroll après 2 rangées
   return (
-    <div className='max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-fuchsia-blue-300 scrollbar-track-slate-100'>
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'>
+    <div className='max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-meadow-300 scrollbar-track-slate-100'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
         {children}
       </div>
     </div>

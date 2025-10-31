@@ -6,7 +6,6 @@ import type { MonsterAction } from '@/hooks/monsters'
 import { parseMonsterTraits } from '@/lib/utils'
 import { CreatureMonsterDisplay } from './creature-monster-display'
 import { CreatureStatsPanel } from './creature-stats-panel'
-import { CreatureTraitsPanel } from './creature-traits-panel'
 import { OwnedAccessoriesManager } from './owned-accessories-manager'
 import { PublicStatusToggle } from './public-status-toggle'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
@@ -106,18 +105,24 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
 
                 {/* Grille principale : monstre + informations */}
                 <div className='grid lg:grid-cols-2 gap-6'>
-                    {/* Colonne gauche : Monstre animé et actions */}
-                    <CreatureMonsterDisplay
-                        name={currentMonster.name}
-                        traits={traits}
-                        state={currentMonster.state}
-                        level={currentMonster.level_id?.level ?? 1}
-                        currentAction={currentAction}
-                        onAction={handleAction}
-                        monsterId={currentMonster._id}
-                        onActionComplete={handleActionComplete}
-                        equippedAccessories={equippedAccessories}
-                    />
+                    {/* Colonne gauche : Monstre animé, actions et visibilité */}
+                    <div className='space-y-6'>
+                        <CreatureMonsterDisplay
+                            name={currentMonster.name}
+                            traits={traits}
+                            state={currentMonster.state}
+                            level={currentMonster.level_id?.level ?? 1}
+                            currentAction={currentAction}
+                            onAction={handleAction}
+                            monsterId={currentMonster._id}
+                            onActionComplete={handleActionComplete}
+                            equippedAccessories={equippedAccessories}
+                        />
+                        <PublicStatusToggle
+                            monsterId={currentMonster._id}
+                            initialIsPublic={currentMonster.isPublic ?? false}
+                        />
+                    </div>
 
                     {/* Colonne droite : Panneaux d'informations */}
                     <div className='space-y-6'>
@@ -130,22 +135,13 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                             createdAt={currentMonster.createdAt}
                             updatedAt={currentMonster.updatedAt}
                         />
-                        <CreatureTraitsPanel traits={traits} />
-                        <PublicStatusToggle
+                        <OwnedAccessoriesManager
                             monsterId={currentMonster._id}
-                            initialIsPublic={currentMonster.isPublic ?? false}
+                            equippedAccessories={equippedAccessories}
+                            onAccessoryChange={handleAccessoriesRefresh}
+                            refreshTrigger={refreshTrigger}
                         />
                     </div>
-                </div>
-
-                {/* Gestionnaire d'accessoires possédés - Pleine largeur */}
-                <div className='mt-8'>
-                    <OwnedAccessoriesManager
-                        monsterId={currentMonster._id}
-                        equippedAccessories={equippedAccessories}
-                        onAccessoryChange={handleAccessoriesRefresh}
-                        refreshTrigger={refreshTrigger}
-                    />
                 </div>
             </div>
             </div>
