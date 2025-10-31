@@ -109,16 +109,24 @@ export function GalleryFilters ({
   }
 
   return (
-    <div className='bg-white rounded-2xl shadow-md p-6 mb-8'>
-      <div className='flex flex-col gap-6'>
+    <div className='relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-lavender-50/30 to-fuchsia-blue-50/30 p-6 shadow-xl border-4 border-white/90'>
+      {/* Motif décoratif de fond */}
+      <div className='absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gradient-to-br from-lavender-200/30 to-fuchsia-blue-200/20 blur-2xl' aria-hidden='true' />
+
+      <div className='relative flex flex-col gap-6'>
         {/* En-tête */}
         <div className='flex items-center justify-between'>
-          <h3 className='text-lg font-bold text-gray-900'>
-            🔍 Filtres
-          </h3>
+          <div className='flex items-center gap-3'>
+            <div className='flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-lavender-400 to-fuchsia-blue-500 shadow-md text-xl border-2 border-white/80'>
+              🔍
+            </div>
+            <h3 className='text-xl font-black text-forest-800'>
+              Filtres de Recherche
+            </h3>
+          </div>
           <button
             onClick={handleReset}
-            className='text-sm text-lochinvar-600 hover:text-lochinvar-700 font-medium transition-colors'
+            className='px-4 py-2 text-sm text-white font-bold bg-gradient-to-r from-sunset-400 to-gold-500 hover:from-sunset-500 hover:to-gold-600 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-2 border-white/60'
           >
             Réinitialiser
           </button>
@@ -128,34 +136,36 @@ export function GalleryFilters ({
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
           {/* Filtre par niveau */}
           <div className='space-y-2'>
-            <label htmlFor='level-filter' className='block text-sm font-medium text-gray-700'>
+            <label htmlFor='level-filter' className='flex items-center gap-2 text-sm font-bold text-forest-700'>
+              <span className='text-base'>⭐</span>
               Niveau
             </label>
             <select
               id='level-filter'
               value={selectedLevel ?? ''}
               onChange={handleLevelChange}
-              className='w-full rounded-lg border-gray-300 shadow-sm focus:border-lochinvar-500 focus:ring-lochinvar-500 transition-all'
+              className='w-full rounded-xl border-2 border-lavender-200 bg-white px-4 py-2.5 text-forest-800 font-medium shadow-sm focus:border-lavender-400 focus:ring-2 focus:ring-lavender-300 transition-all hover:border-lavender-300'
             >
               <option value=''>Tous les niveaux</option>
-              <option value='1'>Niveau 1</option>
-              <option value='2'>Niveau 2</option>
-              <option value='3'>Niveau 3</option>
-              <option value='4'>Niveau 4</option>
-              <option value='5'>Niveau 5</option>
+              <option value='1'>⭐ Niveau 1</option>
+              <option value='2'>⭐ Niveau 2</option>
+              <option value='3'>⭐ Niveau 3</option>
+              <option value='4'>⭐ Niveau 4</option>
+              <option value='5'>⭐ Niveau 5</option>
             </select>
           </div>
 
           {/* Filtre par état */}
           <div className='space-y-2'>
-            <label htmlFor='state-filter' className='block text-sm font-medium text-gray-700'>
+            <label htmlFor='state-filter' className='flex items-center gap-2 text-sm font-bold text-forest-700'>
+              <span className='text-base'>😊</span>
               Humeur
             </label>
             <select
               id='state-filter'
               value={selectedState}
               onChange={handleStateChange}
-              className='w-full rounded-lg border-gray-300 shadow-sm focus:border-lochinvar-500 focus:ring-lochinvar-500 transition-all'
+              className='w-full rounded-xl border-2 border-lavender-200 bg-white px-4 py-2.5 text-forest-800 font-medium shadow-sm focus:border-lavender-400 focus:ring-2 focus:ring-lavender-300 transition-all hover:border-lavender-300'
             >
               <option value=''>Toutes les humeurs</option>
               <option value='happy'>😊 Heureux</option>
@@ -168,34 +178,36 @@ export function GalleryFilters ({
 
           {/* Tri par */}
           <div className='space-y-2'>
-            <label htmlFor='sort-filter' className='block text-sm font-medium text-gray-700'>
+            <label htmlFor='sort-filter' className='flex items-center gap-2 text-sm font-bold text-forest-700'>
+              <span className='text-base'>📊</span>
               Trier par
             </label>
             <select
               id='sort-filter'
               value={sortBy}
               onChange={handleSortChange}
-              className='w-full rounded-lg border-gray-300 shadow-sm focus:border-lochinvar-500 focus:ring-lochinvar-500 transition-all'
+              className='w-full rounded-xl border-2 border-lavender-200 bg-white px-4 py-2.5 text-forest-800 font-medium shadow-sm focus:border-lavender-400 focus:ring-2 focus:ring-lavender-300 transition-all hover:border-lavender-300'
             >
-              <option value='createdAt'>Date de création</option>
-              <option value='level'>Niveau</option>
-              <option value='name'>Nom</option>
+              <option value='createdAt'>📅 Date de création</option>
+              <option value='level'>⭐ Niveau</option>
+              <option value='name'>🔤 Nom</option>
             </select>
           </div>
 
           {/* Ordre de tri */}
           <div className='space-y-2'>
-            <label htmlFor='sort-order-filter' className='block text-sm font-medium text-gray-700'>
+            <label htmlFor='sort-order-filter' className='flex items-center gap-2 text-sm font-bold text-forest-700'>
+              <span className='text-base'>🔄</span>
               Ordre
             </label>
             <select
               id='sort-order-filter'
               value={sortOrder}
               onChange={handleSortOrderChange}
-              className='w-full rounded-lg border-gray-300 shadow-sm focus:border-lochinvar-500 focus:ring-lochinvar-500 transition-all'
+              className='w-full rounded-xl border-2 border-lavender-200 bg-white px-4 py-2.5 text-forest-800 font-medium shadow-sm focus:border-lavender-400 focus:ring-2 focus:ring-lavender-300 transition-all hover:border-lavender-300'
             >
-              <option value='desc'>Décroissant</option>
-              <option value='asc'>Croissant</option>
+              <option value='desc'>⬇️ Décroissant</option>
+              <option value='asc'>⬆️ Croissant</option>
             </select>
           </div>
         </div>

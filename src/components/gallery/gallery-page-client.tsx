@@ -113,43 +113,74 @@ export function GalleryPageClient ({ initialData }: GalleryPageClientProps): Rea
       {/* Indicateur de chargement */}
       {isPending && (
         <div className='flex justify-center py-12'>
-          <div className='flex items-center gap-3 text-lochinvar-600'>
-            <svg
-              className='h-6 w-6 animate-spin'
-              fill='none'
-              viewBox='0 0 24 24'
-            >
-              <circle
-                className='opacity-25'
-                cx='12'
-                cy='12'
-                r='10'
-                stroke='currentColor'
-                strokeWidth='4'
-              />
-              <path
-                className='opacity-75'
-                fill='currentColor'
-                d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-              />
-            </svg>
-            <span className='font-medium'>Chargement...</span>
+          <div className='relative overflow-hidden rounded-3xl bg-gradient-to-br from-lavender-100 via-white to-fuchsia-blue-100 p-8 shadow-xl border-4 border-white/80'>
+            <div className='flex items-center gap-4'>
+              <div className='flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-br from-lavender-400 to-fuchsia-blue-500 shadow-lg animate-spin' style={{ animationDuration: '2s' }}>
+                <svg
+                  className='h-8 w-8 text-white'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                >
+                  <circle
+                    className='opacity-25'
+                    cx='12'
+                    cy='12'
+                    r='10'
+                    stroke='currentColor'
+                    strokeWidth='4'
+                  />
+                  <path
+                    className='opacity-75'
+                    fill='currentColor'
+                    d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className='text-lg font-black text-forest-800'>Chargement en cours...</p>
+                <p className='text-sm text-forest-600'>Recherche de nouvelles créatures</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {/* Grille de monstres ou état vide */}
       {!isPending && data.monsters.length === 0 ? (
-        <div className='flex flex-col items-center justify-center py-16 px-4'>
-          <div className='text-center max-w-md'>
-            <div className='text-6xl mb-4'>🔍</div>
-            <h3 className='text-2xl font-bold text-gray-900 mb-2'>
-              Aucun monstre trouvé
-            </h3>
-            <p className='text-gray-600 mb-6'>
-              Aucun monstre public ne correspond à vos critères de recherche.
-              Essayez de modifier les filtres ou réinitialisez-les.
-            </p>
+        <div className='relative overflow-hidden rounded-3xl bg-gradient-to-br from-lavender-100 via-white to-sky-100 p-10 sm:p-12 text-center shadow-2xl border-4 border-white/90'>
+          {/* Motifs décoratifs de fond */}
+          <div className='absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gradient-to-br from-lavender-300/40 to-fuchsia-blue-300/30 blur-2xl' aria-hidden='true' />
+          <div className='absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-gradient-to-tr from-meadow-300/30 to-sky-300/20 blur-2xl' aria-hidden='true' />
+
+          <div className='relative space-y-6'>
+            {/* Grosse icône centrale */}
+            <div className='flex justify-center'>
+              <div className='relative'>
+                <div className='flex items-center justify-center h-32 w-32 rounded-3xl bg-gradient-to-br from-lavender-400 to-fuchsia-blue-500 shadow-2xl border-4 border-white text-6xl animate-bounce' style={{ animationDuration: '2s' }}>
+                  🔍
+                </div>
+                {/* Petites étoiles autour */}
+                <div className='absolute -top-2 -right-2 text-2xl animate-pulse'>✨</div>
+                <div className='absolute -bottom-2 -left-2 text-2xl animate-pulse' style={{ animationDelay: '0.5s' }}>💫</div>
+              </div>
+            </div>
+
+            {/* Titre accrocheur */}
+            <div className='space-y-3'>
+              <h3 className='text-3xl sm:text-4xl font-black text-forest-800 leading-tight'>
+                Aucune Créature Trouvée !
+              </h3>
+              <p className='text-lg text-forest-600 leading-relaxed max-w-md mx-auto'>
+                Aucun petit monstre ne correspond à tes critères de recherche. Essaie de modifier les filtres ou réinitialise-les.
+              </p>
+            </div>
+
+            {/* Message encourageant */}
+            <div className='pt-4'>
+              <p className='text-sm font-medium text-forest-500 italic'>
+                "Chaque créature est unique, explore toutes les possibilités ! 🌈"
+              </p>
+            </div>
           </div>
         </div>
       ) : (
