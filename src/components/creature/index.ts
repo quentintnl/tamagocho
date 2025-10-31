@@ -18,4 +18,3 @@ export { AccessoryCard } from './accessory-card'
 export { CategoryFilter } from './category-filter'
 export { CollapsibleSection } from './collapsible-section'
 export { FeedbackMessage } from './feedback-message'
-

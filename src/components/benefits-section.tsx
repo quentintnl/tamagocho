@@ -72,8 +72,8 @@ export default function BenefitsSection (): React.ReactNode {
   return (
     <section id='benefits' className='py-20 bg-gradient-to-b from-transparent via-sky-50/30 to-meadow-50/30 relative overflow-hidden'>
       {/* Decorative elements */}
-      <div className='absolute top-0 right-0 w-64 h-64 bg-meadow-200/20 rounded-full blur-3xl'></div>
-      <div className='absolute bottom-0 left-0 w-64 h-64 bg-sky-200/20 rounded-full blur-3xl'></div>
+      <div className='absolute top-0 right-0 w-64 h-64 bg-meadow-200/20 rounded-full blur-3xl' />
+      <div className='absolute bottom-0 left-0 w-64 h-64 bg-sky-200/20 rounded-full blur-3xl' />
 
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10'>
         <div className='text-center mb-16'>

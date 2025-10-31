@@ -120,7 +120,8 @@ export function generateStarsBackground (config: StarsBackgroundConfig = {
         fill="url(#sky-gradient)"
       />
 
-      ${hasMoon ? `
+      ${hasMoon
+? `
       <!-- Lune -->
       <g transform="translate(150, 50)">
         <!-- Halo lunaire -->
@@ -145,7 +146,8 @@ export function generateStarsBackground (config: StarsBackgroundConfig = {
         <circle cx="4" cy="2" r="2" fill="#E6D68A" opacity="0.6" />
         <circle cx="2" cy="-6" r="2.5" fill="#E6D68A" opacity="0.6" />
       </g>
-      ` : ''}
+      `
+: ''}
 
       <!-- Étoiles scintillantes -->
       ${stars.map((star, i) => `
@@ -259,7 +261,8 @@ export function generateRainbowBackground (config: RainbowBackgroundConfig = {
         }).join('')}
       </g>
 
-      ${hasClouds ? `
+      ${hasClouds
+? `
       <!-- Nuages -->
       <!-- Nuage gauche -->
       <g transform="translate(40, 50)">
@@ -283,7 +286,8 @@ export function generateRainbowBackground (config: RainbowBackgroundConfig = {
         <ellipse cx="10" cy="-1" rx="13" ry="9" fill="url(#cloud-gradient)" />
         <ellipse cx="18" cy="0" rx="11" ry="7" fill="url(#cloud-gradient)" />
       </g>
-      ` : ''}
+      `
+: ''}
 
       <!-- Soleil -->
       <g transform="translate(160, 40)">
@@ -402,7 +406,8 @@ export function generateSunsetBackground (config: SunsetBackgroundConfig = {
       <!-- Ciel dégradé -->
       <rect x="0" y="0" width="200" height="200" fill="url(#sunset-gradient)" />
 
-      ${hasSun ? `
+      ${hasSun
+? `
       <!-- Soleil couchant -->
       <g transform="translate(100, 140)">
         <circle cx="0" cy="0" r="35" fill="#FFD700" opacity="0.3" />
@@ -413,9 +418,11 @@ export function generateSunsetBackground (config: SunsetBackgroundConfig = {
       <!-- Reflets sur l'eau -->
       <ellipse cx="100" cy="160" rx="60" ry="10" fill="#FF8C00" opacity="0.4" />
       <ellipse cx="100" cy="175" rx="40" ry="8" fill="#FF8C00" opacity="0.3" />
-      ` : ''}
+      `
+: ''}
 
-      ${hasBirds ? `
+      ${hasBirds
+? `
       <!-- Oiseaux -->
       <g transform="translate(50, 60)">
         <path d="M 0,0 Q -5,-3 -10,0" fill="none" stroke="#2C2C2C" stroke-width="1.5" stroke-linecap="round" />
@@ -429,7 +436,8 @@ export function generateSunsetBackground (config: SunsetBackgroundConfig = {
         <path d="M 0,0 Q -3,-2 -6,0" fill="none" stroke="#2C2C2C" stroke-width="1" stroke-linecap="round" />
         <path d="M 0,0 Q 3,-2 6,0" fill="none" stroke="#2C2C2C" stroke-width="1" stroke-linecap="round" />
       </g>
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -525,7 +533,8 @@ export function generateAuroraBackground (config: AuroraBackgroundConfig = {
       <!-- Ciel nocturne -->
       <rect x="0" y="0" width="200" height="200" fill="${skyColor}" />
 
-      ${hasStars ? `
+      ${hasStars
+? `
       <!-- Étoiles -->
       ${Array.from({ length: 40 }, () => {
         const x = Math.random() * 200
@@ -533,7 +542,8 @@ export function generateAuroraBackground (config: AuroraBackgroundConfig = {
         const size = 0.5 + Math.random() * 1.5
         return `<circle cx="${x}" cy="${y}" r="${size}" fill="white" opacity="${0.5 + Math.random() * 0.5}" />`
       }).join('')}
-      ` : ''}
+      `
+: ''}
 
       <!-- Aurores boréales ondulantes -->
       <path
@@ -600,4 +610,3 @@ export function generateBackground (type: BackgroundType): string {
       return generateStarsBackground()
   }
 }
-

@@ -113,7 +113,7 @@ export async function getDailyQuests (ownerId: string): Promise<DailyQuestType[]
   const now = new Date()
 
   // Find active quests that haven't expired
-  let quests = await DailyQuest.find({
+  const quests = await DailyQuest.find({
     ownerId,
     status: { $in: ['active', 'completed', 'claimed'] },
     expiresAt: { $gt: now }
@@ -323,4 +323,3 @@ export async function expireOldQuests (): Promise<number> {
 
   return result.modifiedCount
 }
-

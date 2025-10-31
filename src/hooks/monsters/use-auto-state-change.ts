@@ -129,4 +129,3 @@ export function useAutoStateChange (
     }
   }, [monsterId]) // Redémarrer le cycle si monsterId change
 }
-

@@ -35,4 +35,3 @@ export function ShopLayout ({ children }: ShopLayoutProps): React.ReactNode {
     </div>
   )
 }
-

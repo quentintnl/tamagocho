@@ -120,4 +120,3 @@ export class MongoWalletRepository implements IWalletRepository {
  * Can be replaced with mock for testing
  */
 export const walletRepository: IWalletRepository = new MongoWalletRepository()
-

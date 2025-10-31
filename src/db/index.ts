@@ -5,12 +5,12 @@ const uri = `mongodb+srv://${process.env.MONGODB_USERNAME as string}:${process.e
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
-    serverSelectionTimeoutMS: 5000,
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true
-    }
+  serverSelectionTimeoutMS: 5000,
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true
+  }
 })
 
 /**
@@ -32,69 +32,69 @@ const client = new MongoClient(uri, {
 let mongoosePromise: Promise<typeof mongoose> | null = null
 
 async function connectMongooseToDatabase (): Promise<void> {
-    // Si déjà connecté, ne rien faire
-    if (mongoose.connection.readyState === mongoose.ConnectionStates.connected) {
-        return
+  // Si déjà connecté, ne rien faire
+  if (mongoose.connection.readyState === mongoose.ConnectionStates.connected) {
+    return
+  }
+
+  // Si une connexion est en cours, attendre qu'elle se termine
+  if (mongoose.connection.readyState === mongoose.ConnectionStates.connecting) {
+    await mongoose.connection.asPromise()
+    return
+  }
+
+  // Utiliser le cache de connexion
+  if (process.env.NODE_ENV === 'development') {
+    const globalWithMongoose = global as typeof globalThis & {
+      _mongoosePromise?: Promise<typeof mongoose>
     }
 
-    // Si une connexion est en cours, attendre qu'elle se termine
-    if (mongoose.connection.readyState === mongoose.ConnectionStates.connecting) {
-        await mongoose.connection.asPromise()
-        return
+    if (globalWithMongoose._mongoosePromise == null) {
+      globalWithMongoose._mongoosePromise = mongoose.connect(uri)
     }
-
-    // Utiliser le cache de connexion
-    if (process.env.NODE_ENV === 'development') {
-        const globalWithMongoose = global as typeof globalThis & {
-            _mongoosePromise?: Promise<typeof mongoose>
-        }
-
-        if (globalWithMongoose._mongoosePromise == null) {
-            globalWithMongoose._mongoosePromise = mongoose.connect(uri)
-        }
-        mongoosePromise = globalWithMongoose._mongoosePromise
-    } else {
-        if (mongoosePromise == null) {
-            mongoosePromise = mongoose.connect(uri)
-        }
+    mongoosePromise = globalWithMongoose._mongoosePromise
+  } else {
+    if (mongoosePromise == null) {
+      mongoosePromise = mongoose.connect(uri)
     }
+  }
 
-    try {
-        await mongoosePromise
-        // Log uniquement lors de la première connexion
-        console.log('Mongoose connected to MongoDB database')
-    } catch (error) {
-        console.error('Error connecting to the database:', error)
-        mongoosePromise = null
-        throw error
-    }
+  try {
+    await mongoosePromise
+    // Log uniquement lors de la première connexion
+    console.log('Mongoose connected to MongoDB database')
+  } catch (error) {
+    console.error('Error connecting to the database:', error)
+    mongoosePromise = null
+    throw error
+  }
 }
 
 async function connectToDatabase (): Promise<void> {
-    try {
-        await client.connect()
-        console.log('Connected to MongoDB database')
-    } catch (error) {
-        console.error('Error connecting to the database:', error)
-    }
+  try {
+    await client.connect()
+    console.log('Connected to MongoDB database')
+  } catch (error) {
+    console.error('Error connecting to the database:', error)
+  }
 }
 
 // Promise globale pour réutiliser la connexion
 let clientPromise: Promise<MongoClient>
 
 if (process.env.NODE_ENV === 'development') {
-    // En dev, utiliser une variable globale pour préserver la connexion entre HMR
-    const globalWithMongo = global as typeof globalThis & {
-        _mongoClientPromise?: Promise<MongoClient>
-    }
+  // En dev, utiliser une variable globale pour préserver la connexion entre HMR
+  const globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>
+  }
 
-    if (globalWithMongo._mongoClientPromise == null) {
-        globalWithMongo._mongoClientPromise = client.connect()
-    }
-    clientPromise = globalWithMongo._mongoClientPromise
+  if (globalWithMongo._mongoClientPromise == null) {
+    globalWithMongo._mongoClientPromise = client.connect()
+  }
+  clientPromise = globalWithMongo._mongoClientPromise
 } else {
-    // En production, créer une nouvelle connexion
-    clientPromise = client.connect()
+  // En production, créer une nouvelle connexion
+  clientPromise = client.connect()
 }
 
 export { client, connectToDatabase, connectMongooseToDatabase }

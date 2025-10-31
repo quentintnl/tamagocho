@@ -72,11 +72,13 @@ export function AddCoinsPanel ({
                 variant='outline'
                 size='md'
               >
-                {isProcessing ? '...' : (
-                  <span className='flex items-center gap-1'>
-                    {amount} <TomatokenIcon size='sm' />
-                  </span>
-                )}
+                {isProcessing
+                  ? '...'
+                  : (
+                    <span className='flex items-center gap-1'>
+                      {amount} <TomatokenIcon size='sm' />
+                    </span>
+                    )}
               </Button>
             ))}
           </div>
@@ -92,4 +94,3 @@ export function AddCoinsPanel ({
     </div>
   )
 }
-

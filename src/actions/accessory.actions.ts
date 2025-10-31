@@ -390,4 +390,3 @@ export async function removeAccessory (
     }
   }
 }
-

@@ -97,12 +97,14 @@ export function generateSunglasses (config: SunglassesConfig = {
         </linearGradient>
         
         <!-- Dégradé pour les reflets -->
-        ${hasReflection ? `
+        ${hasReflection
+? `
         <linearGradient id="reflection-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:white;stop-opacity:0.6" />
           <stop offset="100%" style="stop-color:white;stop-opacity:0" />
         </linearGradient>
-        ` : ''}
+        `
+: ''}
       </defs>
 
       <!-- Verre gauche -->
@@ -137,7 +139,8 @@ export function generateSunglasses (config: SunglassesConfig = {
         rx="3"
       />
       
-      ${hasReflection ? `
+      ${hasReflection
+? `
       <!-- Reflets sur les verres -->
       <ellipse 
         cx="40" 
@@ -155,7 +158,8 @@ export function generateSunglasses (config: SunglassesConfig = {
         fill="url(#reflection-gradient)"
         opacity="0.7"
       />
-      ` : ''}
+      `
+: ''}
       
       <!-- Branches gauche -->
       <line 
@@ -279,7 +283,8 @@ export function generateNerdGlasses (config: NerdGlassesConfig = {
         rx="3"
       />
       
-      ${hasTape ? `
+      ${hasTape
+? `
       <!-- Scotch de réparation sur le pont -->
       <g opacity="0.8">
         <rect 
@@ -307,7 +312,8 @@ export function generateNerdGlasses (config: NerdGlassesConfig = {
           stroke-width="0.5"
         />
       </g>
-      ` : ''}
+      `
+: ''}
       
       <!-- Branches gauche -->
       <line 
@@ -389,7 +395,8 @@ export function generateReadingGlasses (config: ReadingGlassesConfig = {
       <line x1="20" y1="35" x2="5" y2="35" stroke="${frameColor}" stroke-width="2" />
       <line x1="180" y1="35" x2="195" y2="35" stroke="${frameColor}" stroke-width="2" />
       
-      ${hasChain ? `
+      ${hasChain
+? `
       <!-- Chaînette -->
       <path 
         d="M 5 35 Q 5 60 15 70"
@@ -406,7 +413,8 @@ export function generateReadingGlasses (config: ReadingGlassesConfig = {
         stroke-dasharray="2,2"
       />
       <line x1="15" y1="70" x2="185" y2="70" stroke="#C0C0C0" stroke-width="1" stroke-dasharray="2,2" />
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -451,7 +459,8 @@ export function generateMonocle (config: MonocleConfig = {
         opacity="0.4"
       />
       
-      ${hasChain ? `
+      ${hasChain
+? `
       <!-- Anneau d'attache -->
       <circle 
         cx="135" 
@@ -470,7 +479,8 @@ export function generateMonocle (config: MonocleConfig = {
         stroke-width="1.5"
       />
       <circle cx="160" cy="115" r="4" fill="${frameColor}" />
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -537,7 +547,8 @@ export function generateCyberGlasses (config: CyberGlassesConfig = {
         fill="${frameColor}"
       />
       
-      ${hasHUD ? `
+      ${hasHUD
+? `
       <!-- Affichage HUD gauche -->
       <g opacity="0.9">
         <line x1="25" y1="35" x2="75" y2="35" stroke="${glowColor}" stroke-width="0.5" />
@@ -553,7 +564,8 @@ export function generateCyberGlasses (config: CyberGlassesConfig = {
         <circle cx="170" cy="45" r="8" fill="none" stroke="${glowColor}" stroke-width="0.5" />
         <circle cx="170" cy="45" r="5" fill="none" stroke="${glowColor}" stroke-width="0.5" />
       </g>
-      ` : ''}
+      `
+: ''}
       
       <!-- Branches futuristes -->
       <line x1="15" y1="42" x2="0" y2="42" stroke="${frameColor}" stroke-width="3" />
@@ -621,7 +633,8 @@ export function generateLaserGlasses (config: LaserGlassesConfig = {
         fill="${frameColor}"
       />
       
-      ${isActive ? `
+      ${isActive
+? `
       <!-- Rayons laser gauche -->
       <g opacity="0.8">
         <line x1="50" y1="45" x2="50" y2="80" stroke="${laserColor}" stroke-width="2" />
@@ -639,7 +652,8 @@ export function generateLaserGlasses (config: LaserGlassesConfig = {
       <!-- LEDs d'activation -->
       <circle cx="75" cy="35" r="2" fill="#00FF00" />
       <circle cx="125" cy="35" r="2" fill="#00FF00" />
-      ` : ''}
+      `
+: ''}
       
       <!-- Branches -->
       <line x1="20" y1="45" x2="5" y2="45" stroke="${frameColor}" stroke-width="3" />
@@ -672,4 +686,3 @@ export function generateGlasses (type: GlassesType): string {
       return generateSunglasses()
   }
 }
-

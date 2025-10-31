@@ -68,4 +68,3 @@ export const config = {
     '/sign-in'
   ]
 }
-

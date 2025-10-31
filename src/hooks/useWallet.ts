@@ -58,4 +58,3 @@ export function useWallet (): UseWalletReturn {
     refresh: fetchWallet
   }
 }
-

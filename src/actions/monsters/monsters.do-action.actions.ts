@@ -25,7 +25,6 @@ export interface ActionResult {
   error?: string
 }
 
-
 /**
  * Effectue une action sur un monstre
  *

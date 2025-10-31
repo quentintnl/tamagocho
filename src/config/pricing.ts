@@ -6,29 +6,29 @@
  */
 
 export interface PricingPackage {
-    productId: string
-    price: number
+  productId: string
+  price: number
 }
 
 export const pricingTable: Record<number, PricingPackage> = {
-    10: {
-        productId: 'prod_TJrIuugdxUfIh6',
-        price: 0.5
-    },
-    50: {
-        productId: 'prod_TJrJlPk1OkhK9E',
-        price: 1
-    },
-    500: {
-        productId: 'prod_TJrJqc1MXPSb8t',
-        price: 2
-    },
-    1000: {
-        productId: 'prod_TJrKDD5VieU8H9',
-        price: 3
-    },
-    5000: {
-        productId: 'prod_TJrLeyDGzXlfRb',
-        price: 10
-    }
+  10: {
+    productId: 'prod_TJrIuugdxUfIh6',
+    price: 0.5
+  },
+  50: {
+    productId: 'prod_TJrJlPk1OkhK9E',
+    price: 1
+  },
+  500: {
+    productId: 'prod_TJrJqc1MXPSb8t',
+    price: 2
+  },
+  1000: {
+    productId: 'prod_TJrKDD5VieU8H9',
+    price: 3
+  },
+  5000: {
+    productId: 'prod_TJrLeyDGzXlfRb',
+    price: 10
+  }
 }

@@ -183,4 +183,3 @@ export function getRandomQuestTemplates (count: number = 5): QuestTemplate[] {
 export function getQuestTemplate (type: string, difficulty: string): QuestTemplate | undefined {
   return QUEST_TEMPLATES.find(q => q.type === type && q.difficulty === difficulty)
 }
-

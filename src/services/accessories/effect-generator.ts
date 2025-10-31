@@ -111,7 +111,8 @@ export function generateSparkles (config: SparklesConfig = {
           <stop offset="100%" style="stop-color:${sparkleColor};stop-opacity:0" />
         </radialGradient>
 
-        ${animated ? `
+        ${animated
+? `
         <animate
           id="sparkle-animation"
           attributeName="opacity"
@@ -119,7 +120,8 @@ export function generateSparkles (config: SparklesConfig = {
           dur="2s"
           repeatCount="indefinite"
         />
-        ` : ''}
+        `
+: ''}
       </defs>
 
       <!-- Particules brillantes -->
@@ -236,7 +238,8 @@ export function generateFire (config: FireConfig = {
             fill="${f.color}"
             opacity="${0.7 + Math.random() * 0.3}"
           >
-            ${animated ? `
+            ${animated
+? `
               <animate 
                 attributeName="ry" 
                 values="${f.height / 2};${f.height / 2 + 10};${f.height / 2}" 
@@ -251,7 +254,8 @@ export function generateFire (config: FireConfig = {
                 repeatCount="indefinite"
                 begin="${f.delay}s"
               />
-            ` : ''}
+            `
+: ''}
           </ellipse>
         </g>
       `).join('')}
@@ -268,7 +272,8 @@ export function generateFire (config: FireConfig = {
               fill="${flameColors[0]}"
               opacity="0.8"
             >
-              ${animated ? `
+              ${animated
+? `
                 <animateTransform
                   attributeName="transform"
                   type="scale"
@@ -277,7 +282,8 @@ export function generateFire (config: FireConfig = {
                   repeatCount="indefinite"
                   begin="${i * 0.3}s"
                 />
-              ` : ''}
+              `
+: ''}
             </path>
             <path
               d="M 0,0 Q -5,-15 0,-30 Q 5,-15 0,0"
@@ -347,7 +353,8 @@ export function generateHearts (config: HeartsConfig = {
             stroke="#FF1493"
             stroke-width="0.5"
           >
-            ${animated ? `
+            ${animated
+? `
             <animate
               attributeName="opacity"
               values="0.3;0.8;0.3"
@@ -363,7 +370,8 @@ export function generateHearts (config: HeartsConfig = {
               begin="${h.delay}s"
               repeatCount="indefinite"
             />
-            ` : ''}
+            `
+: ''}
           </path>
         </g>
       `).join('')}
@@ -415,7 +423,8 @@ export function generateBubbles (config: BubblesConfig = {
             stroke-width="1"
             opacity="0.7"
           />
-          ${hasShine ? `
+          ${hasShine
+? `
           <ellipse
             cx="${b.x - b.size * 0.3}"
             cy="${b.y - b.size * 0.3}"
@@ -424,7 +433,8 @@ export function generateBubbles (config: BubblesConfig = {
             fill="white"
             opacity="0.6"
           />
-          ` : ''}
+          `
+: ''}
         </g>
       `).join('')}
     </svg>
@@ -467,14 +477,16 @@ export function generateLightning (config: LightningConfig = {
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          ${animated ? `
+          ${animated
+? `
           <animate
             attributeName="opacity"
             values="0;1;0"
             dur="0.3s"
             repeatCount="indefinite"
           />
-          ` : ''}
+          `
+: ''}
         </path>
         <path
           d="M 60,40 L 55,80 L 65,85 L 50,140"
@@ -496,7 +508,8 @@ export function generateLightning (config: LightningConfig = {
           stroke-linecap="round"
           stroke-linejoin="round"
         >
-          ${animated ? `
+          ${animated
+? `
           <animate
             attributeName="opacity"
             values="0;1;0"
@@ -504,7 +517,8 @@ export function generateLightning (config: LightningConfig = {
             begin="0.15s"
             repeatCount="indefinite"
           />
-          ` : ''}
+          `
+: ''}
         </path>
         <path
           d="M 140,40 L 145,80 L 135,85 L 150,140"
@@ -594,7 +608,8 @@ export function generateDivine (config: DivineConfig = {
         `
       }).join('')}
 
-      ${hasWings ? `
+      ${hasWings
+? `
       <!-- Aile gauche -->
       <g transform="translate(40, 100)">
         <ellipse cx="-20" cy="-10" rx="35" ry="20" fill="url(#wing-gradient)" opacity="0.7" transform="rotate(-30)" />
@@ -608,7 +623,8 @@ export function generateDivine (config: DivineConfig = {
         <ellipse cx="15" cy="5" rx="30" ry="18" fill="url(#wing-gradient)" opacity="0.6" transform="rotate(20)" />
         <ellipse cx="10" cy="15" rx="25" ry="15" fill="url(#wing-gradient)" opacity="0.5" transform="rotate(10)" />
       </g>
-      ` : ''}
+      `
+: ''}
 
       <!-- Halo -->
       <ellipse
@@ -674,4 +690,3 @@ export function generateEffect (type: EffectType): string {
       return generateSparkles()
   }
 }
-

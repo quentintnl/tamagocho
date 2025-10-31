@@ -93,4 +93,3 @@ export function usePaymentRedirect (): UsePaymentRedirectReturn {
     onPaymentSuccess
   }
 }
-

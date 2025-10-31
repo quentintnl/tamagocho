@@ -49,4 +49,3 @@ export interface UpdateWalletBalanceDTO {
   ownerId: string
   amount: number
 }
-

@@ -144,6 +144,3 @@ export async function hasSufficientBalance (
 
   return wallet.coin >= amount
 }
-
-
-

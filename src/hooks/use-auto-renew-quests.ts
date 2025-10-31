@@ -223,4 +223,3 @@ export function useAutoRenewQuests (options: UseAutoRenewQuestsOptions = {}): vo
     }
   }, [enabled, userId, verbose, onRenewed, onError])
 }
-

@@ -68,7 +68,7 @@ export default function MonstersSection (): React.ReactNode {
       </div>
 
       {/* Grass decoration at bottom */}
-      <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-meadow-100/40 to-transparent pointer-events-none'></div>
+      <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-meadow-100/40 to-transparent pointer-events-none' />
     </section>
   )
 }

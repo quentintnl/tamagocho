@@ -88,14 +88,13 @@ export function WalletBalance ({ wallet, session, isLoading }: WalletBalanceProp
               <span className='font-medium'>Dernière mise à jour :</span>{' '}
               {wallet?.updatedAt
                 ? new Date(wallet.updatedAt).toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })
-                : 'N/A'
-              }
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+                : 'N/A'}
             </p>
           </div>
         </>
@@ -103,4 +102,3 @@ export function WalletBalance ({ wallet, session, isLoading }: WalletBalanceProp
     </div>
   )
 }
-

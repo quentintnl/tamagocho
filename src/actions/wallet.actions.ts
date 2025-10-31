@@ -123,4 +123,3 @@ export async function subtractCoinsFromWallet (amount: number): Promise<Wallet |
     return null
   }
 }
-

@@ -143,4 +143,3 @@ export async function getMonsterById (id: string): Promise<PopulatedMonster | nu
     return null
   }
 }
-

@@ -143,14 +143,16 @@ export function generatePartyHat (config: PartyHatConfig = {
         stroke-width="3"
       />
 
-      ${hasConfetti ? `
+      ${hasConfetti
+? `
       <!-- Confettis -->
       <rect x="60" y="50" width="4" height="8" fill="#FF9CEE" transform="rotate(20 62 54)" />
       <rect x="130" y="70" width="4" height="8" fill="#6BDBFF" transform="rotate(-15 132 74)" />
       <circle cx="80" cy="100" r="3" fill="#FFE66D" />
       <circle cx="120" cy="80" r="3" fill="#B4FF6B" />
       <rect x="110" y="110" width="4" height="8" fill="#FF6B9D" transform="rotate(45 112 114)" />
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -313,7 +315,8 @@ export function generateWizardHat (config: WizardHatConfig = {
         />
       </g>
 
-      ${hasMoon ? `
+      ${hasMoon
+? `
       <!-- Croissant de lune -->
       <g transform="translate(85, 90)">
         <path
@@ -323,7 +326,8 @@ export function generateWizardHat (config: WizardHatConfig = {
           stroke-width="1"
         />
       </g>
-      ` : ''}
+      `
+: ''}
 
       <!-- Reflets magiques -->
       <path
@@ -396,7 +400,8 @@ export function generateBaseballCap (config: BaseballCapConfig = {
         stroke-width="1.5"
       />
 
-      ${hasLogo ? `
+      ${hasLogo
+? `
       <!-- Logo -->
       <text
         x="100"
@@ -407,7 +412,8 @@ export function generateBaseballCap (config: BaseballCapConfig = {
         text-anchor="middle"
         fill="${logoColor}"
       >M</text>
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -493,7 +499,8 @@ export function generateCowboyHat (config: CowboyHatConfig = {
         stroke-width="2"
       />
 
-      ${hasStar ? `
+      ${hasStar
+? `
       <!-- Étoile de shérif -->
       <g transform="translate(100, 110)">
         <path
@@ -503,7 +510,8 @@ export function generateCowboyHat (config: CowboyHatConfig = {
           stroke-width="1"
         />
       </g>
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -569,7 +577,8 @@ export function generateTopHat (config: TopHatConfig = {
         stroke-width="2"
       />
 
-      ${hasRibbon ? `
+      ${hasRibbon
+? `
       <!-- Ruban décoratif -->
       <rect
         x="60"
@@ -584,7 +593,8 @@ export function generateTopHat (config: TopHatConfig = {
       <circle cx="140" cy="112" r="8" fill="${bandColor}" stroke="#660000" stroke-width="2" />
       <circle cx="152" cy="112" r="8" fill="${bandColor}" stroke="#660000" stroke-width="2" />
       <rect x="144" y="108" width="4" height="8" fill="${bandColor}" />
-      ` : ''}
+      `
+: ''}
 
       <!-- Reflet -->
       <ellipse
@@ -623,4 +633,3 @@ export function generateHat (type: HatType): string {
       return generatePartyHat()
   }
 }
-

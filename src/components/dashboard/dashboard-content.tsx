@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
-import type {PopulatedMonster} from '@/types/monster'
+import type { PopulatedMonster } from '@/types/monster'
 import { showLoadingToast, updateToast } from '@/lib/toast'
 import {
   useUserDisplay,
@@ -150,19 +150,19 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
       {/* Système de mise à jour automatique des monstres */}
       <MonstersAutoUpdater
         userId={session.user.id}
-        minInterval={60000}  // 1 minute
+        minInterval={60000} // 1 minute
         maxInterval={180000} // 3 minutes
-        enabled={true}
-        verbose={true}
+        enabled
+        verbose
         showIndicator={false}
       />
 
       {/* Système de renouvellement automatique des quêtes à minuit */}
       <QuestsAutoRenewer
         userId={session.user.id}
-        enabled={true}
-        verbose={true}
-        refreshOnRenew={true}
+        enabled
+        verbose
+        refreshOnRenew
         showIndicator={false}
       />
 
@@ -196,7 +196,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
             <StatsCard
               title='Compagnons'
               value={stats.totalMonsters}
-              description="Petits monstres"
+              description='Petits monstres'
               color='lochinvar'
               icon='🌱'
             />

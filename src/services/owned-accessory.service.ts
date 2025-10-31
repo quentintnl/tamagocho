@@ -155,4 +155,3 @@ export async function deleteOwnedAccessory (ownedAccessoryId: string): Promise<b
   const result = await OwnedAccessoryModel.findByIdAndDelete(ownedAccessoryId)
   return result !== null
 }
-

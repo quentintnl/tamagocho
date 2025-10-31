@@ -176,4 +176,3 @@ export function AccessoryCard ({
     </article>
   )
 }
-

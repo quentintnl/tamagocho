@@ -60,9 +60,9 @@ export const BASE_REWARDS = {
  * Higher difficulty = higher rewards
  */
 export const DIFFICULTY_MULTIPLIERS: Record<QuestDifficulty, number> = {
-  easy: 1,      // 100% of base rewards
-  medium: 1.5,  // 150% of base rewards
-  hard: 2       // 200% of base rewards
+  easy: 1, // 100% of base rewards
+  medium: 1.5, // 150% of base rewards
+  hard: 2 // 200% of base rewards
 } as const
 
 /**
@@ -101,9 +101,9 @@ export const DIFFICULTY_TARGET_RANGES = {
  * Higher weight = more likely to appear
  */
 export const DIFFICULTY_WEIGHTS = {
-  easy: 0.4,    // 40% chance
-  medium: 0.4,  // 40% chance
-  hard: 0.2     // 20% chance
+  easy: 0.4, // 40% chance
+  medium: 0.4, // 40% chance
+  hard: 0.2 // 20% chance
 } as const
 
 /**
@@ -372,4 +372,3 @@ export const QUEST_CONFIG = {
 } as const
 
 export type QuestConfig = typeof QUEST_CONFIG
-

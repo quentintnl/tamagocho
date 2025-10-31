@@ -65,7 +65,7 @@ export async function calculateLevelFromXp (
     accumulatedXp += level.xpRequired
   }
 
-    const remainingXp = totalXp - accumulatedXp
+  const remainingXp = totalXp - accumulatedXp
 
   return {
     level: currentLevel,
@@ -96,4 +96,3 @@ export async function isMaxLevel (levelNumber: number): Promise<boolean> {
   const level = await getXpLevelByNumber(levelNumber)
   return level?.isMaxLevel ?? false
 }
-

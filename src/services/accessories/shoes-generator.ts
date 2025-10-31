@@ -140,7 +140,8 @@ export function generateSneakers (config: SneakersConfig = {
         opacity="0.9"
       />
 
-      ${hasStar ? `
+      ${hasStar
+? `
       <!-- Étoile décorative gauche -->
       <g transform="translate(72, 95)">
         <path
@@ -160,7 +161,8 @@ export function generateSneakers (config: SneakersConfig = {
           stroke-width="0.5"
         />
       </g>
-      ` : ''}
+      `
+: ''}
 
       <!-- Lacets gauche -->
       <path
@@ -313,7 +315,8 @@ export function generateBoots (config: BootsConfig = {
         stroke-dasharray="3,3"
       />
 
-      ${hasBuckle ? `
+      ${hasBuckle
+? `
       <!-- Boucle gauche -->
       <g>
         <rect
@@ -355,7 +358,8 @@ export function generateBoots (config: BootsConfig = {
           fill="#808080"
         />
       </g>
-      ` : ''}
+      `
+: ''}
 
       <!-- Reflets sur le cuir gauche -->
       <ellipse
@@ -495,7 +499,8 @@ export function generateSandals (config: SandalsConfig = {
         fill="${strapColor}"
       />
 
-      ${hasFlower ? `
+      ${hasFlower
+? `
       <!-- Fleur décorative gauche -->
       <g transform="translate(65, 125)">
         <circle cx="0" cy="0" r="6" fill="#FFB6C1" />
@@ -515,7 +520,8 @@ export function generateSandals (config: SandalsConfig = {
         <circle cx="5" cy="3" r="5" fill="#FFB6C1" />
         <circle cx="0" cy="0" r="3" fill="#FFD700" />
       </g>
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -616,7 +622,8 @@ export function generateHeels (config: HeelsConfig = {
         stroke-width="3"
       />
 
-      ${hasGlitter ? `
+      ${hasGlitter
+? `
       <!-- Paillettes gauche -->
       <circle cx="52" cy="122" r="1.5" fill="#FFD700" opacity="0.8" />
       <circle cx="60" cy="118" r="1.5" fill="#FFD700" opacity="0.8" />
@@ -630,7 +637,8 @@ export function generateHeels (config: HeelsConfig = {
       <circle cx="158" cy="122" r="1.5" fill="#FFD700" opacity="0.8" />
       <circle cx="146" cy="127" r="1.5" fill="#FFD700" opacity="0.8" />
       <circle cx="154" cy="127" r="1.5" fill="#FFD700" opacity="0.8" />
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -707,7 +715,8 @@ export function generateRollers (config: RollersConfig = {
         fill="#2C2C2C"
       />
 
-      ${hasFlames ? `
+      ${hasFlames
+? `
       <!-- Flammes de vitesse gauche -->
       <path
         d="M 30 115 Q 25 110 30 105 Q 28 110 30 115"
@@ -731,7 +740,8 @@ export function generateRollers (config: RollersConfig = {
         fill="#FF6347"
         opacity="0.7"
       />
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -817,7 +827,8 @@ export function generateRocketBoots (config: RocketBootsConfig = {
       <rect x="128" y="70" width="20" height="2" fill="#FFD700" />
       <rect x="128" y="75" width="20" height="2" fill="#FFD700" />
 
-      ${isFlying ? `
+      ${isFlying
+? `
       <!-- Flammes de propulsion gauche -->
       <path
         d="M 54 103 Q 58 115 54 125 Q 60 115 64 125 Q 68 115 74 125 Q 70 115 64 103"
@@ -837,7 +848,8 @@ export function generateRocketBoots (config: RocketBootsConfig = {
       <circle cx="68" cy="135" r="2" fill="#FFD700" opacity="0.8" />
       <circle cx="132" cy="130" r="2" fill="#FFD700" opacity="0.8" />
       <circle cx="140" cy="135" r="2" fill="#FFD700" opacity="0.8" />
-      ` : ''}
+      `
+: ''}
     </svg>
   `.trim()
 }
@@ -866,4 +878,3 @@ export function generateShoes (type: ShoesType): string {
       return generateSneakers()
   }
 }
-

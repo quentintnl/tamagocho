@@ -30,4 +30,3 @@ export function ShopSectionHeader ({ title, subtitle }: ShopSectionHeaderProps):
     </div>
   )
 }
-

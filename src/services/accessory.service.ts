@@ -353,4 +353,3 @@ export function getAccessoriesByRarity (rarity: AccessoryRarity): Accessory[] {
   const accessories = getAvailableAccessories()
   return accessories.filter(acc => acc.rarity === rarity)
 }
-

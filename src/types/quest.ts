@@ -134,4 +134,3 @@ export interface CompleteQuestDTO {
   questId: string
   ownerId: string
 }
-

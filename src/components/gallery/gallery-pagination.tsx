@@ -70,8 +70,8 @@ export function GalleryPagination ({
   /**
    * Génère un tableau de numéros de pages à afficher
    */
-  const getPageNumbers = (): (number | string)[] => {
-    const pages: (number | string)[] = []
+  const getPageNumbers = (): Array<number | string> => {
+    const pages: Array<number | string> = []
     const maxPagesToShow = 5
     const halfRange = Math.floor(maxPagesToShow / 2)
 
@@ -208,4 +208,3 @@ export function GalleryPagination ({
     </div>
   )
 }
-

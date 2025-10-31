@@ -170,4 +170,3 @@ export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [],
     </div>
   )
 }
-

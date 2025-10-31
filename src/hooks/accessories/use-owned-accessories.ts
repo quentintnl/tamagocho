@@ -85,4 +85,3 @@ export function useOwnedAccessories (refreshTrigger?: number): UseOwnedAccessori
     refresh: fetchOwnedAccessories
   }
 }
-

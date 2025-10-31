@@ -86,7 +86,7 @@ export function useAccessoryEquipment (): UseAccessoryEquipmentReturn {
         : await removeAccessory(ownedAccessoryId)
 
       if (result.success) {
-         showSuccessToast(result.message)
+        showSuccessToast(result.message)
         setMessage({ type: 'success', text: result.message })
         return true
       } else {
@@ -123,4 +123,3 @@ export function useAccessoryEquipment (): UseAccessoryEquipmentReturn {
     clearMessage
   }
 }
-

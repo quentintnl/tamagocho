@@ -121,4 +121,3 @@ export function MonstersAutoUpdater ({
   // Par défaut, ne rend rien visuellement
   return null
 }
-

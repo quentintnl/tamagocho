@@ -116,8 +116,8 @@ export function PublicStatusToggle ({ monsterId, initialIsPublic }: PublicStatus
             transition-all duration-300 ease-in-out shadow-lg
             focus:outline-none focus:ring-4 focus:ring-offset-2
             disabled:opacity-50 disabled:cursor-not-allowed border-2 border-white/60
-            ${isPublic 
-              ? 'bg-gradient-to-r from-meadow-400 to-forest-500 focus:ring-meadow-300' 
+            ${isPublic
+              ? 'bg-gradient-to-r from-meadow-400 to-forest-500 focus:ring-meadow-300'
               : 'bg-gradient-to-r from-gray-300 to-gray-400 focus:ring-gray-300'
             }
           `}
@@ -138,4 +138,3 @@ export function PublicStatusToggle ({ monsterId, initialIsPublic }: PublicStatus
     </div>
   )
 }
-

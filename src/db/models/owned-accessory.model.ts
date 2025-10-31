@@ -61,4 +61,3 @@ type OwnedAccessoryModel = Model<OwnedAccessory>
 export const OwnedAccessoryModel: OwnedAccessoryModel =
   (mongoose.models.OwnedAccessory as OwnedAccessoryModel) ??
   mongoose.model<OwnedAccessory>('OwnedAccessory', ownedAccessorySchema)
-

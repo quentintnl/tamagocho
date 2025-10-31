@@ -96,4 +96,3 @@ export function ShopStats ({ totalItems, ownedItems, balance }: ShopStatsProps):
     </div>
   )
 }
-

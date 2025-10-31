@@ -43,10 +43,10 @@ export async function POST (req: Request): Promise<Response> {
         wallet.coin = Number(wallet.coin) + koinsToAdd
         wallet.markModified('coin')
         await wallet.save()
-        console.log(`✅ ${koinsToAdd} coins ajoutés au wallet de l'utilisateur ${userId}`)
-        console.log(`   Balance avant: ${previousBalance}, Balance après: ${wallet.coin}`)
+        console.log(`✅ ${koinsToAdd} coins ajoutés au wallet de l'utilisateur ${String(userId)}`)
+        console.log(`   Balance avant: ${String(previousBalance)}, Balance après: ${String(wallet.coin)}`)
       } else {
-        console.error(`❌ Wallet non trouvé pour l'utilisateur ${userId}`)
+        console.error(`❌ Wallet non trouvé pour l'utilisateur ${String(userId)}`)
       }
       break
     }

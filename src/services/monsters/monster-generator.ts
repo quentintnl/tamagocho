@@ -11,7 +11,7 @@ const tomatoColors = [
   ['#98D8C8', '#26A69A'], // Tomate verte - vert clair
   ['#FF69B4', '#EC407A'], // Tomate rose - rose vif
   ['#9B59B6', '#8E44AD'], // Tomate pourpre - violet
-  ['#F4A460', '#D2691E']  // Tomate zébrée - brun sable
+  ['#F4A460', '#D2691E'] // Tomate zébrée - brun sable
 ]
 
 // Couleurs pour les feuilles et tiges de tomates (antennes)

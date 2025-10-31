@@ -71,4 +71,3 @@ export function useActiveRoute (): (path: string) => boolean {
     return pathname === path
   }
 }
-

@@ -224,25 +224,27 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
       {/* Liste des quêtes */}
       {error === null && (
         <>
-          {quests.length === 0 ? (
-            <div className='mt-6 rounded-xl bg-slate-50 p-8 text-center ring-1 ring-slate-200'>
-              <span className='text-5xl'>🎯</span>
-              <p className='mt-4 font-semibold text-slate-800'>Aucune quête disponible</p>
-              <p className='mt-2 text-sm text-slate-600'>
-                Revenez demain pour de nouvelles quêtes !
-              </p>
-            </div>
-          ) : (
-            <div className='mt-6 max-h-[600px] space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-lochinvar-300 scrollbar-track-slate-100 hover:scrollbar-thumb-lochinvar-400'>
-              {sortedQuests.map((quest) => (
-                <DailyQuestCard
-                  key={quest._id}
-                  quest={quest}
-                  onClaimReward={handleClaimReward}
-                />
-              ))}
-            </div>
-          )}
+          {quests.length === 0
+            ? (
+              <div className='mt-6 rounded-xl bg-slate-50 p-8 text-center ring-1 ring-slate-200'>
+                <span className='text-5xl'>🎯</span>
+                <p className='mt-4 font-semibold text-slate-800'>Aucune quête disponible</p>
+                <p className='mt-2 text-sm text-slate-600'>
+                  Revenez demain pour de nouvelles quêtes !
+                </p>
+              </div>
+              )
+            : (
+              <div className='mt-6 max-h-[600px] space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-lochinvar-300 scrollbar-track-slate-100 hover:scrollbar-thumb-lochinvar-400'>
+                {sortedQuests.map((quest) => (
+                  <DailyQuestCard
+                    key={quest._id}
+                    quest={quest}
+                    onClaimReward={handleClaimReward}
+                  />
+                ))}
+              </div>
+              )}
 
           {/* Message de motivation */}
           {quests.length > 0 && completedQuests === totalQuests && (
@@ -279,4 +281,3 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
     </div>
   )
 }
-

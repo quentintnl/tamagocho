@@ -19,4 +19,3 @@ export function ShopTabsSkeleton (): React.ReactNode {
     </div>
   )
 }
-

@@ -16,11 +16,10 @@ interface QuestsDescriptionProps {
  */
 export function QuestsDescription ({ text }: QuestsDescriptionProps): React.ReactNode {
   return (
-    <div className="mb-6 text-center text-gray-600">
+    <div className='mb-6 text-center text-gray-600'>
       {text === null
-        ? <div className="h-6 bg-gray-200 rounded w-96 mx-auto animate-pulse" />
+        ? <div className='h-6 bg-gray-200 rounded w-96 mx-auto animate-pulse' />
         : <p>{text}</p>}
     </div>
   )
 }
-

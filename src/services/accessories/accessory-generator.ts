@@ -154,4 +154,3 @@ export function hasAccessorySVGSupport (accessoryId: string): boolean {
 export function getSupportedAccessoryIds (): string[] {
   return Object.keys(ACCESSORY_TYPE_MAP)
 }
-

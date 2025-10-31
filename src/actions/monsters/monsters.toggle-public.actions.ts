@@ -87,4 +87,3 @@ export async function toggleMonsterPublicStatus (id: string): Promise<{ success:
     }
   }
 }
-

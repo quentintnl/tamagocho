@@ -80,4 +80,3 @@ dailyQuestSchema.index({ ownerId: 1, status: 1, expiresAt: 1 })
 const DailyQuest = mongoose.models.DailyQuest ?? mongoose.model('DailyQuest', dailyQuestSchema)
 
 export default DailyQuest
-

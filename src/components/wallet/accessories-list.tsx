@@ -94,4 +94,3 @@ export function AccessoriesList ({
     </div>
   )
 }
-

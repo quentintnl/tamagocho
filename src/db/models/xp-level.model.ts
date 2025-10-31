@@ -37,4 +37,3 @@ const xpLevelSchema = new Schema({
 })
 
 export default mongoose.models.XpLevel ?? mongoose.model('XpLevel', xpLevelSchema)
-

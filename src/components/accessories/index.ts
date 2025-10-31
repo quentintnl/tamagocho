@@ -5,4 +5,3 @@
  */
 
 export { UniversalAccessoryCard } from './universal-accessory-card'
-

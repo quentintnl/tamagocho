@@ -55,4 +55,3 @@ export function FeedbackMessage ({ type, text }: FeedbackMessageProps): React.Re
     </div>
   )
 }
-

@@ -74,10 +74,10 @@ export async function updateQuestProgressAction (
   questId: string,
   incrementBy: number = 1
 ): Promise<{
-  success: boolean
-  quest?: DailyQuest
-  error?: string
-}> {
+    success: boolean
+    quest?: DailyQuest
+    error?: string
+  }> {
   try {
     const session = await auth.api.getSession({
       headers: await headers()
@@ -169,10 +169,10 @@ export async function trackQuestProgressAction (
   questType: string,
   incrementBy: number = 1
 ): Promise<{
-  success: boolean
-  quests?: DailyQuest[]
-  error?: string
-}> {
+    success: boolean
+    quests?: DailyQuest[]
+    error?: string
+  }> {
   try {
     const session = await auth.api.getSession({
       headers: await headers()
@@ -230,7 +230,6 @@ export async function claimQuestRewardAction (questId: string): Promise<{
     revalidatePath('/wallet')
     revalidatePath('/creature')
 
-
     return {
       success: true,
       quest
@@ -243,4 +242,3 @@ export async function claimQuestRewardAction (questId: string): Promise<{
     }
   }
 }
-

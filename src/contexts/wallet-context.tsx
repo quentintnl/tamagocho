@@ -90,4 +90,3 @@ export function useWalletContext (): WalletContextValue {
 
   return context
 }
-

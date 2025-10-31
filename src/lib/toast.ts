@@ -146,4 +146,3 @@ export function showErrorFromException (
   const message = error instanceof Error ? error.message : fallbackMessage
   return showErrorToast(message)
 }
-

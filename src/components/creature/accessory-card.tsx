@@ -202,28 +202,29 @@ export function AccessoryCard ({
           </div>
 
           {/* Bouton d'achat ou statut */}
-          {isOwned ? (
-            <div className='mt-2 w-full rounded-xl bg-gradient-to-r from-green-100 to-green-200 px-4 py-3 text-center text-sm font-semibold text-green-700'>
-              ✓ Déjà possédé
-            </div>
-          ) : (
-            <button
-              onClick={handleClick}
-              disabled={!canAfford || isPurchasing}
-              className={`mt-2 w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-lg transition-all duration-300 active:scale-95 ${
+          {isOwned
+            ? (
+              <div className='mt-2 w-full rounded-xl bg-gradient-to-r from-green-100 to-green-200 px-4 py-3 text-center text-sm font-semibold text-green-700'>
+                ✓ Déjà possédé
+              </div>
+              )
+            : (
+              <button
+                onClick={handleClick}
+                disabled={!canAfford || isPurchasing}
+                className={`mt-2 w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-lg transition-all duration-300 active:scale-95 ${
                 isPurchasing
                   ? 'bg-slate-300 text-slate-500 cursor-wait'
                   : canAfford
                     ? 'bg-gradient-to-r from-moccaccino-500 to-moccaccino-600 text-white hover:from-moccaccino-600 hover:to-moccaccino-700 hover:shadow-xl'
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed'
               }`}
-            >
-              {isPurchasing ? 'Achat en cours...' : canAfford ? 'Acheter' : 'Fonds insuffisants'}
-            </button>
-          )}
+              >
+                {isPurchasing ? 'Achat en cours...' : canAfford ? 'Acheter' : 'Fonds insuffisants'}
+              </button>
+              )}
         </div>
       </div>
     </article>
   )
 }
-

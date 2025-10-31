@@ -23,4 +23,3 @@ export type { EffectType } from './effect-generator'
 // Backgrounds
 export { generateBackground, generateStarsBackground, generateRainbowBackground } from './background-generator'
 export type { BackgroundType } from './background-generator'
-

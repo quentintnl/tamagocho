@@ -101,4 +101,3 @@ export function useMonsterData (initialMonster: PopulatedMonster): UseMonsterDat
     refreshMonster
   }
 }
-

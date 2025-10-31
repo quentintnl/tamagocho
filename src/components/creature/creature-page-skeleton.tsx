@@ -156,4 +156,3 @@ export function CreaturePageSkeleton ({ showHeader = true }: CreaturePageSkeleto
     </div>
   )
 }
-

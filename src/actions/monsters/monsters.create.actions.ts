@@ -73,4 +73,3 @@ export async function createMonster (monsterData: CreateMonsterFormValues): Prom
   // Retourne l'ID du monstre créé
   return monster._id.toString()
 }
-

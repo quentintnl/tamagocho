@@ -34,4 +34,3 @@ export function AccessoriesGridSkeleton (): React.ReactNode {
     </div>
   )
 }
-

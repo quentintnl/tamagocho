@@ -69,4 +69,3 @@ export class BetterAuthService implements IAuthService {
  * Can be replaced with mock for testing
  */
 export const authService: IAuthService = new BetterAuthService()
-

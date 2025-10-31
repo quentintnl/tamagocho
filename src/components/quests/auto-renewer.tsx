@@ -75,9 +75,9 @@ export function QuestsAutoRenewer ({
   // Indicateur visuel optionnel
   if (showIndicator && enabled) {
     return (
-      <div className="fixed bottom-4 right-4 z-50">
-        <div className="bg-lochinvar-500 text-white px-3 py-1 rounded-full text-sm shadow-lg flex items-center gap-2">
-          <span className="animate-pulse">🌙</span>
+      <div className='fixed bottom-4 right-4 z-50'>
+        <div className='bg-lochinvar-500 text-white px-3 py-1 rounded-full text-sm shadow-lg flex items-center gap-2'>
+          <span className='animate-pulse'>🌙</span>
           <span>Renouvellement auto</span>
         </div>
       </div>
@@ -86,4 +86,3 @@ export function QuestsAutoRenewer ({
 
   return null
 }
-

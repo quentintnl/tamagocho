@@ -3,9 +3,9 @@
 import { connectMongooseToDatabase } from '@/db'
 import Monster from '@/db/models/monster.model'
 import '@/db/models/xp-level.model'
-import type {MonsterDocument, PopulatedMonster} from '@/types/monster'
+import type { MonsterDocument, PopulatedMonster } from '@/types/monster'
 import { getXpLevelByNumber } from '@/services/xp-level.service'
-import {FilterQuery, SortOrder} from "mongoose";
+import { FilterQuery, SortOrder } from 'mongoose'
 
 /**
  * Filtres pour la galerie communautaire
@@ -155,4 +155,3 @@ export async function getPublicMonsters (
     }
   }
 }
-

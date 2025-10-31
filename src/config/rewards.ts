@@ -85,4 +85,3 @@ export function getRewardMessage (
   const bonus = isCorrectAction ? ' 🎯' : ''
   return `💰 +${koinsEarned} ${coinText}${bonus}`
 }
-

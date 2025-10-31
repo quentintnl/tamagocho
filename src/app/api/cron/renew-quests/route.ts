@@ -188,15 +188,15 @@ export async function GET (request: NextRequest): Promise<NextResponse> {
           const createdQuests = await DailyQuest.insertMany(questsData)
           totalQuestsCreated += createdQuests.length
 
-          log('info', `✅ Utilisateur ${ownerId}: ${expireResult.modifiedCount} quête(s) expirée(s), ${createdQuests.length} quête(s) créée(s)`)
+          log('info', `✅ Utilisateur ${String(ownerId)}: ${expireResult.modifiedCount} quête(s) expirée(s), ${createdQuests.length} quête(s) créée(s)`)
         } else {
-          log('info', `ℹ️ Utilisateur ${ownerId}: ${activeQuests} quête(s) encore active(s), pas de renouvellement`)
+          log('info', `ℹ️ Utilisateur ${String(ownerId)}: ${activeQuests} quête(s) encore active(s), pas de renouvellement`)
         }
 
         usersProcessed++
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue'
-        log('error', `❌ Erreur pour l'utilisateur ${user.id}`, { error: errorMessage })
+        log('error', `❌ Erreur pour l'utilisateur ${String(user.id)}`, { error: errorMessage })
         errors.push({ userId: user.id, error: errorMessage })
       }
     }

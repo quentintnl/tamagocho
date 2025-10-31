@@ -66,4 +66,3 @@ export function DailyQuestsSkeleton (): React.ReactNode {
     </div>
   )
 }
-

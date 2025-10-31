@@ -23,8 +23,8 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import type { OwnedAccessory } from '@/types/accessory'
-import type { Accessory } from '@/types/accessory'
+import type { OwnedAccessory, Accessory } from '@/types/accessory'
+
 import { getAccessoryById } from '@/services/accessory.service'
 import { useOwnedAccessories, useAccessoryEquipment } from '@/hooks/accessories'
 import { AccessoriesGrid } from './accessories-grid'
@@ -104,16 +104,18 @@ function OwnedAccessoryCard ({
     >
       {/* Icône de l'accessoire */}
       <div className='relative flex items-center justify-center rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 p-6 mb-3'>
-        {hasSVGSupport && svgContent !== null ? (
-          <div
-            className='w-20 h-20 transition-transform duration-300 group-hover:scale-110'
-            dangerouslySetInnerHTML={{ __html: svgContent }}
-          />
-        ) : (
-          <span className='text-4xl transition-transform duration-300 group-hover:scale-110' aria-label={accessory.name}>
-            {accessory.icon}
-          </span>
-        )}
+        {hasSVGSupport && svgContent !== null
+          ? (
+            <div
+              className='w-20 h-20 transition-transform duration-300 group-hover:scale-110'
+              dangerouslySetInnerHTML={{ __html: svgContent }}
+            />
+            )
+          : (
+            <span className='text-4xl transition-transform duration-300 group-hover:scale-110' aria-label={accessory.name}>
+              {accessory.icon}
+            </span>
+            )}
 
         {/* Badge équipé */}
         {isEquipped && (
@@ -247,13 +249,15 @@ export function OwnedAccessoriesManager ({
             <h2 className='text-2xl font-black text-forest-800'>
               Mes Accessoires
             </h2>
-            {loading ? (
-              <div className='h-3 bg-sky-200/50 rounded w-32 mt-1 animate-pulse' />
-            ) : (
-              <p className='text-xs font-medium text-forest-600'>
-                {ownedAccessories.length} accessoire{ownedAccessories.length > 1 ? 's' : ''} possédé{ownedAccessories.length > 1 ? 's' : ''}
-              </p>
-            )}
+            {loading
+              ? (
+                <div className='h-3 bg-sky-200/50 rounded w-32 mt-1 animate-pulse' />
+                )
+              : (
+                <p className='text-xs font-medium text-forest-600'>
+                  {ownedAccessories.length} accessoire{ownedAccessories.length > 1 ? 's' : ''} possédé{ownedAccessories.length > 1 ? 's' : ''}
+                </p>
+                )}
           </div>
         </div>
 
@@ -391,4 +395,3 @@ export function OwnedAccessoriesManager ({
     </div>
   )
 }
-

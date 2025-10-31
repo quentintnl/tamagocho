@@ -96,4 +96,3 @@ export function useMonsterAccessories (monsterId: string): UseMonsterAccessories
     refreshAccessories
   }
 }
-

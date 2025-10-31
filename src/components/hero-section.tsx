@@ -35,7 +35,7 @@ export default function HeroSection (): React.ReactNode {
       </div>
 
       {/* Bottom grass decoration */}
-      <div className='absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-meadow-100/50 to-transparent pointer-events-none'></div>
+      <div className='absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-meadow-100/50 to-transparent pointer-events-none' />
     </section>
   )
 }

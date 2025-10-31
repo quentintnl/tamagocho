@@ -183,22 +183,23 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
         </div>
 
         {/* Liste des accessoires */}
-        {isLoading || isLoadingOwned ? (
-          <div className='flex min-h-[400px] items-center justify-center'>
-            <div className='text-center'>
-              <div className='mx-auto h-12 w-12 animate-spin rounded-full border-4 border-lochinvar-200 border-t-lochinvar-600' />
-              <p className='mt-4 text-sm text-slate-600'>Chargement...</p>
+        {isLoading || isLoadingOwned
+          ? (
+            <div className='flex min-h-[400px] items-center justify-center'>
+              <div className='text-center'>
+                <div className='mx-auto h-12 w-12 animate-spin rounded-full border-4 border-lochinvar-200 border-t-lochinvar-600' />
+                <p className='mt-4 text-sm text-slate-600'>Chargement...</p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <AccessoriesList
-            accessories={filteredAccessories}
-            onPurchase={handlePurchase}
-            ownedAccessoryIds={ownedAccessoryIds}
-          />
-        )}
+            )
+          : (
+            <AccessoriesList
+              accessories={filteredAccessories}
+              onPurchase={handlePurchase}
+              ownedAccessoryIds={ownedAccessoryIds}
+            />
+            )}
       </main>
     </div>
   )
 }
-

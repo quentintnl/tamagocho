@@ -213,4 +213,3 @@ export function GalleryPageClient ({ initialData }: GalleryPageClientProps): Rea
     </div>
   )
 }
-
