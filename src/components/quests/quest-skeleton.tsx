@@ -12,41 +12,46 @@
 
 export function QuestSkeleton (): React.ReactNode {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border-2 border-gray-200 animate-pulse">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-meadow-100/50 via-white to-forest-50/50 p-6 shadow-xl border-4 border-white/90 animate-pulse">
+      {/* Motif décoratif */}
+      <div className='absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+
       {/* Header */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex-1 pr-4">
+          <div className="flex items-center gap-3 mb-2">
             {/* Title skeleton */}
-            <div className="h-6 bg-gray-200 rounded w-48"></div>
+            <div className="h-7 bg-meadow-200/50 rounded-xl w-56"></div>
             {/* Difficulty badge skeleton */}
-            <div className="h-6 bg-gray-200 rounded-full w-16"></div>
+            <div className="h-8 bg-meadow-300/50 rounded-xl w-20"></div>
           </div>
           {/* Description skeleton */}
-          <div className="h-4 bg-gray-200 rounded w-full max-w-md"></div>
+          <div className="h-5 bg-forest-200/50 rounded-lg w-full max-w-md mt-2"></div>
         </div>
       </div>
 
       {/* Progress section */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between text-sm mb-1">
+      <div className="mb-5">
+        <div className="flex items-center justify-between mb-2">
           {/* Progress text skeleton */}
-          <div className="h-4 bg-gray-200 rounded w-32"></div>
+          <div className="h-5 bg-forest-200/50 rounded-lg w-40"></div>
           {/* Percentage skeleton */}
-          <div className="h-4 bg-gray-200 rounded w-12"></div>
+          <div className="h-5 bg-forest-200/50 rounded-lg w-14"></div>
         </div>
         {/* Progress bar skeleton */}
-        <div className="w-full bg-gray-200 rounded-full h-3"></div>
+        <div className="w-full bg-forest-100/50 rounded-full h-4 border-2 border-white shadow-inner"></div>
       </div>
 
       {/* Rewards section */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           {/* Coin reward skeleton */}
-          <div className="h-5 bg-gray-200 rounded w-24"></div>
+          <div className="h-10 bg-gold-200/50 rounded-xl w-28"></div>
           {/* XP reward skeleton */}
-          <div className="h-5 bg-gray-200 rounded w-20"></div>
+          <div className="h-10 bg-lavender-200/50 rounded-xl w-24"></div>
         </div>
+        {/* Button skeleton */}
+        <div className="h-10 bg-meadow-200/50 rounded-xl w-32"></div>
       </div>
     </div>
   )
