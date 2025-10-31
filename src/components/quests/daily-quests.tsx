@@ -14,7 +14,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { getUserDailyQuests, claimQuestRewardAction } from '@/actions/quest.actions'
 import type { DailyQuest } from '@/types/quest'
 import Button from '@/components/button'
@@ -29,26 +29,39 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
   const [error, setError] = useState<string | null>(null)
   const [claimingQuestId, setClaimingQuestId] = useState<string | null>(null)
 
-  useEffect(() => {
-    loadQuests()
-  }, [])
+  // Ref pour éviter les appels multiples simultanés
+  const loadingRef = useRef(false)
 
-  const loadQuests = async (): Promise<void> => {
-    setLoading(true)
-    setError(null)
-
-    const result = await getUserDailyQuests()
-
-    if (result.success && result.quests != null) {
-      setQuests(result.quests)
-    } else {
-      setError(result.error ?? 'Erreur inconnue')
+  const loadQuests = useCallback(async (): Promise<void> => {
+    // Éviter les appels simultanés
+    if (loadingRef.current) {
+      console.log('[DailyQuests] Chargement déjà en cours, skip')
+      return
     }
 
-    setLoading(false)
-  }
+    try {
+      loadingRef.current = true
+      setLoading(true)
+      setError(null)
 
-  const handleClaimReward = async (questId: string): Promise<void> => {
+      const result = await getUserDailyQuests()
+
+      if (result.success && result.quests != null) {
+        setQuests(result.quests)
+      } else {
+        setError(result.error ?? 'Erreur inconnue')
+      }
+    } finally {
+      setLoading(false)
+      loadingRef.current = false
+    }
+  }, [])
+
+  useEffect(() => {
+    void loadQuests()
+  }, [loadQuests])
+
+  const handleClaimReward = useCallback(async (questId: string): Promise<void> => {
     setClaimingQuestId(questId)
 
     const result = await claimQuestRewardAction(questId)
@@ -68,7 +81,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
     }
 
     setClaimingQuestId(null)
-  }
+  }, [onQuestComplete])
 
   const getProgressPercentage = (quest: DailyQuest): number => {
     return Math.min((quest.currentProgress / quest.targetCount) * 100, 100)

@@ -23,7 +23,7 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { getUserDailyQuests, claimQuestRewardAction } from '@/actions/quest.actions'
 import type { DailyQuest } from '@/types/quest'
 import { DailyQuestCard } from './daily-quest-card'
@@ -39,11 +39,22 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
   const [error, setError] = useState<string | null>(null)
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' } | null>(null)
 
+  // Ref pour éviter les appels multiples simultanés
+  const loadingRef = useRef(false)
+
   /**
    * Charge les quêtes quotidiennes
+   * Optimisé avec useCallback pour éviter les re-créations inutiles
    */
-  const loadQuests = async (): Promise<void> => {
+  const loadQuests = useCallback(async (): Promise<void> => {
+    // Éviter les appels simultanés
+    if (loadingRef.current) {
+      console.log('[DailyQuests] Chargement déjà en cours, skip')
+      return
+    }
+
     try {
+      loadingRef.current = true
       setIsLoading(true)
       setError(null)
 
@@ -59,13 +70,15 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
       console.error('Erreur chargement quêtes:', err)
     } finally {
       setIsLoading(false)
+      loadingRef.current = false
     }
-  }
+  }, []) // Pas de dépendances car on utilise uniquement des setters
 
   /**
    * Réclamer la récompense d'une quête
+   * Optimisé avec useCallback pour éviter les re-créations inutiles
    */
-  const handleClaimReward = async (questId: string): Promise<void> => {
+  const handleClaimReward = useCallback(async (questId: string): Promise<void> => {
     try {
       const quest = quests.find(q => q._id === questId)
       if (quest === undefined) return
@@ -110,12 +123,12 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
         setNotification(null)
       }, 3000)
     }
-  }
+  }, [quests, onRewardClaimed, loadQuests])
 
-  // Charger les quêtes au montage
+  // Charger les quêtes au montage UNIQUEMENT
   useEffect(() => {
     void loadQuests()
-  }, [])
+  }, [loadQuests])
 
   // Calculer les statistiques
   const totalQuests = quests.length
