@@ -25,9 +25,9 @@ interface StatItemProps {
  */
 export function StatItem ({ label, value }: StatItemProps): React.ReactNode {
   return (
-    <div className='flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0'>
-      <span className='text-gray-600 font-medium'>{label}</span>
-      <span className='text-gray-900 font-bold'>{value}</span>
+    <div className='flex justify-between items-center py-3 px-4 rounded-xl bg-white/60 backdrop-blur-sm border-2 border-meadow-200/40 hover:border-meadow-300/60 transition-all'>
+      <span className='text-forest-600 font-bold text-sm'>{label}</span>
+      <span className='text-forest-800 font-black text-base'>{value}</span>
     </div>
   )
 }
@@ -84,32 +84,43 @@ export function CreatureStatsPanel ({
   updatedAt
 }: CreatureStatsPanelProps): React.ReactNode {
   return (
-    <div className='bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border-4 border-moccaccino-200'>
-      <h2 className='text-2xl font-bold text-moccaccino-600 mb-4'>
-        Statistiques
-      </h2>
+    <div className='relative overflow-hidden rounded-3xl bg-gradient-to-br from-meadow-100 via-white to-forest-50 p-6 shadow-xl border-4 border-white/90'>
+      {/* Motif décoratif */}
+      <div className='absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
 
-      {/* Barre de progression XP */}
-      <div className='mb-6'>
-        <XpProgressBar
-          currentXp={xp}
-          xpToNextLevel={xpToNextLevel}
-          currentLevel={level}
-          isMaxLevel={isMaxLevel}
-        />
-      </div>
+      <div className='relative'>
+        {/* En-tête */}
+        <div className='flex items-center gap-3 mb-6'>
+          <div className='flex items-center justify-center h-12 w-12 rounded-2xl bg-gradient-to-br from-meadow-400 to-forest-500 shadow-lg border-2 border-white text-2xl'>
+            📊
+          </div>
+          <h2 className='text-2xl font-black text-forest-800'>
+            Statistiques
+          </h2>
+        </div>
 
-      <div className='space-y-3'>
-        <StatItem label='Niveau' value={level.toString()} />
-        <StatItem label='État' value={getStateLabel(state)} />
-        <StatItem
-          label='Date de création'
-          value={new Date(createdAt).toLocaleDateString('fr-FR')}
-        />
-        <StatItem
-          label='Dernière mise à jour'
-          value={new Date(updatedAt).toLocaleDateString('fr-FR')}
-        />
+        {/* Barre de progression XP */}
+        <div className='mb-6'>
+          <XpProgressBar
+            currentXp={xp}
+            xpToNextLevel={xpToNextLevel}
+            currentLevel={level}
+            isMaxLevel={isMaxLevel}
+          />
+        </div>
+
+        <div className='space-y-3'>
+          <StatItem label='Niveau' value={level.toString()} />
+          <StatItem label='État' value={getStateLabel(state)} />
+          <StatItem
+            label='Date de création'
+            value={new Date(createdAt).toLocaleDateString('fr-FR')}
+          />
+          <StatItem
+            label='Dernière mise à jour'
+            value={new Date(updatedAt).toLocaleDateString('fr-FR')}
+          />
+        </div>
       </div>
     </div>
   )

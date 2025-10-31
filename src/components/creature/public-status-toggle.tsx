@@ -79,101 +79,61 @@ export function PublicStatusToggle ({ monsterId, initialIsPublic }: PublicStatus
   }
 
   return (
-    <div className='bg-white rounded-2xl shadow-md p-6'>
-      <div className='flex items-center justify-between'>
+    <div className='relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 via-white to-lavender-50 p-6 shadow-xl border-4 border-white/90'>
+      {/* Motif décoratif */}
+      <div className='absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+
+      <div className='relative flex items-center justify-between gap-4'>
         <div className='flex-1'>
-          <h3 className='text-lg font-bold text-gray-900 mb-1'>
-            Visibilité
-          </h3>
-          <p className='text-sm text-gray-600'>
+          {/* En-tête avec icône */}
+          <div className='flex items-center gap-3 mb-2'>
+            <div className='flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-br from-sky-400 to-lavender-500 shadow-lg border-2 border-white text-lg'>
+              {isPublic ? '🌍' : '🔒'}
+            </div>
+            <h3 className='text-lg font-black text-forest-800'>
+              Visibilité
+            </h3>
+          </div>
+
+          <p className='text-sm text-forest-600 font-medium ml-13'>
             {isPublic
-              ? 'Votre monstre est visible publiquement'
-              : 'Votre monstre est privé'}
+              ? 'Ton monstre est visible publiquement'
+              : 'Ton monstre est privé'}
           </p>
           {error !== null && (
-            <p className='text-sm text-moccaccino-600 mt-1'>
-              {error}
+            <p className='text-xs text-sunset-600 font-bold mt-2 ml-13'>
+              ⚠️ {error}
             </p>
           )}
         </div>
 
-        <div className='flex items-center gap-3'>
-          {/* Indicateur visuel */}
-          <div className='flex items-center gap-2'>
-            <span className='text-sm font-medium text-gray-700'>
-              {isPublic ? 'Public' : 'Privé'}
-            </span>
-            {isPublic && (
-              <svg
-                className='w-5 h-5 text-lochinvar-500'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-                />
-              </svg>
-            )}
-            {!isPublic && (
-              <svg
-                className='w-5 h-5 text-gray-400'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
-                />
-              </svg>
-            )}
-          </div>
-
-          {/* Toggle Switch */}
-          <button
-            onClick={handleToggle}
-            disabled={isPending}
+        {/* Toggle Switch amélioré */}
+        <button
+          onClick={handleToggle}
+          disabled={isPending}
+          className={`
+            relative inline-flex h-10 w-20 items-center rounded-2xl
+            transition-all duration-300 ease-in-out shadow-lg
+            focus:outline-none focus:ring-4 focus:ring-offset-2
+            disabled:opacity-50 disabled:cursor-not-allowed border-2 border-white/60
+            ${isPublic 
+              ? 'bg-gradient-to-r from-meadow-400 to-forest-500 focus:ring-meadow-300' 
+              : 'bg-gradient-to-r from-gray-300 to-gray-400 focus:ring-gray-300'
+            }
+          `}
+          aria-label={isPublic ? 'Rendre privé' : 'Rendre public'}
+        >
+          <span
             className={`
-              relative inline-flex h-8 w-14 items-center rounded-full
+              inline-block h-7 w-7 transform rounded-xl bg-white shadow-lg
               transition-all duration-300 ease-in-out
-              focus:outline-none focus:ring-2 focus:ring-lochinvar-500 focus:ring-offset-2
-              disabled:opacity-50 disabled:cursor-not-allowed
-              ${isPublic ? 'bg-lochinvar-500' : 'bg-gray-300'}
+              flex items-center justify-center font-bold text-xs
+              ${isPublic ? 'translate-x-11' : 'translate-x-1'}
             `}
-            aria-label={isPublic ? 'Rendre privé' : 'Rendre public'}
           >
-            <span
-              className={`
-                inline-block h-6 w-6 transform rounded-full bg-white
-                transition-transform duration-300 ease-in-out
-                ${isPublic ? 'translate-x-7' : 'translate-x-1'}
-              `}
-            />
-          </button>
-        </div>
-      </div>
-
-      {/* Description supplémentaire */}
-      <div className='mt-4 p-3 bg-gray-50 rounded-lg'>
-        <p className='text-xs text-gray-600'>
-          {isPublic ? (
-            <>
-              <strong className='text-lochinvar-700'>Mode public :</strong> Les autres utilisateurs peuvent voir votre monstre
-              dans la liste publique. Vos statistiques et traits sont visibles.
-            </>
-          ) : (
-            <>
-              <strong className='text-gray-700'>Mode privé :</strong> Seul vous pouvez voir ce monstre.
-              Il n&apos;apparaîtra pas dans les listes publiques.
-            </>
-          )}
-        </p>
+            {isPending ? '⏳' : (isPublic ? '✓' : '✕')}
+          </span>
+        </button>
       </div>
     </div>
   )

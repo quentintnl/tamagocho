@@ -4,7 +4,6 @@ import { useState } from 'react'
 import type { MonsterTraits, PopulatedMonster } from '@/types/monster'
 import type { MonsterAction } from '@/hooks/monsters'
 import { parseMonsterTraits } from '@/lib/utils'
-import { CreatureHeader } from './creature-header'
 import { CreatureMonsterDisplay } from './creature-monster-display'
 import { CreatureStatsPanel } from './creature-stats-panel'
 import { CreatureTraitsPanel } from './creature-traits-panel'
@@ -93,19 +92,23 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
     }
 
     return (
-        <div className='min-h-screen bg-gradient-to-b from-lochinvar-50 to-fuchsia-blue-50'>
+        <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-meadow-50 via-sky-50 to-lavender-100'>
             {/* Header avec wallet et bouton retour */}
             <PageHeaderWithWallet />
 
-            <div className='py-12'>
-                <div className='container mx-auto px-4 max-w-4xl'>
-                    {/* En-tête avec nom et niveau */}
-                    <CreatureHeader name={currentMonster.name} level={currentMonster.level_id?.level ?? 1} />
+            {/* Motifs décoratifs de fond animés - thème fruits & légumes */}
+            <div className='pointer-events-none absolute -right-20 top-40 h-96 w-96 rounded-full bg-gradient-to-br from-sunset-200/40 via-gold-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '8s' }} />
+            <div className='pointer-events-none absolute -left-24 bottom-40 h-96 w-96 rounded-full bg-gradient-to-tr from-meadow-200/50 via-forest-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '10s' }} />
+            <div className='pointer-events-none absolute right-1/3 top-1/3 h-80 w-80 rounded-full bg-gradient-to-bl from-lavender-200/40 via-sky-200/30 to-transparent blur-3xl animate-pulse' aria-hidden='true' style={{ animationDuration: '12s' }} />
+
+            <div className='relative z-10 py-12'>
+                <div className='container mx-auto px-4 max-w-6xl'>
 
                 {/* Grille principale : monstre + informations */}
-                <div className='grid md:grid-cols-2 gap-8'>
+                <div className='grid lg:grid-cols-2 gap-6'>
                     {/* Colonne gauche : Monstre animé et actions */}
                     <CreatureMonsterDisplay
+                        name={currentMonster.name}
                         traits={traits}
                         state={currentMonster.state}
                         level={currentMonster.level_id?.level ?? 1}

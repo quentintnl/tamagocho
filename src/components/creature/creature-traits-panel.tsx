@@ -30,9 +30,9 @@ interface TraitItemProps {
  */
 export function TraitItem ({ label, value }: TraitItemProps): React.ReactNode {
   return (
-    <div className='flex justify-between items-center py-2 border-b border-fuchsia-blue-100 last:border-b-0'>
-      <span className='text-fuchsia-blue-700 font-medium'>{label}</span>
-      <span className='text-fuchsia-blue-900 font-bold'>{value}</span>
+    <div className='flex justify-between items-center py-3 px-4 rounded-xl bg-white/60 backdrop-blur-sm border-2 border-lavender-200/40 hover:border-lavender-300/60 transition-all'>
+      <span className='text-lavender-700 font-bold text-sm'>{label}</span>
+      <span className='text-lavender-900 font-black text-base'>{value}</span>
     </div>
   )
 }
@@ -63,15 +63,27 @@ interface CreatureTraitsPanelProps {
  */
 export function CreatureTraitsPanel ({ traits }: CreatureTraitsPanelProps): React.ReactNode {
   return (
-    <div className='bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border-4 border-fuchsia-blue-200'>
-      <h2 className='text-2xl font-bold text-fuchsia-blue-600 mb-4'>
-        Caractéristiques
-      </h2>
-      <div className='space-y-3'>
-        <TraitItem label='Forme du corps' value={getBodyStyleLabel(traits.bodyStyle)} />
-        <TraitItem label="Type d'yeux" value={getEyeStyleLabel(traits.eyeStyle)} />
-        <TraitItem label='Antenne' value={getAntennaStyleLabel(traits.antennaStyle)} />
-        <TraitItem label='Accessoire' value={getAccessoryLabel(traits.accessory)} />
+    <div className='relative overflow-hidden rounded-3xl bg-gradient-to-br from-lavender-100 via-white to-fuchsia-blue-50 p-6 shadow-xl border-4 border-white/90'>
+      {/* Motif décoratif */}
+      <div className='absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/30 blur-xl' aria-hidden='true' />
+
+      <div className='relative'>
+        {/* En-tête */}
+        <div className='flex items-center gap-3 mb-6'>
+          <div className='flex items-center justify-center h-12 w-12 rounded-2xl bg-gradient-to-br from-lavender-400 to-fuchsia-blue-500 shadow-lg border-2 border-white text-2xl'>
+            ✨
+          </div>
+          <h2 className='text-2xl font-black text-forest-800'>
+            Caractéristiques
+          </h2>
+        </div>
+
+        <div className='space-y-3'>
+          <TraitItem label='Forme du corps' value={getBodyStyleLabel(traits.bodyStyle)} />
+          <TraitItem label="Type d'yeux" value={getEyeStyleLabel(traits.eyeStyle)} />
+          <TraitItem label='Antenne' value={getAntennaStyleLabel(traits.antennaStyle)} />
+          <TraitItem label='Accessoire' value={getAccessoryLabel(traits.accessory)} />
+        </div>
       </div>
     </div>
   )

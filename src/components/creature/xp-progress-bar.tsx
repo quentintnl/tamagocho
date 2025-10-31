@@ -54,36 +54,41 @@ export function XpProgressBar ({
   return (
     <div className='w-full'>
       {/* En-tête avec label et stats */}
-      <div className='flex justify-between items-center mb-2'>
-        <span className='text-sm font-semibold text-gray-700'>
-          Expérience (Niveau {currentLevel}{isMaxLevel ? ' - MAX' : ''})
+      <div className='flex justify-between items-center mb-3'>
+        <span className='text-sm font-black text-forest-800'>
+          Expérience{isMaxLevel ? ' - NIVEAU MAX' : ` (Niveau ${currentLevel})`}
         </span>
         {!isMaxLevel && (
-          <span className='text-xs text-gray-600'>
+          <span className='text-xs font-bold text-forest-600 bg-white/60 px-3 py-1 rounded-full border-2 border-meadow-200/60'>
             {currentXp} / {xpToNextLevel} XP
           </span>
         )}
         {isMaxLevel && (
-          <span className='text-xs text-fuchsia-blue-600 font-bold'>
-            ⭐ NIVEAU MAX
+          <span className='text-xs font-black text-gold-600 bg-gradient-to-r from-gold-100 to-sunset-100 px-3 py-1 rounded-full border-2 border-gold-300/60'>
+            ⭐ MAX
           </span>
         )}
       </div>
 
       {/* Conteneur de la barre de progression */}
-      <div className='w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner'>
+      <div className='relative w-full bg-forest-100/50 rounded-full h-5 overflow-hidden shadow-inner border-2 border-white'>
         {/* Barre de progression animée */}
         <div
           className={`h-full rounded-full transition-all duration-500 ease-out flex items-center justify-end px-2 ${
             isMaxLevel
-              ? 'bg-gradient-to-r from-fuchsia-blue-400 to-fuchsia-blue-600'
-              : 'bg-gradient-to-r from-lochinvar-400 to-lochinvar-600'
+              ? 'bg-gradient-to-r from-gold-400 to-sunset-500'
+              : 'bg-gradient-to-r from-meadow-400 to-forest-500'
           }`}
           style={{ width: `${percentage}%` }}
         >
+          {/* Effet de brillance */}
+          {percentage > 0 && (
+            <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse' style={{ animationDuration: '2s' }} />
+          )}
+
           {/* Pourcentage affiché dans la barre si suffisamment de place */}
-          {percentage > 15 && (
-            <span className='text-xs font-bold text-white drop-shadow-md'>
+          {percentage > 20 && (
+            <span className='relative text-xs font-black text-white drop-shadow-md'>
               {isMaxLevel ? 'MAX' : `${Math.floor(percentage)}%`}
             </span>
           )}
@@ -92,13 +97,13 @@ export function XpProgressBar ({
 
       {/* Message de progression */}
       {!isMaxLevel && percentage >= 90 && (
-        <p className='text-xs text-fuchsia-blue-600 font-semibold mt-1 animate-pulse'>
-          🎉 Presque au niveau suivant !
+        <p className='text-xs text-gold-600 font-black mt-2 animate-pulse flex items-center gap-1'>
+          <span className='text-base'>🎉</span> Presque au niveau suivant !
         </p>
       )}
       {isMaxLevel && (
-        <p className='text-xs text-fuchsia-blue-600 font-semibold mt-1'>
-          🏆 Votre créature a atteint le niveau maximum !
+        <p className='text-xs text-gold-600 font-black mt-2 flex items-center gap-1'>
+          <span className='text-base'>🏆</span> Ta créature a atteint le niveau maximum !
         </p>
       )}
     </div>
