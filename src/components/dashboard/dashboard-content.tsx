@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
@@ -46,6 +47,7 @@ type Session = typeof authClient.$Infer.Session
  */
 function DashboardContent ({ session, monsters: initialMonsters }: { session: Session, monsters: PopulatedMonster[] }): React.ReactNode {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const router = useRouter()
 
   // Hook pour le rafraîchissement automatique des monstres (toutes les minutes)
   const { monsters } = useMonsterRefresh(initialMonsters, 60000)
@@ -64,8 +66,8 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
    */
   const handleLogout = useCallback((): void => {
     void authClient.signOut()
-    window.location.href = '/sign-in'
-  }, [])
+    router.push('/sign-in')
+  }, [router])
 
   /**
    * Ouvre le modal de création de monstre
@@ -94,6 +96,14 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
       window.location.reload()
     })
   }, [])
+
+  /**
+   * Redirige vers la page wallet
+   * Mémorisée avec useCallback pour éviter les re-créations inutiles
+   */
+  const handleGoToWallet = useCallback((): void => {
+    router.push('/wallet')
+  }, [router])
 
   return (
     <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-100 via-meadow-50 to-lavender-50'>
@@ -167,7 +177,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
 
               {/* Lien vers la page wallet */}
               <button
-                onClick={() => { window.location.href = '/wallet' }}
+                onClick={handleGoToWallet}
                 className='mt-4 w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-sunset-50 to-sunset-100 rounded-2xl border-2 border-sunset-200 hover:border-sunset-300 hover:shadow-lg transition-all duration-200 group'
               >
                 <div className='flex items-center gap-3'>

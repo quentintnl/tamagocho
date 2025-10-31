@@ -1,11 +1,13 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useWallet } from '@/hooks/useWallet'
+import { useCallback } from 'react'
 
 // Single Responsibility: Header handles only navigation and page title display
 export default function Header (): React.ReactNode {
   const pathname = usePathname()
+  const router = useRouter()
   const { wallet } = useWallet()
 
   // Déterminer le nom de la page actuelle
@@ -25,30 +27,30 @@ export default function Header (): React.ReactNode {
     return pathname === path
   }
 
-  // Navigation handlers
-  const handleDashboard = (): void => {
-    window.location.href = '/dashboard'
-  }
+  // Navigation handlers optimisés avec useCallback et router.push
+  const handleDashboard = useCallback((): void => {
+    router.push('/dashboard')
+  }, [router])
 
-  const handleMonsters = (): void => {
-    window.location.href = '/monsters'
-  }
+  const handleMonsters = useCallback((): void => {
+    router.push('/monsters')
+  }, [router])
 
-  const handleGallery = (): void => {
-    window.location.href = '/gallery'
-  }
+  const handleGallery = useCallback((): void => {
+    router.push('/gallery')
+  }, [router])
 
-  const handleShop = (): void => {
-    window.location.href = '/shop'
-  }
+  const handleShop = useCallback((): void => {
+    router.push('/shop')
+  }, [router])
 
-  const handleWallet = (): void => {
-    window.location.href = '/wallet'
-  }
+  const handleWallet = useCallback((): void => {
+    router.push('/wallet')
+  }, [router])
 
-  const handleQuests = (): void => {
-    window.location.href = '/quests'
-  }
+  const handleQuests = useCallback((): void => {
+    router.push('/quests')
+  }, [router])
 
   return (
     <header className='bg-gradient-to-r from-meadow-50/90 to-sky-50/90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b-2 border-meadow-200/50'>

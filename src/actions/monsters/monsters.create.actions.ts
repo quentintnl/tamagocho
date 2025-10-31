@@ -6,7 +6,7 @@ import '@/db/models/xp-level.model'
 import { auth } from '@/lib/auth'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
 import { getXpLevelByNumber } from '@/services/xp-level.service'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { headers } from 'next/headers'
 
 /**
@@ -63,7 +63,11 @@ export async function createMonster (monsterData: CreateMonsterFormValues): Prom
 
   await monster.save()
 
+  // Invalidation du cache des monstres pour cet utilisateur
+  revalidateTag(`monsters-${session.user.id}`)
+
   // Revalidation du cache pour rafraîchir le dashboard
   revalidatePath('/dashboard')
+  revalidatePath('/monsters')
 }
 

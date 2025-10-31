@@ -6,7 +6,7 @@ import '@/db/models/xp-level.model'
 import { auth } from '@/lib/auth'
 import { XP_GAIN_CORRECT_ACTION, XP_GAIN_INCORRECT_ACTION } from '@/types/monster'
 import { calculateLevelFromXp } from '@/services/xp-level.service'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { Types } from 'mongoose'
 import { MonsterAction } from '@/hooks/monsters'
 import { headers } from 'next/headers'
@@ -156,8 +156,13 @@ export async function doActionOnMonster (id: string, action: MonsterAction): Pro
         console.warn('Failed to track quest progress:', questError)
       }
 
+      // Invalidation du cache des monstres pour cet utilisateur
+      revalidateTag(`monsters-${user.id}`)
+
       // Revalidation du cache pour rafraîchir la page
       revalidatePath(`/creature/${id}`)
+      revalidatePath('/dashboard')
+      revalidatePath('/monsters')
       revalidatePath('/wallet')
 
       return {

@@ -3,7 +3,7 @@
 import { connectMongooseToDatabase } from '@/db'
 import Monster from '@/db/models/monster.model'
 import { auth } from '@/lib/auth'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { Types } from 'mongoose'
 import { headers } from 'next/headers'
 
@@ -65,6 +65,9 @@ export async function toggleMonsterPublicStatus (id: string): Promise<{ success:
     // Basculement du statut public
     monster.isPublic = !(monster.isPublic ?? false)
     await monster.save()
+
+    // Invalidation du cache des monstres pour cet utilisateur
+    revalidateTag(`monsters-${user.id}`)
 
     // Revalidation du cache pour rafraîchir la page
     revalidatePath(`/creature/${id}`)

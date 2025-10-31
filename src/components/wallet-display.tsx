@@ -14,6 +14,8 @@
 'use client'
 
 import { useWalletContext } from '@/contexts/wallet-context'
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
 
 interface WalletDisplayProps {
   variant?: 'default' | 'compact'
@@ -29,6 +31,7 @@ export default function WalletDisplay ({
   variant = 'default'
 }: WalletDisplayProps): React.ReactNode {
   const { wallet, isLoading, error } = useWalletContext()
+  const router = useRouter()
 
   // Loading state
   if (isLoading) {
@@ -46,11 +49,11 @@ export default function WalletDisplay ({
   }
 
   /**
-   * Redirige vers la page wallet
+   * Redirige vers la page wallet (optimisé avec useCallback)
    */
-  const handleClick = (): void => {
-    window.location.href = '/wallet'
-  }
+  const handleClick = useCallback((): void => {
+    router.push('/wallet')
+  }, [router])
 
   // Compact variant
   if (variant === 'compact') {
