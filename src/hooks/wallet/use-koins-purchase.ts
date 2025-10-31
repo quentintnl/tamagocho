@@ -18,6 +18,7 @@
 'use client'
 
 import { useState } from 'react'
+import { showErrorToast } from '@/lib/toast'
 
 /**
  * Type de message de feedback
@@ -77,18 +78,22 @@ export function useKoinsPurchase (): UseKoinsPurchaseReturn {
         // Redirection vers Stripe Checkout
         window.location.href = data.url
       } else {
+        const errorMsg = 'Erreur lors de la création de la session de paiement'
         setMessage({
           type: 'error',
-          text: 'Erreur lors de la création de la session de paiement'
+          text: errorMsg
         })
+        showErrorToast(errorMsg)
         setIsProcessing(false)
       }
     } catch (error) {
       console.error('Erreur lors de l\'achat de koins :', error)
+      const errorMsg = 'Une erreur est survenue lors de la redirection vers Stripe'
       setMessage({
         type: 'error',
-        text: 'Une erreur est survenue lors de la redirection vers Stripe'
+        text: errorMsg
       })
+      showErrorToast(errorMsg)
       setIsProcessing(false)
     }
   }

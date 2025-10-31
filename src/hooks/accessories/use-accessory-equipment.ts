@@ -18,6 +18,7 @@
 
 import { useState } from 'react'
 import { equipAccessory, removeAccessory } from '@/actions/accessory.actions'
+import { showSuccessToast, showErrorToast } from '@/lib/toast'
 
 /**
  * Type de message de feedback
@@ -85,14 +86,18 @@ export function useAccessoryEquipment (): UseAccessoryEquipmentReturn {
         : await removeAccessory(ownedAccessoryId)
 
       if (result.success) {
+         showSuccessToast(result.message)
         setMessage({ type: 'success', text: result.message })
         return true
       } else {
+        showErrorToast(result.message)
         setMessage({ type: 'error', text: result.message })
         return false
       }
     } catch (error) {
-      console.error('Erreur lors de l\'équipement/déséquipement :', error)
+      const errorMsg = 'Une erreur est survenue'
+      setMessage({ type: 'error', text: errorMsg })
+      showErrorToast(errorMsg)
       setMessage({ type: 'error', text: 'Une erreur est survenue' })
       return false
     } finally {

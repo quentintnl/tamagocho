@@ -6,6 +6,7 @@ import { authClient } from '@/lib/auth-client'
 import { createMonster } from '@/actions/monsters'
 import type { CreateMonsterFormValues } from '@/types/forms/create-monster-form'
 import type {PopulatedMonster} from '@/types/monster'
+import { showSuccessToast, showErrorToast, showLoadingToast, updateToast } from '@/lib/toast'
 import {
   useUserDisplay,
   useMonsterStats,
@@ -106,10 +107,22 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
    *
    * @param {CreateMonsterFormValues} values - Valeurs du formulaire
    */
-  const handleMonsterSubmit = useCallback((values: CreateMonsterFormValues): void => {
-    void createMonster(values).then(() => {
-      window.location.reload()
-    })
+  const handleMonsterSubmit = useCallback(async (values: CreateMonsterFormValues): Promise<void> => {
+    const toastId = showLoadingToast('Création de ton monstre en cours...')
+
+    try {
+      await createMonster(values)
+      updateToast(toastId, `${values.name} a été créé avec succès ! 🎉`, 'success')
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
+    } catch (error) {
+      updateToast(
+        toastId,
+        error instanceof Error ? error.message : 'Erreur lors de la création du monstre',
+        'error'
+      )
+    }
   }, [])
 
   /**

@@ -16,6 +16,7 @@
 
 import { useState, useTransition } from 'react'
 import { toggleMonsterPublicStatus } from '@/actions/monsters'
+import { showSuccessToast, showErrorToast } from '@/lib/toast'
 
 /**
  * Props pour le composant PublicStatusToggle
@@ -58,8 +59,15 @@ export function PublicStatusToggle ({ monsterId, initialIsPublic }: PublicStatus
         const result = await toggleMonsterPublicStatus(monsterId)
 
         if (result.success && result.isPublic !== undefined) {
+          showSuccessToast(
+            result.isPublic
+              ? 'Ton monstre est maintenant visible publiquement ! 🌍'
+              : 'Ton monstre est maintenant privé 🔒'
+          )
           setIsPublic(result.isPublic)
-        } else {
+          const errorMsg = result.error ?? 'Une erreur est survenue'
+          setError(errorMsg)
+          showErrorToast(errorMsg)
           setError(result.error ?? 'Une erreur est survenue')
           // Revert optimistic update if failed
           setTimeout(() => {

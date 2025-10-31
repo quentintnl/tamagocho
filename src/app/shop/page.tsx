@@ -20,7 +20,7 @@ import { ShopLayout } from '@/components/shop/shop-layout'
 import { ShopStats } from '@/components/shop/shop-stats'
 import { ShopSectionHeader } from '@/components/shop/shop-section-header'
 import Button from '@/components/button'
-import { toast } from 'react-toastify'
+import { showSuccessToast, showErrorToast } from '@/lib/toast'
 import type { Accessory } from '@/types/accessory'
 
 /**
@@ -85,7 +85,7 @@ export default function ShopPage (): React.ReactNode {
         setOwnedAccessoryIds(ownedIds)
       } catch (error) {
         console.error('Erreur lors du chargement des accessoires:', error)
-        toast.error('Erreur lors du chargement des accessoires')
+        showErrorToast('Erreur lors du chargement des accessoires')
       } finally {
         setIsLoading(false)
       }
@@ -102,7 +102,7 @@ export default function ShopPage (): React.ReactNode {
   const handlePurchase = async (accessoryId: string): Promise<void> => {
     const accessory = accessories.find(acc => acc.id === accessoryId)
     if (accessory === undefined || accessory === null) {
-      toast.error('Accessoire introuvable')
+      showErrorToast('Accessoire introuvable')
       return
     }
 
@@ -120,21 +120,17 @@ export default function ShopPage (): React.ReactNode {
       const result = await purchaseAccessoryOnly(selectedAccessory.id)
 
       if (result.success) {
-        toast.success(result.message, {
-          autoClose: 5000
-        })
+        showSuccessToast(result.message, { autoClose: 5000 })
 
         // Recharger les données pour afficher l'accessoire comme possédé
         const updatedOwnedIds = await getUserOwnedAccessoryIds()
         setOwnedAccessoryIds(updatedOwnedIds)
       } else {
-        toast.error(result.message, {
-          autoClose: 5000
-        })
+        showErrorToast(result.message, { autoClose: 5000 })
       }
     } catch (error) {
       console.error('Erreur lors de l\'achat:', error)
-      toast.error('Une erreur est survenue lors de l\'achat. Veuillez réessayer.')
+      showErrorToast('Une erreur est survenue lors de l\'achat. Veuillez réessayer.')
     } finally {
       setSelectedAccessory(null)
     }

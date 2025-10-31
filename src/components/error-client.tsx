@@ -2,7 +2,7 @@
 
 import { redirectToDashboard } from '@/actions/navigation.actions'
 import { useEffect } from 'react'
-import { toast } from 'react-toastify'
+import { showErrorToast } from '@/lib/toast'
 
 function ErrorClient (
   {
@@ -12,12 +12,12 @@ function ErrorClient (
     error: Error | null | string
   }): React.ReactNode {
   useEffect(() => {
-    toast.error(
+    showErrorToast(
       typeof error === 'string'
         ? error
         : error instanceof Error
           ? error.message
-          : 'An unexpected error occurred'
+          : 'Une erreur inattendue est survenue'
     )
     void redirectToDashboard()
   }, [error])

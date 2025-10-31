@@ -2,6 +2,7 @@ import { useState } from 'react'
 import InputField from '../input'
 import Button from '../button'
 import { authClient } from '@/lib/auth-client'
+import { showErrorToast, showSuccessToast } from '@/lib/toast'
 
 interface Credentials {
   email: string
@@ -34,11 +35,14 @@ function SignUpForm ({ onError }: { onError: (error: string) => void }): React.R
       onSuccess: (ctx) => {
         console.log('User signed up:', ctx)
         setIsLoading(false)
+        showSuccessToast('Compte créé avec succès ! Bienvenue ! 🎉')
         onError('') // Clear error on success
       },
       onError: (ctx) => {
         console.error('Sign up error:', ctx)
-        setIsLoading(false)
+        const errorMsg = ctx.error.message
+        onError(errorMsg)
+        showErrorToast(errorMsg)
         onError(ctx.error.message)
       }
     })

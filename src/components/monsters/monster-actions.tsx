@@ -2,7 +2,7 @@
 
 import { doActionOnMonster } from '@/actions/monsters'
 import { useMonsterAction, type MonsterAction } from '@/hooks/monsters'
-import { toast } from 'react-toastify'
+import { showSuccessToast, showInfoToast, showErrorToast } from '@/lib/toast'
 import { getRewardMessage } from '@/config/rewards'
 import { useWalletContext } from '@/contexts/wallet-context'
 
@@ -139,34 +139,17 @@ export function MonsterActions ({ onAction, monsterId, onActionComplete }: Monst
       const message = getRewardMessage(result.action, result.koinsEarned, result.isCorrectAction)
 
       // Toast de succès avec style personnalisé
-      toast.success(message, {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      })
+      showSuccessToast(message)
 
       // Toast supplémentaire pour une action parfaite
       if (result.isCorrectAction) {
-        toast.info('Ton monstre est heureux ! 🎉', {
-          position: 'top-right',
-          autoClose: 2500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true
-        })
+        showInfoToast('Ton monstre est heureux ! 🎉', { autoClose: 2500 })
       }
 
       // Rafraîchir le wallet pour mettre à jour l'affichage
       await refreshWallet()
     } else if (!result.success && result.error !== undefined) {
-      toast.error(`Erreur : ${result.error}`, {
-        position: 'top-right',
-        autoClose: 3000
-      })
+      showErrorToast(`Erreur : ${result.error}`)
     }
 
     // Appeler le callback de rafraîchissement après l'action

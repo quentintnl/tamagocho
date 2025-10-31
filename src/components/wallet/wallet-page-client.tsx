@@ -26,7 +26,7 @@ import { WalletBalance } from './wallet-balance'
 import { AddCoinsPanel } from './add-coins-panel'
 import { pricingTable } from '@/config/pricing'
 import type { authClient } from '@/lib/auth-client'
-import { toast } from 'react-toastify'
+import { showErrorToast } from '@/lib/toast'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -71,14 +71,7 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
    */
   useEffect(() => {
     if (showErrorMessage) {
-      toast.error('Paiement annulé', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      })
+      showErrorToast('Paiement annulé', { autoClose: 5000 })
     }
   }, [showErrorMessage])
 

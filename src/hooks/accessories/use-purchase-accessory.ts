@@ -18,6 +18,7 @@
 
 import { useState } from 'react'
 import { purchaseAccessory } from '@/actions/accessory.actions'
+import { showSuccessToast, showErrorToast } from '@/lib/toast'
 
 /**
  * Type de message de feedback
@@ -74,14 +75,18 @@ export function usePurchaseAccessory (): UsePurchaseAccessoryReturn {
       const result = await purchaseAccessory(accessoryId, monsterId)
 
       if (result.success) {
+        showSuccessToast(result.message)
         setMessage({ type: 'success', text: result.message })
         return true
       } else {
+        showErrorToast(result.message)
         setMessage({ type: 'error', text: result.message })
         return false
       }
     } catch (error) {
-      console.error('Erreur lors de l\'achat :', error)
+      const errorMsg = 'Une erreur est survenue lors de l\'achat'
+      setMessage({ type: 'error', text: errorMsg })
+      showErrorToast(errorMsg)
       setMessage({ type: 'error', text: 'Une erreur est survenue lors de l\'achat' })
       return false
     } finally {

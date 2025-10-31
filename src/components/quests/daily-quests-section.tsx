@@ -28,6 +28,7 @@ import { getUserDailyQuests, claimQuestRewardAction } from '@/actions/quest.acti
 import type { DailyQuest } from '@/types/quest'
 import { DailyQuestCard } from './daily-quest-card'
 import { DailyQuestsSkeleton } from './daily-quests-skeleton'
+import { showSuccessToast, showErrorToast } from '@/lib/toast'
 
 interface DailyQuestsSectionProps {
   /** Callback appelé après réclamation d'une récompense */
@@ -64,11 +65,15 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
       if (result.success && result.quests !== undefined) {
         setQuests(result.quests)
       } else {
-        setError(result.error ?? 'Erreur lors du chargement des quêtes')
+        const errorMsg = result.error ?? 'Erreur lors du chargement des quêtes'
+        setError(errorMsg)
+        showErrorToast(errorMsg)
       }
-    } catch (err) {
-      setError('Erreur lors du chargement des quêtes')
-      console.error('Erreur chargement quêtes:', err)
+    } catch (error) {
+      const errorMsg = 'Erreur lors du chargement des quêtes'
+      setError(errorMsg)
+      showErrorToast(errorMsg)
+      console.error('Erreur chargement quêtes:', error)
     } finally {
       setIsLoading(false)
       loadingRef.current = false
@@ -87,11 +92,13 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
       const result = await claimQuestRewardAction(questId)
 
       if (result.success && result.quest !== undefined) {
+        const successMsg = `🎉 +${quest.coinReward} Koins gagnés !`
         // Afficher la notification
         setNotification({
-          message: `🎉 +${quest.coinReward} Koins gagnés !`,
+          message: successMsg,
           type: 'success'
         })
+        showSuccessToast(successMsg)
 
         // Callback pour mettre à jour le wallet
         onRewardClaimed?.(quest.coinReward)
@@ -104,21 +111,25 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
         // Rafraîchir les quêtes
         await loadQuests()
       } else {
+        const errorMsg = result.error ?? 'Erreur lors de la réclamation'
         setNotification({
-          message: result.error ?? 'Erreur lors de la réclamation',
+          message: errorMsg,
           type: 'error'
         })
+        showErrorToast(errorMsg)
 
         setTimeout(() => {
           setNotification(null)
         }, 3000)
       }
     } catch (err) {
+      const errorMsg = 'Erreur lors de la réclamation'
       console.error('Erreur réclamation récompense:', err)
       setNotification({
-        message: 'Erreur lors de la réclamation',
+        message: errorMsg,
         type: 'error'
       })
+      showErrorToast(errorMsg)
 
       setTimeout(() => {
         setNotification(null)

@@ -23,6 +23,7 @@ import { QuestsHeader } from './quests-header'
 import { QuestsFooter } from './quests-footer'
 import { useWalletContext } from '@/contexts/wallet-context'
 import TomatokenIcon from '@/components/tomatoken-icon'
+import { showSuccessToast, showErrorToast } from '@/lib/toast'
 
 interface DailyQuestsProps {
   onQuestComplete?: () => void
@@ -69,7 +70,9 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
         })
 
         setQuests(sortedQuests)
-      } else {
+        const errorMsg = result.error ?? 'Erreur inconnue'
+        setError(errorMsg)
+        showErrorToast(`Erreur lors du chargement des quêtes : ${errorMsg}`)
         setError(result.error ?? 'Erreur inconnue')
       }
     } finally {
@@ -102,6 +105,9 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
       })
 
       setQuests(sortedQuests)
+      // Afficher un toast de succès
+      showSuccessToast(`Récompense réclamée : +${result.quest.coinReward} gochoCoins ! 🎉`)
+
 
       // Refresh wallet to show updated coins immediately
       await refreshWallet()
@@ -110,7 +116,9 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
       if (onQuestComplete != null) {
         onQuestComplete()
       }
-    } else {
+      const errorMsg = result.error ?? 'Erreur lors de la réclamation'
+      setError(errorMsg)
+      showErrorToast(errorMsg)
       setError(result.error ?? 'Erreur lors de la réclamation')
     }
 
