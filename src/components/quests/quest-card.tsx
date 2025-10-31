@@ -14,6 +14,7 @@
 'use client'
 
 import type { DailyQuest } from '@/types/quest'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 interface QuestCardProps {
   quest: DailyQuest
@@ -54,7 +55,9 @@ export default function QuestCard ({ quest, compact = false }: QuestCardProps): 
 
         <div className="flex items-center justify-between text-xs text-gray-600">
           <span>{quest.currentProgress} / {quest.targetCount}</span>
-          <span className="font-semibold text-yellow-600">+{quest.coinReward} 🪙</span>
+          <span className="font-semibold text-yellow-600 flex items-center gap-1">
+            +{quest.coinReward} <TomatokenIcon size='xs' />
+          </span>
         </div>
       </div>
     )
@@ -87,7 +90,7 @@ export default function QuestCard ({ quest, compact = false }: QuestCardProps): 
 
       <div className="flex items-center gap-3 text-sm">
         <div className="flex items-center gap-1">
-          <span>🪙</span>
+          <TomatokenIcon size='sm' />
           <span className="font-bold text-yellow-600">+{quest.coinReward}</span>
         </div>
         {(quest.xpReward ?? 0) > 0 && (

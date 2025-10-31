@@ -16,6 +16,7 @@
 
 import type React from 'react'
 import Button from '@/components/button'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 /**
  * Props pour le composant AddCoinsPanel
@@ -53,7 +54,7 @@ export function AddCoinsPanel ({
   return (
     <div className='bg-white rounded-2xl shadow-lg p-8 border border-gray-100'>
       <h2 className='text-2xl font-bold text-gray-800 mb-6'>
-        Ajouter de la monnaie
+        Ajouter des Tomatokens
       </h2>
 
       <div className='space-y-6'>
@@ -71,7 +72,11 @@ export function AddCoinsPanel ({
                 variant='outline'
                 size='md'
               >
-                {isProcessing ? '...' : `${amount} 💰`}
+                {isProcessing ? '...' : (
+                  <span className='flex items-center gap-1'>
+                    {amount} <TomatokenIcon size='sm' />
+                  </span>
+                )}
               </Button>
             ))}
           </div>

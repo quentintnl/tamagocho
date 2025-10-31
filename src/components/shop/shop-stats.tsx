@@ -4,6 +4,8 @@
  * Composant réutilisable pour afficher les statistiques de la boutique
  */
 
+import TomatokenIcon from '@/components/tomatoken-icon'
+
 interface ShopStatsProps {
   totalItems: number | null
   ownedItems: number | null
@@ -35,7 +37,9 @@ export function ShopStats ({ totalItems, ownedItems, balance }: ShopStatsProps):
         <p className='text-sm text-forest-600 font-medium'>Votre solde</p>
         {balance === null
           ? <div className='h-8 bg-gray-300 rounded w-1/2 mx-auto animate-pulse mt-1' />
-          : <p className='text-3xl font-bold text-sunset-600'>{balance} 💰</p>}
+          : <p className='text-3xl font-bold text-sunset-600 flex items-center justify-center gap-2'>
+              {balance} <TomatokenIcon size='lg' />
+            </p>}
       </div>
     </div>
   )

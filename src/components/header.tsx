@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { useWallet } from '@/hooks/useWallet'
 import { useCallback } from 'react'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 // Single Responsibility: Header handles only navigation and page title display
 export default function Header (): React.ReactNode {
@@ -153,7 +154,7 @@ export default function Header (): React.ReactNode {
               `}
             >
               <div className='flex items-center justify-center w-5 h-5 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full'>
-                <span className='text-xs'>💰</span>
+                <TomatokenIcon size='xs' />
               </div>
               <span className='font-bold'>
                 {wallet?.coin?.toLocaleString() ?? '0'}

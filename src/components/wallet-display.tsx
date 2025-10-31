@@ -16,6 +16,7 @@
 import { useWalletContext } from '@/contexts/wallet-context'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
+import TomatokenIcon from './tomatoken-icon'
 
 interface WalletDisplayProps {
   variant?: 'default' | 'compact'
@@ -64,7 +65,7 @@ export default function WalletDisplay ({
         title='Gérer mon wallet'
       >
         <div className='flex items-center justify-center w-6 h-6 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full shadow-sm group-hover:scale-110 transition-transform'>
-          <span className='text-xs font-bold text-white'>💰</span>
+          <TomatokenIcon size='xs' />
         </div>
         <span className='text-sm font-bold text-forest-800 group-hover:text-meadow-600 transition-colors'>
           {wallet.coin.toLocaleString()}
@@ -81,7 +82,7 @@ export default function WalletDisplay ({
       title='Gérer mon wallet'
     >
       <div className='flex items-center justify-center w-8 h-8 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
-        <span className='text-base font-bold text-white'>💰</span>
+        <TomatokenIcon size='sm' />
       </div>
       <div className='flex flex-col'>
         <span className='text-xs text-forest-600 font-medium'>Pièces</span>

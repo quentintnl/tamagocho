@@ -16,6 +16,7 @@
 
 import type { Accessory, AccessoryRarity } from '@/types/accessory'
 import { generateAccessoryById, hasAccessorySVGSupport } from '@/services/accessories/accessory-generator'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 /**
  * Props pour le composant AccessoryCard
@@ -180,7 +181,7 @@ export function AccessoryCard ({
             <div className='flex items-start justify-between gap-3'>
               <h3 className='text-lg font-semibold text-slate-900 sm:text-xl'>{accessory.name}</h3>
               <span className='inline-flex items-center gap-1 rounded-full bg-amber-100/80 px-3 py-1 text-xs font-semibold text-amber-600 shadow-inner'>
-                <span aria-hidden='true'>💰</span>
+                <TomatokenIcon size='xs' />
                 {accessory.price}
               </span>
             </div>

@@ -28,6 +28,7 @@
 
 import { useState } from 'react'
 import type { DailyQuest } from '@/types/quest'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 interface DailyQuestCardProps {
   quest: DailyQuest
@@ -37,15 +38,15 @@ interface DailyQuestCardProps {
 /**
  * Obtient l'icône et la couleur selon le type de quête
  */
-function getQuestIcon (type: string): { icon: string, color: string, bgColor: string } {
-  const icons: Record<string, { icon: string, color: string, bgColor: string }> = {
+function getQuestIcon (type: string): { icon: React.ReactNode, color: string, bgColor: string } {
+  const icons: Record<string, { icon: React.ReactNode, color: string, bgColor: string }> = {
     feed_monster: { icon: '🍖', color: 'text-moccaccino-600', bgColor: 'bg-moccaccino-100' },
     play_with_monster: { icon: '🎮', color: 'text-fuchsia-blue-600', bgColor: 'bg-fuchsia-blue-100' },
     level_up_monster: { icon: '⬆️', color: 'text-lochinvar-600', bgColor: 'bg-lochinvar-100' },
     buy_accessory: { icon: '🛍️', color: 'text-sunset-600', bgColor: 'bg-sunset-100' },
     equip_accessory: { icon: '👕', color: 'text-lavender-600', bgColor: 'bg-lavender-100' },
     visit_gallery: { icon: '🖼️', color: 'text-sky-600', bgColor: 'bg-sky-100' },
-    earn_coins: { icon: '💰', color: 'text-gold-600', bgColor: 'bg-gold-100' }
+    earn_coins: { icon: <TomatokenIcon size='md' />, color: 'text-gold-600', bgColor: 'bg-gold-100' }
   }
 
   return icons[type] ?? { icon: '⭐', color: 'text-slate-600', bgColor: 'bg-slate-100' }
@@ -122,8 +123,8 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
       {/* Animation de récompense */}
       {showRewardAnimation && (
         <div className='absolute inset-0 z-20 flex items-center justify-center bg-white/90 backdrop-blur-sm'>
-          <div className='animate-bounce text-4xl'>
-            💰 +{quest.coinReward}
+          <div className='animate-bounce flex items-center gap-2 text-4xl'>
+            <TomatokenIcon size='3xl' /> +{quest.coinReward}
           </div>
         </div>
       )}
@@ -157,7 +158,7 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
 
         {/* Récompense en coins */}
         <div className='flex items-center gap-1 rounded-lg bg-sunset-50 px-2 py-1 ring-1 ring-sunset-200'>
-          <span className='text-base'>💰</span>
+          <TomatokenIcon size='sm' />
           <span className='font-bold text-sunset-700 text-sm'>+{quest.coinReward}</span>
         </div>
       </div>

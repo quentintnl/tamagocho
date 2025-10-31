@@ -8,6 +8,7 @@
 import { ModalOverlay } from '@/components/dashboard/modal-overlay'
 import Button from '@/components/button'
 import type { Accessory } from '@/types/accessory'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 /**
  * Props pour le composant PurchaseConfirmationModal
@@ -76,7 +77,7 @@ export function PurchaseConfirmationModal ({
               {accessory.description}
             </p>
             <div className='inline-flex items-center gap-2 px-4 py-2 bg-moccaccino-50 rounded-full'>
-              <span className='text-2xl'>💰</span>
+              <TomatokenIcon size='lg' />
               <span className='text-xl font-bold text-moccaccino-600'>
                 {accessory.price}
               </span>
@@ -88,25 +89,25 @@ export function PurchaseConfirmationModal ({
           <div className='mb-6 space-y-2 bg-slate-50 rounded-xl p-4'>
             <div className='flex justify-between text-sm'>
               <span className='text-slate-600'>Solde actuel</span>
-              <span className='font-semibold text-slate-900'>
-                {currentBalance} 💰
+              <span className='font-semibold text-slate-900 flex items-center gap-1'>
+                {currentBalance} <TomatokenIcon size='sm' />
               </span>
             </div>
             <div className='flex justify-between text-sm'>
               <span className='text-slate-600'>Prix</span>
-              <span className='font-semibold text-moccaccino-600'>
-                - {accessory.price} 💰
+              <span className='font-semibold text-moccaccino-600 flex items-center gap-1'>
+                - {accessory.price} <TomatokenIcon size='sm' />
               </span>
             </div>
             <div className='h-px bg-slate-200' />
             <div className='flex justify-between text-sm'>
               <span className='font-semibold text-slate-700'>Solde restant</span>
               <span
-                className={`font-bold ${
+                className={`font-bold flex items-center gap-1 ${
                   canAfford ? 'text-lochinvar-600' : 'text-red-600'
                 }`}
               >
-                {remainingBalance} 💰
+                {remainingBalance} <TomatokenIcon size='sm' />
               </span>
             </div>
           </div>

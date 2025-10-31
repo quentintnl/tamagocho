@@ -17,6 +17,7 @@
 import type React from 'react'
 import type { Wallet } from '@/types/wallet'
 import type { authClient } from '@/lib/auth-client'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -66,7 +67,7 @@ export function WalletBalance ({ wallet, session, isLoading }: WalletBalanceProp
           <div className='mb-6'>
             <div className='flex items-center justify-center gap-4 p-6 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl border-2 border-yellow-300 shadow-inner'>
               <div className='flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg'>
-                <span className='text-3xl' aria-hidden='true'>💰</span>
+                <TomatokenIcon size='3xl' />
               </div>
               <div className='text-center'>
                 <p className='text-5xl font-bold text-gray-800'>

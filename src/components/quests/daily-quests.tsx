@@ -22,6 +22,7 @@ import { QuestSkeleton } from './quest-skeleton'
 import { QuestsHeader } from './quests-header'
 import { QuestsFooter } from './quests-footer'
 import { useWalletContext } from '@/contexts/wallet-context'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 interface DailyQuestsProps {
   onQuestComplete?: () => void
@@ -242,7 +243,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-1">
-                      <span className="text-xl">🪙</span>
+                      <TomatokenIcon size='md' />
                       <span className="font-bold text-yellow-600">+{quest.coinReward} Koins</span>
                     </div>
                     {(quest.xpReward ?? 0) > 0 && (

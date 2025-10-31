@@ -23,6 +23,7 @@ import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import { MonstersAutoUpdater } from '@/components/monsters/auto-updater'
 import { QuestsAutoRenewer } from '@/components/quests/auto-renewer'
 import { DailyQuestsSection } from '@/components/quests/daily-quests-section'
+import TomatokenIcon from '@/components/tomatoken-icon'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -196,7 +197,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
               >
                 <div className='flex items-center gap-3'>
                   <div className='flex items-center justify-center w-10 h-10 bg-gradient-to-br from-sunset-400 to-sunset-600 rounded-full shadow-md group-hover:scale-110 transition-transform'>
-                    <span className='text-xl'>💰</span>
+                    <TomatokenIcon size='md' />
                   </div>
                   <div className='text-left'>
                     <p className='text-sm font-medium text-forest-600'>Mon Wallet</p>
