@@ -29,4 +29,3 @@ export default async function WalletPage (): Promise<React.ReactNode> {
 
   return <WalletPageClient session={session} />
 }
-

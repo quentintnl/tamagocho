@@ -54,12 +54,11 @@ export default async function QuestsPage (): Promise<React.ReactNode> {
         </div>
       </div>
 
-      <div className="mt-8">
+      <div className='mt-8'>
         <DailyQuests />
       </div>
 
-      <QuestsTips show={true} />
+      <QuestsTips show />
     </QuestsLayout>
   )
 }
-

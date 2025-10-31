@@ -141,4 +141,3 @@ export default function MonstersPage (): React.ReactNode {
     </Suspense>
   )
 }
-

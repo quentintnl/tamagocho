@@ -45,4 +45,3 @@ export async function GET (): Promise<Response> {
     }, { status: 500 })
   }
 }
-

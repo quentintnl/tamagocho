@@ -176,8 +176,8 @@ export default function ShopPage (): React.ReactNode {
             onClick={() => { setHideOwned(!hideOwned) }}
             className={`
               px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg transition-all duration-200 border-2
-              ${hideOwned 
-                ? 'bg-gradient-to-r from-sky-400 to-lavender-500 text-white border-white/60 hover:shadow-xl hover:scale-105' 
+              ${hideOwned
+                ? 'bg-gradient-to-r from-sky-400 to-lavender-500 text-white border-white/60 hover:shadow-xl hover:scale-105'
                 : 'bg-white text-forest-700 border-meadow-200 hover:border-meadow-300 hover:shadow-xl hover:scale-105'
               }
             `}

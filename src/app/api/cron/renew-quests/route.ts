@@ -9,8 +9,8 @@
  * @endpoint GET/POST /api/cron/renew-quests
  */
 import { NextRequest, NextResponse } from 'next/server'
-import clientPromise from '@/db'
-import { connectMongooseToDatabase } from '@/db'
+import clientPromise, { connectMongooseToDatabase } from '@/db'
+
 import DailyQuest from '@/db/models/daily-quest.model'
 import { getRandomQuestTemplates } from '@/config/quests'
 
@@ -242,4 +242,3 @@ export async function GET (request: NextRequest): Promise<NextResponse> {
 export async function POST (request: NextRequest): Promise<NextResponse> {
   return await GET(request)
 }
-

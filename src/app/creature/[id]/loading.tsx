@@ -11,4 +11,3 @@ import { CreaturePageSkeleton } from '@/components/creature/creature-page-skelet
 export default function Loading (): React.ReactNode {
   return <CreaturePageSkeleton />
 }
-

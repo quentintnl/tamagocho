@@ -4,7 +4,6 @@
  * Facilite l'import des composants depuis un point d'entrée unique.
  */
 
-export { CreatureHeader } from './creature-header'
 export { CreatureMonsterDisplay } from './creature-monster-display'
 export { CreatureStatsPanel } from './creature-stats-panel'
 export { CreatureTraitsPanel } from './creature-traits-panel'

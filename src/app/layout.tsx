@@ -48,7 +48,7 @@ export default function RootLayout ({
           position='top-right'
           autoClose={4000}
           hideProgressBar={false}
-          newestOnTop={true}
+          newestOnTop
           closeOnClick
           rtl={false}
           pauseOnFocusLoss

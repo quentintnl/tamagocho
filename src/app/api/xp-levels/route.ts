@@ -46,7 +46,7 @@ export async function GET (request: NextRequest): Promise<Response> {
       [`xp-level-${levelNum}`],
       {
         revalidate: 3600, // 1 heure - les niveaux XP sont statiques
-        tags: [`xp-levels`]
+        tags: ['xp-levels']
       }
     )
 
@@ -70,4 +70,3 @@ export async function GET (request: NextRequest): Promise<Response> {
     }, { status: 500 })
   }
 }
-

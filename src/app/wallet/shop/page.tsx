@@ -28,4 +28,3 @@ export default async function AccessoryShopPage (): Promise<React.ReactNode> {
 
   return <AccessoryShopClient session={session} />
 }
-

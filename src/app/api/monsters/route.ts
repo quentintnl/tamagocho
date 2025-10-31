@@ -2,7 +2,7 @@ import { connectMongooseToDatabase } from '@/db'
 import Monster from '@/db/models/monster.model'
 import '@/db/models/xp-level.model'
 import { auth } from '@/lib/auth'
-import {headers} from "next/headers";
+import { headers } from 'next/headers'
 
 export async function GET (): Promise<Response> {
   const session = await auth.api.getSession({
