@@ -20,13 +20,13 @@
 import { useEffect } from 'react'
 import { useWallet } from '@/hooks/useWallet'
 import { usePaymentRedirect, useKoinsPurchase } from '@/hooks/wallet'
-import Button from '@/components/button'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
 import SuccessModal from '@/components/wallet/success-modal'
 import { WalletBalance } from './wallet-balance'
 import { AddCoinsPanel } from './add-coins-panel'
 import { pricingTable } from '@/config/pricing'
 import type { authClient } from '@/lib/auth-client'
+import { toast } from 'react-toastify'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -67,6 +67,22 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
   }, [showSuccessModal])
 
   /**
+   * Affiche un toast lorsque le paiement est annulé
+   */
+  useEffect(() => {
+    if (showErrorMessage) {
+      toast.error('Paiement annulé', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      })
+    }
+  }, [showErrorMessage])
+
+  /**
    * Gère le clic sur un montant pour acheter des koins
    *
    * @param {number} amount - Montant de koins à acheter
@@ -89,11 +105,11 @@ export default function WalletPageClient ({ session }: WalletPageClientProps): R
       <PageHeaderWithWallet title='Mon Wallet' />
 
       <main className='container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-4xl'>
-        {/* Message de notification */}
-        {(message !== null || showErrorMessage) && (
+        {/* Message de notification pour les erreurs générales */}
+        {(message !== null && message.type === 'error') && (
           <div className='mb-6 p-4 rounded-lg border bg-red-50 border-red-200 text-red-800'>
             <p className='font-medium'>
-              {message?.text ?? '❌ Paiement annulé'}
+              {message.text}
             </p>
           </div>
         )}
