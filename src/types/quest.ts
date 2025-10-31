@@ -30,7 +30,7 @@ export type QuestDifficulty = typeof QUEST_DIFFICULTIES[number]
 /**
  * Quest status
  */
-export const QUEST_STATUSES = ['active', 'completed', 'expired'] as const
+export const QUEST_STATUSES = ['active', 'completed', 'claimed', 'expired'] as const
 
 export type QuestStatus = typeof QUEST_STATUSES[number]
 

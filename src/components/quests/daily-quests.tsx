@@ -21,6 +21,7 @@ import Button from '@/components/button'
 import { QuestSkeleton } from './quest-skeleton'
 import { QuestsHeader } from './quests-header'
 import { QuestsFooter } from './quests-footer'
+import { useWalletContext } from '@/contexts/wallet-context'
 
 interface DailyQuestsProps {
   onQuestComplete?: () => void
@@ -30,6 +31,9 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
   const [quests, setQuests] = useState<DailyQuest[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Utiliser le contexte wallet pour pouvoir le rafraîchir
+  const { refreshWallet } = useWalletContext()
   const [claimingQuestId, setClaimingQuestId] = useState<string | null>(null)
 
   // Ref pour éviter les appels multiples simultanés
@@ -75,6 +79,9 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
         prev.map(q => (q._id === questId ? result.quest! : q))
       )
 
+      // Refresh wallet to show updated coins immediately
+      await refreshWallet()
+
       // Notify parent component
       if (onQuestComplete != null) {
         onQuestComplete()
@@ -84,7 +91,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
     }
 
     setClaimingQuestId(null)
-  }, [onQuestComplete])
+  }, [onQuestComplete, refreshWallet])
 
   const getProgressPercentage = (quest: DailyQuest): number => {
     return Math.min((quest.currentProgress / quest.targetCount) * 100, 100)
@@ -159,8 +166,8 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
                 // Vraies cartes de quêtes
                 quests.map(quest => {
                   const progressPercentage = getProgressPercentage(quest)
-                  const isCompleted = quest.status === 'completed'
-            const canClaim = isCompleted && quest.currentProgress >= quest.targetCount
+                  const isCompleted = quest.status === 'completed' || quest.status === 'claimed'
+            const canClaim = quest.status === 'completed' && quest.currentProgress >= quest.targetCount
 
             return (
               <div

@@ -15,6 +15,7 @@
 
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import {
   getDailyQuests,
   updateQuestProgress,
@@ -223,6 +224,12 @@ export async function claimQuestRewardAction (questId: string): Promise<{
     }
 
     const quest = await claimQuestReward(questId, session.user.id)
+    // Revalidate paths to update wallet and quests display
+    revalidatePath('/dashboard')
+    revalidatePath('/quests')
+    revalidatePath('/wallet')
+    revalidatePath('/creature')
+
 
     return {
       success: true,

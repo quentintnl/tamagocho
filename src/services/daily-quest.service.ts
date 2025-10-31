@@ -114,7 +114,7 @@ export async function getDailyQuests (ownerId: string): Promise<DailyQuestType[]
   // Find active quests that haven't expired
   let quests = await DailyQuest.find({
     ownerId,
-    status: { $in: ['active', 'completed'] },
+    status: { $in: ['active', 'completed', 'claimed'] },
     expiresAt: { $gt: now }
   }).sort({ createdAt: 1 })
 
@@ -292,6 +292,10 @@ export async function claimQuestReward (questId: string, ownerId: string): Promi
   if (quest.coinReward > 0) {
     await addCoins({ ownerId, amount: quest.coinReward })
   }
+
+  // Mark quest as claimed to prevent duplicate claims
+  quest.status = 'claimed'
+  await quest.save()
 
   return serializeQuest(quest)
 }
