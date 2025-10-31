@@ -19,6 +19,7 @@ import { AccessoriesGridSkeleton } from '@/components/shop/accessories-grid-skel
 import { ShopLayout } from '@/components/shop/shop-layout'
 import { ShopStats } from '@/components/shop/shop-stats'
 import { ShopSectionHeader } from '@/components/shop/shop-section-header'
+import Button from '@/components/button'
 import { toast } from 'react-toastify'
 import type { Accessory } from '@/types/accessory'
 
@@ -39,18 +40,28 @@ export default function ShopPage (): React.ReactNode {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
   const [activeTab, setActiveTab] = useState<ShopTab>('accessories')
+  const [hideOwned, setHideOwned] = useState(false)
   const { wallet } = useWallet()
 
-  // Filtrer les accessoires selon l'onglet actif
+  // Filtrer les accessoires selon l'onglet actif et le statut de possession
   const filteredAccessories = useMemo(() => {
+    let filtered: Accessory[]
+
     if (activeTab === 'accessories') {
       // Tout sauf les backgrounds
-      return accessories.filter(acc => acc.category !== 'background')
+      filtered = accessories.filter(acc => acc.category !== 'background')
     } else {
       // Seulement les backgrounds
-      return accessories.filter(acc => acc.category === 'background')
+      filtered = accessories.filter(acc => acc.category === 'background')
     }
-  }, [accessories, activeTab])
+
+    // Filtrer les accessoires possédés si hideOwned est activé
+    if (hideOwned) {
+      filtered = filtered.filter(acc => !ownedAccessoryIds.includes(acc.id))
+    }
+
+    return filtered
+  }, [accessories, activeTab, hideOwned, ownedAccessoryIds])
 
   // Compter les accessoires par catégorie
   const counts = useMemo(() => {
@@ -162,6 +173,19 @@ export default function ShopPage (): React.ReactNode {
         title={isLoading ? null : (activeTab === 'accessories' ? '🎨 Accessoires' : '🖼️ Arrière-plans')}
         subtitle={isLoading ? null : `${filteredAccessories.length} ${activeTab === 'accessories' ? 'accessoires' : 'arrière-plans'} disponibles`}
       />
+
+      {/* Bouton de filtre pour masquer/afficher les accessoires possédés */}
+      {!isLoading && (
+        <div className='mb-6 flex justify-end'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => { setHideOwned(!hideOwned) }}
+          >
+            {hideOwned ? '👁️ Afficher les possédés' : '🙈 Masquer les possédés'}
+          </Button>
+        </div>
+      )}
 
       {/* Liste des accessoires */}
       {isLoading
