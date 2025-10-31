@@ -19,7 +19,6 @@ import { AccessoriesGridSkeleton } from '@/components/shop/accessories-grid-skel
 import { ShopLayout } from '@/components/shop/shop-layout'
 import { ShopStats } from '@/components/shop/shop-stats'
 import { ShopSectionHeader } from '@/components/shop/shop-section-header'
-import Button from '@/components/button'
 import { showSuccessToast, showErrorToast } from '@/lib/toast'
 import type { Accessory } from '@/types/accessory'
 
@@ -173,13 +172,19 @@ export default function ShopPage (): React.ReactNode {
       {/* Bouton de filtre pour masquer/afficher les accessoires possédés */}
       {!isLoading && (
         <div className='mb-6 flex justify-end'>
-          <Button
-            variant='outline'
-            size='sm'
+          <button
             onClick={() => { setHideOwned(!hideOwned) }}
+            className={`
+              px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg transition-all duration-200 border-2
+              ${hideOwned 
+                ? 'bg-gradient-to-r from-sky-400 to-lavender-500 text-white border-white/60 hover:shadow-xl hover:scale-105' 
+                : 'bg-white text-forest-700 border-meadow-200 hover:border-meadow-300 hover:shadow-xl hover:scale-105'
+              }
+            `}
           >
-            {hideOwned ? '👁️ Afficher les possédés' : '🙈 Masquer les possédés'}
-          </Button>
+            <span className='mr-2'>{hideOwned ? '👁️' : '🙈'}</span>
+            {hideOwned ? 'Afficher les possédés' : 'Masquer les possédés'}
+          </button>
         </div>
       )}
 

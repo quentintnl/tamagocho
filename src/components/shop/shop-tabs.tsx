@@ -63,30 +63,30 @@ export function ShopTabs ({
 
   return (
     <div className='flex justify-center mb-8'>
-      <div className='inline-flex bg-white/90 backdrop-blur-md rounded-3xl p-2 shadow-xl ring-2 ring-meadow-200/60'>
+      <div className='inline-flex bg-white/90 backdrop-blur-md rounded-3xl p-2 shadow-xl border-4 border-white/80'>
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => { onTabChange(tab.id) }}
             className={`
-              relative px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300
+              relative px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300
               ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-br from-meadow-500 to-forest-500 text-white shadow-lg'
-                  : 'text-forest-600 hover:text-forest-800 hover:bg-meadow-50'
+                  ? 'bg-gradient-to-br from-meadow-500 to-forest-500 text-white shadow-lg scale-105'
+                  : 'text-forest-600 hover:text-forest-800 hover:bg-meadow-50 hover:scale-105'
               }
             `}
           >
             <div className='flex items-center gap-2'>
-              <span className='text-xl'>{tab.icon}</span>
+              <span className='text-2xl'>{tab.icon}</span>
               <span>{tab.label}</span>
               <span
                 className={`
-                  inline-flex items-center justify-center min-w-[24px] h-6 px-2 rounded-full text-xs font-bold
+                  inline-flex items-center justify-center min-w-[28px] h-7 px-2.5 rounded-xl text-xs font-black border-2
                   ${
                     activeTab === tab.id
-                      ? 'bg-white/20 text-white'
-                      : 'bg-meadow-200 text-forest-700'
+                      ? 'bg-white/20 text-white border-white/30'
+                      : 'bg-meadow-100 text-forest-700 border-meadow-200'
                   }
                 `}
               >
