@@ -97,7 +97,7 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-white p-4 shadow-lg ring-1 transition-all duration-300 ${
+      className={`relative overflow-hidden rounded-xl bg-white p-2 shadow-lg ring-1 transition-all duration-300 ${
         isCompleted
           ? 'ring-meadow-300 shadow-meadow-200/50'
           : isExpired
@@ -107,14 +107,14 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
     >
       {/* Badge "Complété" */}
       {isCompleted && (
-        <div className='absolute -right-8 top-3 rotate-45 bg-meadow-500 px-10 py-1 text-xs font-bold text-white shadow-md'>
+        <div className='absolute -right-8 top-1.5 rotate-45 bg-meadow-500 px-10 py-0.5 text-xs font-bold text-white shadow-md'>
           ✓ Complété
         </div>
       )}
 
       {/* Badge "Expiré" */}
       {isExpired && (
-        <div className='absolute -right-8 top-3 rotate-45 bg-slate-400 px-10 py-1 text-xs font-bold text-white shadow-md'>
+        <div className='absolute -right-8 top-1.5 rotate-45 bg-slate-400 px-10 py-0.5 text-xs font-bold text-white shadow-md'>
           Expiré
         </div>
       )}
@@ -122,28 +122,28 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
       {/* Animation de récompense */}
       {showRewardAnimation && (
         <div className='absolute inset-0 z-20 flex items-center justify-center bg-white/90 backdrop-blur-sm'>
-          <div className='animate-bounce text-6xl'>
+          <div className='animate-bounce text-4xl'>
             💰 +{quest.coinReward}
           </div>
         </div>
       )}
 
       {/* En-tête */}
-      <div className='flex items-start justify-between gap-3'>
-        <div className='flex items-start gap-3'>
+      <div className='flex items-start justify-between gap-2'>
+        <div className='flex items-start gap-2'>
           {/* Icône */}
-          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${bgColor} text-2xl`}>
+          <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${bgColor} text-lg`}>
             {icon}
           </div>
 
           {/* Titre et description */}
           <div className='flex-1'>
-            <h3 className='font-semibold text-slate-800 text-base'>{quest.title}</h3>
-            <p className='text-sm text-slate-600 mt-0.5'>{quest.description}</p>
+            <h3 className='font-semibold text-slate-800 text-sm'>{quest.title}</h3>
+            <p className='text-xs text-slate-600 mt-0.5'>{quest.description}</p>
 
             {/* Badge difficulté */}
-            <div className='mt-2 flex items-center gap-2'>
-              <span className={`inline-flex items-center rounded-full ${difficultyStyle.bgColor} px-2 py-0.5 text-xs font-medium ${difficultyStyle.color}`}>
+            <div className='mt-1 flex items-center gap-1.5'>
+              <span className={`inline-flex items-center rounded-full ${difficultyStyle.bgColor} px-1.5 py-0.5 text-xs font-medium ${difficultyStyle.color}`}>
                 {difficultyStyle.label}
               </span>
               {(quest.xpReward ?? 0) > 0 && (
@@ -154,11 +154,17 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
             </div>
           </div>
         </div>
+
+        {/* Récompense en coins */}
+        <div className='flex items-center gap-1 rounded-lg bg-sunset-50 px-2 py-1 ring-1 ring-sunset-200'>
+          <span className='text-base'>💰</span>
+          <span className='font-bold text-sunset-700 text-sm'>+{quest.coinReward}</span>
+        </div>
       </div>
 
       {/* Progress bar */}
-      <div className='mt-4'>
-        <div className='flex items-center justify-between text-sm mb-2'>
+      <div className='mt-2'>
+        <div className='flex items-center justify-between text-xs mb-1'>
           <span className='font-medium text-slate-700'>
             Progression
           </span>
@@ -168,7 +174,7 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
         </div>
 
         {/* Barre de progression */}
-        <div className='relative h-3 overflow-hidden rounded-full bg-slate-100'>
+        <div className='relative h-2 overflow-hidden rounded-full bg-slate-100'>
           <div
             className={`h-full rounded-full transition-all duration-500 ease-out ${
               isCompleted
@@ -183,7 +189,7 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
         </div>
 
         {/* Pourcentage */}
-        <div className='mt-1 text-right'>
+        <div className='mt-0.5 text-right'>
           <span className='text-xs font-medium text-slate-500'>
             {Math.round(progress)}%
           </span>
@@ -191,29 +197,21 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
       </div>
 
       {/* Récompense et action */}
-      <div className='mt-4 flex items-center justify-between gap-3'>
-        {/* Récompense */}
-        <div className='flex items-center gap-2'>
-          <div className='flex items-center gap-1 rounded-lg bg-sunset-50 px-3 py-1.5 ring-1 ring-sunset-200'>
-            <span className='text-lg'>💰</span>
-            <span className='font-bold text-sunset-700'>+{quest.coinReward}</span>
-          </div>
-        </div>
-
+      <div className='mt-2 flex items-center justify-end gap-2'>
         {/* Bouton réclamer */}
         {isCompleted && (
           <button
             onClick={handleClaimReward}
             disabled={isClaiming}
-            className={`rounded-lg px-4 py-2 font-semibold text-sm shadow-md transition-all duration-200 ${
+            className={`rounded-lg px-3 py-1 font-semibold text-xs shadow-md transition-all duration-200 ${
               isClaiming
                 ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
                 : 'bg-gradient-to-r from-meadow-500 to-meadow-600 text-white hover:from-meadow-600 hover:to-meadow-700 active:scale-95'
             }`}
           >
             {isClaiming ? (
-              <span className='flex items-center gap-2'>
-                <svg className='animate-spin h-4 w-4' viewBox='0 0 24 24'>
+              <span className='flex items-center gap-1.5'>
+                <svg className='animate-spin h-3 w-3' viewBox='0 0 24 24'>
                   <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' fill='none' />
                   <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z' />
                 </svg>
