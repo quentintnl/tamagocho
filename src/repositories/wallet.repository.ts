@@ -44,11 +44,13 @@ export interface IWalletRepository {
  * Serializes a Mongoose wallet document to a plain object
  * Converts ObjectId and Dates to strings for Client Component compatibility
  *
- * @param doc - Mongoose wallet document
+ * @param doc - Mongoose wallet document or lean object
  * @returns Plain wallet object
  */
-function serializeWallet (doc: WalletDocument): WalletType {
-  const obj = doc.toObject()
+function serializeWallet (doc: WalletDocument | any): WalletType {
+  // Si c'est un document Mongoose avec toObject(), on l'utilise
+  // Sinon, on traite doc comme un objet simple (lean)
+  const obj = typeof doc.toObject === 'function' ? doc.toObject() : doc
   return {
     _id: String(obj._id),
     ownerId: obj.ownerId,

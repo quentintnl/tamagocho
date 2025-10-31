@@ -56,9 +56,6 @@ export function GalleryPageClient ({ initialData }: GalleryPageClientProps): Rea
     sortOrder: 'desc'
   })
 
-  // État de la pagination
-  const [currentPage, setCurrentPage] = useState(1)
-
   /**
    * Charge les monstres en fonction des filtres et de la page
    */
@@ -84,7 +81,6 @@ export function GalleryPageClient ({ initialData }: GalleryPageClientProps): Rea
     }
 
     setFilters(updatedFilters)
-    setCurrentPage(1) // Retour à la page 1 lors d'un changement de filtre
 
     startTransition(() => {
       void loadMonsters(1, updatedFilters)
@@ -95,7 +91,6 @@ export function GalleryPageClient ({ initialData }: GalleryPageClientProps): Rea
    * Gère le changement de page
    */
   const handlePageChange = (page: number): void => {
-    setCurrentPage(page)
     startTransition(() => {
       void loadMonsters(page, filters)
     })
