@@ -3,7 +3,7 @@
 ## Date: 27 octobre 2025
 
 ## Résumé
-Remplacement complet du système de génération de monstres par celui du repository [v0-tamagotcho](https://github.com/RiusmaX/v0-tamagotcho).
+Remplacement complet du système de génération de monstres par celui du repository [v0-tomatgotchi](https://github.com/RiusmaX/v0-tomatgotchi).
 
 ## Changements Principaux
 
@@ -194,7 +194,7 @@ for (const monster of monsters) {
 
 ## Ressources
 
-- Repository source: https://github.com/RiusmaX/v0-tamagotcho
+- Repository source: https://github.com/RiusmaX/v0-tomatgotchi
 - Documentation TypeScript: https://www.typescriptlang.org/
 - SVG Reference: https://developer.mozilla.org/en-US/docs/Web/SVG
 - CSS Animations: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations

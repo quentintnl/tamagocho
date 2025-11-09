@@ -4,11 +4,11 @@ sidebar_position: 3
 
 # Configuration Vercel
 
-Guide complet pour déployer Tamagotcho (Next.js + Docusaurus) sur Vercel.
+Guide complet pour déployer Tomatgotchi (Next.js + Docusaurus) sur Vercel.
 
 ## 🚀 Vue d'ensemble
 
-Le projet Tamagotcho utilise une configuration spéciale pour héberger à la fois :
+Le projet Tomatgotchi utilise une configuration spéciale pour héberger à la fois :
 - **Application Next.js** sur `/` (routes principales)
 - **Documentation Docusaurus** sur `/documentation/` (sous-chemin)
 
@@ -126,9 +126,9 @@ Ajouter les variables dans **Settings > Environment Variables** :
 | Variable | Valeur | Description |
 |----------|--------|-------------|
 | `MONGODB_URI` | `mongodb+srv://...` | Connexion MongoDB |
-| `MONGODB_DATABASE_NAME` | `tamagotcho` | Nom de la base |
+| `MONGODB_DATABASE_NAME` | `tomatgotchi` | Nom de la base |
 | `BETTER_AUTH_SECRET` | `secret_32_chars_min` | Secret Better Auth |
-| `NEXT_PUBLIC_APP_URL` | `https://tamagotcho.vercel.app` | URL de production |
+| `NEXT_PUBLIC_APP_URL` | `https://tomatgotchi.vercel.app` | URL de production |
 | `GITHUB_CLIENT_ID` | `your_client_id` | GitHub OAuth ID |
 | `GITHUB_CLIENT_SECRET` | `your_secret` | GitHub OAuth Secret |
 
@@ -187,16 +187,16 @@ vercel --prod
 
 ```bash
 # Application principale
-https://tamagotcho.vercel.app/
+https://tomatgotchi.vercel.app/
 
 # Dashboard (requiert authentification)
-https://tamagotcho.vercel.app/dashboard
+https://tomatgotchi.vercel.app/dashboard
 
 # Documentation
-https://tamagotcho.vercel.app/documentation/
+https://tomatgotchi.vercel.app/documentation/
 
 # API Health check
-https://tamagotcho.vercel.app/api/auth/session
+https://tomatgotchi.vercel.app/api/auth/session
 ```
 
 ## 🐛 Troubleshooting
@@ -241,8 +241,8 @@ cd documentation && npm run build
 
 **Solutions :**
 1. Vérifier les URLs de callback dans GitHub OAuth App :
-   - Homepage URL : `https://tamagotcho.vercel.app`
-   - Callback URL : `https://tamagotcho.vercel.app/api/auth/callback/github`
+   - Homepage URL : `https://tomatgotchi.vercel.app`
+   - Callback URL : `https://tomatgotchi.vercel.app/api/auth/callback/github`
 2. Vérifier `GITHUB_CLIENT_ID` et `GITHUB_CLIENT_SECRET`
 3. Vérifier `NEXT_PUBLIC_APP_URL` pointe vers le bon domaine
 
@@ -287,7 +287,7 @@ Monitorer via **Vercel Analytics** et **Web Vitals**.
 ### Ajouter un domaine
 
 1. Aller dans **Vercel Dashboard > Settings > Domains**
-2. Ajouter le domaine (ex: `tamagotcho.com`)
+2. Ajouter le domaine (ex: `tomatgotchi.com`)
 3. Configurer les DNS selon les instructions Vercel
 4. Mettre à jour `NEXT_PUBLIC_APP_URL` et GitHub OAuth URLs
 
@@ -323,4 +323,4 @@ Activer Vercel Analytics pour :
 
 ---
 
-**Configuration réalisée pour Tamagotcho - My Digital School**
+**Configuration réalisée pour Tomatgotchi - My Digital School**

@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic'
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Tamagotcho Documentation',
+  title: 'Tomatgotchi Documentation',
   tagline: 'Documentation technique du projet Tamagotchi My Digital School',
   favicon: 'img/favicon.ico',
 
@@ -15,7 +15,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://tamagotcho.vercel.app',
+  url: 'https://tomatgotchi.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/documentation/',
@@ -23,7 +23,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'RiusmaX', // Usually your GitHub org/user name.
-  projectName: 'tamagotcho', // Usually your repo name.
+  projectName: 'tomatgotchi', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -44,7 +44,7 @@ const config: Config = {
           routeBasePath: '/',
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/RiusmaX/tamagotcho/tree/master/documentation/'
+            'https://github.com/RiusmaX/tomatgotchi/tree/master/documentation/'
         },
         blog: false,
         theme: {
@@ -61,9 +61,9 @@ const config: Config = {
       respectPrefersColorScheme: true
     },
     navbar: {
-      title: 'Tamagotcho',
+      title: 'Tomatgotchi',
       logo: {
-        alt: 'Tamagotcho Logo',
+        alt: 'Tomatgotchi Logo',
         src: 'img/logo.svg'
       },
       items: [
@@ -74,7 +74,7 @@ const config: Config = {
           label: 'Documentation'
         },
         {
-          href: 'https://github.com/RiusmaX/tamagotcho',
+          href: 'https://github.com/RiusmaX/tomatgotchi',
           label: 'GitHub',
           position: 'right'
         }
@@ -97,12 +97,12 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/RiusmaX/tamagotcho'
+              href: 'https://github.com/RiusmaX/tomatgotchi'
             }
           ]
         }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Digital School - Tamagotcho.`
+      copyright: `Copyright © ${new Date().getFullYear()} My Digital School - Tomatgotchi.`
     },
     prism: {
       theme: prismThemes.github,

@@ -10,7 +10,7 @@ export const XP_GAIN_CORRECT_ACTION = 20
 export const XP_GAIN_INCORRECT_ACTION = 5
 export const MAX_LEVEL = 5
 
-// Pixel Monster Types (from GitHub v0-tamagotcho)
+// Pixel Monster Types (from GitHub v0-tomatgotchi)
 export type MonsterStyle = 'round' | 'square' | 'tall' | 'wide'
 export type EyeStyle = 'big' | 'small' | 'star' | 'sleepy'
 export type AntennaStyle = 'single' | 'double' | 'curly' | 'none'

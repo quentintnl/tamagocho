@@ -58,7 +58,7 @@ export interface UserDisplay {
 export function useUserDisplay (session: Session): UserDisplay {
   return useMemo(() => {
     const displayName = deriveDisplayName(session)
-    const email = session.user?.email ?? 'gardien.ne@tamagotcho.app'
+    const email = session.user?.email ?? 'gardien.ne@tomatgotchi.app'
     const firstLetter = displayName.charAt(0).toUpperCase()
     const initial = firstLetter === '' ? 'G' : firstLetter
 

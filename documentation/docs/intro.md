@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Introduction
 
-Bienvenue dans la documentation technique de **Tamagotcho** ! 🎮
+Bienvenue dans la documentation technique de **Tomatgotchi** ! 🎮
 
-## Qu'est-ce que Tamagotcho ?
+## Qu'est-ce que Tomatgotchi ?
 
-Tamagotcho est une application web moderne inspirée des célèbres Tamagotchi, développée dans le cadre d'un projet scolaire à My Digital School. L'application permet aux utilisateurs de créer, nourrir et s'occuper de créatures virtuelles pixelisées.
+Tomatgotchi est une application web moderne inspirée des célèbres Tamagotchi, développée dans le cadre d'un projet scolaire à My Digital School. L'application permet aux utilisateurs de créer, nourrir et s'occuper de créatures virtuelles pixelisées.
 
 ## Stack Technique
 

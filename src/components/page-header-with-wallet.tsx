@@ -45,7 +45,7 @@ export default function PageHeaderWithWallet ({
     if (pathname === '/shop') return 'Boutique'
     if (pathname === '/wallet') return 'Mon Wallet'
     if (pathname?.startsWith('/creature/')) return 'Ma Créature'
-    return 'Tamagotcho'
+    return 'Tomatgotchi'
   }
 
   // Déterminer si un bouton est actif

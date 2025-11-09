@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Système de Monstres
 
-Documentation complète du système de génération et de gestion des créatures Tamagotcho.
+Documentation complète du système de génération et de gestion des créatures Tomatgotchi.
 
 ## Vue d'ensemble
 
-Le système de monstres est au cœur de l'application Tamagotcho. Chaque monstre est une créature unique générée aléatoirement avec des traits visuels et des états émotionnels dynamiques.
+Le système de monstres est au cœur de l'application Tomatgotchi. Chaque monstre est une créature unique générée aléatoirement avec des traits visuels et des états émotionnels dynamiques.
 
 ## Types de données
 
@@ -378,6 +378,6 @@ describe('generateRandomTraits', () => {
 
 ## Ressources
 
-- [Code source: monster-generator.ts](https://github.com/RiusmaX/tamagotcho/blob/master/src/services/monsters/monster-generator.ts)
-- [Types: monster.ts](https://github.com/RiusmaX/tamagotcho/blob/master/src/types/monster.ts)
-- [Modèle DB: monster.model.ts](https://github.com/RiusmaX/tamagotcho/blob/master/src/db/models/monster.model.ts)
+- [Code source: monster-generator.ts](https://github.com/RiusmaX/tomatgotchi/blob/master/src/services/monsters/monster-generator.ts)
+- [Types: monster.ts](https://github.com/RiusmaX/tomatgotchi/blob/master/src/types/monster.ts)
+- [Modèle DB: monster.model.ts](https://github.com/RiusmaX/tomatgotchi/blob/master/src/db/models/monster.model.ts)

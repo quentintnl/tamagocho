@@ -1,4 +1,4 @@
-# Copilot Instructions - Tamagotcho Project
+# Copilot Instructions - Tomatgotchi Project
 
 ## Project Overview
 This is a Next.js 15.5.4 project using the App Router architecture, built for a school project (My Digital School). It's a Tamagotchi-style application using React 19, TypeScript, and Tailwind CSS 4 with custom color palette.

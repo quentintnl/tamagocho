@@ -1,6 +1,6 @@
 # Déploiement Vercel - Guide Rapide
 
-Ce guide explique comment déployer Tamagotcho (Next.js + Docusaurus) sur Vercel.
+Ce guide explique comment déployer Tomatgotchi (Next.js + Docusaurus) sur Vercel.
 
 ## 🚀 Première installation
 
@@ -8,7 +8,7 @@ Ce guide explique comment déployer Tamagotcho (Next.js + Docusaurus) sur Vercel
 
 1. Aller sur [vercel.com](https://vercel.com)
 2. Cliquer sur **"Add New Project"**
-3. Importer depuis GitHub : `RiusmaX/tamagotcho`
+3. Importer depuis GitHub : `RiusmaX/tomatgotchi`
 4. Sélectionner le repository
 
 ### 2. Configuration du build
@@ -31,9 +31,9 @@ Ajouter dans **Settings > Environment Variables** :
 
 ```
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/
-MONGODB_DATABASE_NAME=tamagotcho
+MONGODB_DATABASE_NAME=tomatgotchi
 BETTER_AUTH_SECRET=votre_secret_32_caracteres_minimum
-NEXT_PUBLIC_APP_URL=https://tamagotcho.vercel.app
+NEXT_PUBLIC_APP_URL=https://tomatgotchi.vercel.app
 GITHUB_CLIENT_ID=votre_github_client_id
 GITHUB_CLIENT_SECRET=votre_github_client_secret
 ```
@@ -52,9 +52,9 @@ Cliquer sur **"Deploy"** et attendre la fin du build (~2-5 minutes).
 1. Aller sur [GitHub OAuth Apps](https://github.com/settings/developers)
 2. Cliquer sur **"New OAuth App"**
 3. Remplir :
-   - **Application name** : Tamagotcho
-   - **Homepage URL** : `https://tamagotcho.vercel.app`
-   - **Authorization callback URL** : `https://tamagotcho.vercel.app/api/auth/callback/github`
+   - **Application name** : Tomatgotchi
+   - **Homepage URL** : `https://tomatgotchi.vercel.app`
+   - **Authorization callback URL** : `https://tomatgotchi.vercel.app/api/auth/callback/github`
 4. Copier **Client ID** et **Client Secret**
 5. Les ajouter dans Vercel Environment Variables
 
@@ -62,10 +62,10 @@ Cliquer sur **"Deploy"** et attendre la fin du build (~2-5 minutes).
 
 Après déploiement :
 
-- **Application** : `https://tamagotcho.vercel.app/`
-- **Dashboard** : `https://tamagotcho.vercel.app/dashboard`
-- **Documentation** : `https://tamagotcho.vercel.app/documentation/`
-- **API Auth** : `https://tamagotcho.vercel.app/api/auth/*`
+- **Application** : `https://tomatgotchi.vercel.app/`
+- **Dashboard** : `https://tomatgotchi.vercel.app/dashboard`
+- **Documentation** : `https://tomatgotchi.vercel.app/documentation/`
+- **API Auth** : `https://tomatgotchi.vercel.app/api/auth/*`
 
 ## 🔄 Déploiements automatiques
 
@@ -107,4 +107,4 @@ Pour plus de détails, consultez :
 
 ---
 
-**Support** : [GitHub Issues](https://github.com/RiusmaX/tamagotcho/issues)
+**Support** : [GitHub Issues](https://github.com/RiusmaX/tomatgotchi/issues)

@@ -1,4 +1,4 @@
-# 🎮 Tamagotcho
+# 🎮 Tomatgotchi
 
 Application web moderne inspirée des célèbres Tamagotchi, développée avec Next.js 15, TypeScript et MongoDB.
 
@@ -29,8 +29,8 @@ Application web moderne inspirée des célèbres Tamagotchi, développée avec N
 
 ```bash
 # Cloner le projet
-git clone https://github.com/RiusmaX/tamagotcho.git
-cd tamagotcho
+git clone https://github.com/RiusmaX/tomatgotchi.git
+cd tomatgotchi
 
 # Installer les dépendances
 npm install
@@ -49,7 +49,7 @@ Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
 La documentation complète du projet est disponible dans le dossier `/documentation` et accessible en ligne :
 
-- **Production** : [https://tamagotcho.vercel.app/documentation](https://tamagotcho.vercel.app/documentation)
+- **Production** : [https://tomatgotchi.vercel.app/documentation](https://tomatgotchi.vercel.app/documentation)
 - **Local** : `npm run dev:docs` puis [http://localhost:3000](http://localhost:3000)
 
 ### Sections disponibles
@@ -76,7 +76,7 @@ La documentation complète du projet est disponible dans le dossier `/documentat
 ## 📁 Structure du projet
 
 ```
-tamagotcho/
+tomatgotchi/
 ├── src/
 │   ├── app/              # Next.js App Router (pages et layouts)
 │   ├── components/       # Composants React réutilisables
@@ -132,7 +132,7 @@ Créer un fichier `.env.local` à la racine :
 ```bash
 # MongoDB
 MONGODB_URI="mongodb+srv://username:password@cluster.mongodb.net/"
-MONGODB_DATABASE_NAME="tamagotcho"
+MONGODB_DATABASE_NAME="tomatgotchi"
 
 # Better Auth
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
@@ -179,4 +179,4 @@ Projet réalisé dans le cadre de la formation **My Digital School**.
 
 ---
 
-**Développé avec ❤️ et ☕ par l'équipe Tamagotcho**
+**Développé avec ❤️ et ☕ par l'équipe Tomatgotchi**

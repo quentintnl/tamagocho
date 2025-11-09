@@ -12,16 +12,16 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export const metadata: Readonly<Metadata> = {
-  title: 'Tamagotcho - Adopte et prends soin de ton compagnon virtuel',
-  description: 'Tamagotcho est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !',
-  keywords: 'Tamagotcho, monstre virtuel, adoption, jeu, aventure',
+  title: 'Tomatgotchi - Adopte et prends soin de ton compagnon virtuel',
+  description: 'Tomatgotchi est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !',
+  keywords: 'Tomatgotchi, monstre virtuel, adoption, jeu, aventure',
   openGraph: {
-    title: 'Tamagotcho - Adopte et prends soin de ton compagnon virtuel',
-    description: 'Tamagotcho est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !'
+    title: 'Tomatgotchi - Adopte et prends soin de ton compagnon virtuel',
+    description: 'Tomatgotchi est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !'
   },
   twitter: {
-    title: 'Tamagotcho - Adopte et prends soin de ton compagnon virtuel',
-    description: 'Tamagotcho est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !'
+    title: 'Tomatgotchi - Adopte et prends soin de ton compagnon virtuel',
+    description: 'Tomatgotchi est une application web où tu peux adopter, nourrir, jouer et faire évoluer ton propre monstre virtuel. Rejoins-nous pour une aventure amusante et interactive !'
   }
 }
 

@@ -59,13 +59,13 @@ export default function Footer (): React.ReactNode {
             <div className='flex items-center space-x-2 mb-4'>
               <Image
                 src='/logo_comp.webp'
-                alt='Tamagotcho Logo'
+                alt='Tomatgotchi Logo'
                 width={32}
                 height={32}
                 className='w-8 h-8'
               />
               <span className='text-2xl font-bold bg-gradient-to-r from-meadow-300 to-sky-300 bg-clip-text text-transparent'>
-                Tamagotcho
+                Tomatgotchi
               </span>
             </div>
             <p className='text-meadow-100/80 mb-6 max-w-md leading-relaxed'>
@@ -80,7 +80,7 @@ export default function Footer (): React.ReactNode {
         </div>
 
         <div className='border-t border-meadow-800/30 mt-12 pt-8 text-center text-meadow-100/70'>
-          <p>&copy; 2025 Tamagotcho. Tous droits réservés. Créé avec 💚 pour My Digital School.</p>
+          <p>&copy; 2025 Tomatgotchi. Tous droits réservés. Créé avec 💚 pour My Digital School.</p>
         </div>
       </div>
     </footer>

@@ -33,7 +33,7 @@ const PAGE_TITLES: Record<string, string> = {
  * @returns Page title string
  */
 export function getPageTitle (pathname: string | null): string {
-  if (pathname === null) return 'Tamagotcho'
+  if (pathname === null) return 'Tomatgotchi'
 
   // Check exact matches first
   if (pathname in PAGE_TITLES) {
@@ -46,7 +46,7 @@ export function getPageTitle (pathname: string | null): string {
   }
 
   // Default fallback
-  return 'Tamagotcho'
+  return 'Tomatgotchi'
 }
 
 /**

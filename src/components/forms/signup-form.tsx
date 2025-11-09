@@ -55,7 +55,7 @@ function SignUpForm ({ onError }: { onError: (error: string) => void }): React.R
           🆕 Créer un compte
         </h2>
         <p className='text-gray-600 text-sm'>
-          Rejoignez l'aventure Tamagotcho ! 🎆
+          Rejoignez l'aventure Tomatgotchi ! 🎆
         </p>
       </div>
 
