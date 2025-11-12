@@ -72,6 +72,8 @@ export default function MonstersPageContent ({
           level={monster.level_id?.level ?? 1}
           createdAt={String(monster.createdAt)}
           updatedAt={String(monster.updatedAt)}
+          isPublic={monster.isPublic ?? false}
+          equippedAccessories={monster.equippedAccessories ?? []}
         />
       ))}
     </div>
