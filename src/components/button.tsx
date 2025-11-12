@@ -33,9 +33,10 @@ function Button ({
 }): React.ReactNode {
   return (
     <button
-      className={`rounded-md  ${disabled ? '' : 'transition-all duration-300 cursor-pointer active:scale-95'} ${getSize(size)} ${getVariant(variant, disabled)}`}
+      className={`rounded-md flex items-center justify-center ${disabled ? '' : 'transition-all duration-300 cursor-pointer active:scale-95'} ${getSize(size)} ${getVariant(variant, disabled)}`}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {children}
     </button>
