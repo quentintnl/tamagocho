@@ -90,6 +90,9 @@ export async function userOwnsAccessory (ownerId: string, accessoryId: string): 
 /**
  * Equip an accessory to a monster
  *
+ * Automatically unequips any accessory of the same category already equipped.
+ * This ensures only one item per category (one hat, one glasses, one background, etc.)
+ *
  * @param ownedAccessoryId - Owned accessory ID
  * @param monsterId - Monster ID to equip to
  * @returns Updated owned accessory
@@ -100,6 +103,44 @@ export async function equipAccessoryToMonster (
 ): Promise<OwnedAccessory | null> {
   await connectMongooseToDatabase()
 
+  // Récupérer l'accessoire qu'on veut équiper
+  const accessoryToEquip = await OwnedAccessoryModel.findById(ownedAccessoryId).lean()
+
+  if (accessoryToEquip === null) {
+    return null
+  }
+
+  // Déterminer la catégorie de l'accessoire à partir de son ID
+  // Les IDs suivent le format: category-name (ex: hat-party, glasses-cool, bg-stars)
+  let categoryPrefix = ''
+
+  if (accessoryToEquip.accessoryId.startsWith('hat-')) {
+    categoryPrefix = 'hat-'
+  } else if (accessoryToEquip.accessoryId.startsWith('glasses-')) {
+    categoryPrefix = 'glasses-'
+  } else if (accessoryToEquip.accessoryId.startsWith('shoes-')) {
+    categoryPrefix = 'shoes-'
+  } else if (accessoryToEquip.accessoryId.startsWith('bg-')) {
+    categoryPrefix = 'bg-'
+  } else if (accessoryToEquip.accessoryId.startsWith('effect-')) {
+    categoryPrefix = 'effect-'
+  }
+
+  // Si on a trouvé une catégorie, déséquiper tous les accessoires de cette catégorie
+  if (categoryPrefix !== '') {
+    await OwnedAccessoryModel.updateMany(
+      {
+        monsterId,
+        isEquipped: true,
+        accessoryId: { $regex: new RegExp(`^${categoryPrefix}`) }
+      },
+      {
+        isEquipped: false
+      }
+    )
+  }
+
+  // Équiper le nouvel accessoire
   return await OwnedAccessoryModel.findByIdAndUpdate(
     ownedAccessoryId,
     {
