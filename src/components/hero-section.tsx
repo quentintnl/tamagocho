@@ -1,4 +1,5 @@
 import Button from '@/components/button'
+import Link from 'next/link'
 
 // Single Responsibility: Hero section handles only the main landing content
 export default function HeroSection (): React.ReactNode {
@@ -24,12 +25,16 @@ export default function HeroSection (): React.ReactNode {
             Prenez soin de votre compagnon, observez-le grandir au rythme de la nature 🌸
           </p>
           <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-            <Button size='xl' variant='primary'>
-              🌱 Commencer l'aventure
-            </Button>
-            <Button size='xl' variant='outline'>
-              🌿 Découvrir le monde
-            </Button>
+            <Link href='/sign-in'>
+              <Button size='xl' variant='primary'>
+                🌱 Commencer l'aventure
+              </Button>
+            </Link>
+            <Link href='/sign-in'>
+              <Button size='xl' variant='outline'>
+                🌿 Découvrir le monde
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
