@@ -174,6 +174,12 @@ function drawMonster (
 
   ctx.clearRect(0, 0, 160, 160)
 
+  // Dessiner l'arrière-plan en premier (s'il y en a un équipé)
+  const backgroundAccessory = equippedAccessories.find(acc => acc.accessoryId.startsWith('bg-'))
+  if (backgroundAccessory !== undefined) {
+    drawPurchasedBackground(ctx, backgroundAccessory.accessoryId, frame)
+  }
+
   // Animations selon l'action
   if (currentAction !== null && actionFrame < 150) {
     const progress = actionFrame / 150
@@ -663,7 +669,7 @@ function drawEquippedAccessories (
   equippedAccessories.forEach(ownedAccessory => {
     const { accessoryId } = ownedAccessory
 
-    // Dessiner selon le type d'accessoire
+    // Dessiner selon le type d'accessoire (sauf les arrière-plans qui sont dessinés au début)
     if (accessoryId.startsWith('hat-')) {
       drawPurchasedHat(ctx, accessoryId, bodyY, pixelSize, frame)
     } else if (accessoryId.startsWith('glasses-')) {
@@ -672,9 +678,8 @@ function drawEquippedAccessories (
       drawPurchasedShoes(ctx, accessoryId, bodyY, pixelSize)
     } else if (accessoryId.startsWith('effect-')) {
       drawPurchasedEffect(ctx, accessoryId, bodyY, pixelSize, frame)
-    } else if (accessoryId.startsWith('bg-')) {
-      drawPurchasedBackground(ctx, accessoryId, frame)
     }
+    // Les arrière-plans (bg-*) sont dessinés au début de drawMonster
   })
 }
 
@@ -914,35 +919,440 @@ function drawPurchasedBackground (
   frame: number
 ): void {
   ctx.save()
-  ctx.globalAlpha = 0.3
 
   switch (bgId) {
     case 'bg-stars': {
-      // Fond étoilé
-      ctx.fillStyle = '#FFD700'
-      const stars = [
-        { x: 20, y: 20 + Math.sin(frame * 0.03) * 3 },
-        { x: 140, y: 30 + Math.sin(frame * 0.04) * 3 },
-        { x: 30, y: 120 + Math.sin(frame * 0.05) * 3 },
-        { x: 130, y: 100 + Math.sin(frame * 0.035) * 3 },
-        { x: 80, y: 15 + Math.sin(frame * 0.045) * 3 }
+      // Ciel nocturne dégradé
+      const skyGradient = ctx.createRadialGradient(80, 80, 0, 80, 80, 120)
+      skyGradient.addColorStop(0, '#000033')
+      skyGradient.addColorStop(1, '#191970')
+      ctx.fillStyle = skyGradient
+      ctx.fillRect(0, 0, 160, 160)
+
+      // Lune avec halo
+      ctx.save()
+      ctx.globalAlpha = 0.4
+      const moonGlow = ctx.createRadialGradient(130, 35, 0, 130, 35, 25)
+      moonGlow.addColorStop(0, '#FFD700')
+      moonGlow.addColorStop(1, 'rgba(255, 215, 0, 0)')
+      ctx.fillStyle = moonGlow
+      ctx.fillRect(105, 10, 50, 50)
+      ctx.restore()
+
+      // Lune principale
+      ctx.fillStyle = '#F0E68C'
+      ctx.beginPath()
+      ctx.arc(130, 35, 14, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.strokeStyle = '#DAA520'
+      ctx.lineWidth = 0.5
+      ctx.stroke()
+
+      // Cratères lunaires
+      ctx.fillStyle = '#E6D68A'
+      ctx.globalAlpha = 0.6
+      ctx.beginPath()
+      ctx.arc(126, 33, 2.5, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.beginPath()
+      ctx.arc(133, 37, 1.5, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.beginPath()
+      ctx.arc(132, 31, 2, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.globalAlpha = 1
+
+      // Étoiles scintillantes améliorées
+      const starPositions = [
+        { x: 20, y: 25, size: 2.5, twinkle: 0.03 },
+        { x: 45, y: 15, size: 1.8, twinkle: 0.04 },
+        { x: 35, y: 45, size: 2.2, twinkle: 0.05 },
+        { x: 70, y: 20, size: 1.5, twinkle: 0.035 },
+        { x: 140, y: 70, size: 2, twinkle: 0.045 },
+        { x: 25, y: 95, size: 1.6, twinkle: 0.038 },
+        { x: 55, y: 80, size: 2.3, twinkle: 0.042 },
+        { x: 100, y: 15, size: 1.7, twinkle: 0.05 },
+        { x: 145, y: 110, size: 2.1, twinkle: 0.036 },
+        { x: 115, y: 90, size: 1.9, twinkle: 0.048 }
       ]
-      ctx.font = '14px Arial'
-      stars.forEach(star => {
-        ctx.fillText('⭐', star.x, star.y)
+
+      starPositions.forEach(star => {
+        const twinkle = Math.sin(frame * star.twinkle) * 0.5 + 0.5
+
+        // Halo de l'étoile
+        ctx.save()
+        ctx.globalAlpha = twinkle * 0.3
+        const starGlow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 2)
+        starGlow.addColorStop(0, 'white')
+        starGlow.addColorStop(1, 'rgba(255, 255, 255, 0)')
+        ctx.fillStyle = starGlow
+        ctx.beginPath()
+        ctx.arc(star.x, star.y, star.size * 2, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.restore()
+
+        // Étoile principale (forme à 4 branches)
+        ctx.save()
+        ctx.globalAlpha = 0.7 + twinkle * 0.3
+        ctx.fillStyle = 'white'
+        ctx.translate(star.x, star.y)
+        ctx.beginPath()
+        for (let i = 0; i < 8; i++) {
+          const radius = i % 2 === 0 ? star.size : star.size * 0.4
+          const angle = (i / 8) * Math.PI * 2 - Math.PI / 2
+          const x = Math.cos(angle) * radius
+          const y = Math.sin(angle) * radius
+          if (i === 0) ctx.moveTo(x, y)
+          else ctx.lineTo(x, y)
+        }
+        ctx.closePath()
+        ctx.fill()
+        ctx.restore()
       })
+
+      // Constellation (Grande Ourse)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)'
+      ctx.lineWidth = 0.8
+      ctx.globalAlpha = 0.7
+      const constellation = [
+        [25, 120], [32, 115], [40, 118], [48, 115],
+        [52, 108], [40, 125], [48, 130]
+      ]
+      ctx.beginPath()
+      ctx.moveTo(constellation[0][0], constellation[0][1])
+      for (let i = 1; i < 5; i++) {
+        ctx.lineTo(constellation[i][0], constellation[i][1])
+      }
+      ctx.moveTo(constellation[2][0], constellation[2][1])
+      ctx.lineTo(constellation[5][0], constellation[5][1])
+      ctx.lineTo(constellation[6][0], constellation[6][1])
+      ctx.stroke()
+
+      constellation.forEach(([x, y]) => {
+        ctx.fillStyle = 'white'
+        ctx.beginPath()
+        ctx.arc(x, y, 1.2, 0, Math.PI * 2)
+        ctx.fill()
+      })
+      ctx.globalAlpha = 1
+
       break
     }
+
     case 'bg-rainbow': {
-      // Arc-en-ciel
-      const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3']
-      colors.forEach((color, i) => {
-        ctx.strokeStyle = color
-        ctx.lineWidth = 3
+      // Ciel bleu dégradé
+      const skyGradient = ctx.createLinearGradient(0, 0, 0, 160)
+      skyGradient.addColorStop(0, '#87CEEB')
+      skyGradient.addColorStop(1, '#E0F6FF')
+      ctx.fillStyle = skyGradient
+      ctx.fillRect(0, 0, 160, 160)
+
+      // Soleil brillant
+      ctx.save()
+      ctx.globalAlpha = 0.3
+      const sunGlow = ctx.createRadialGradient(135, 30, 0, 135, 30, 20)
+      sunGlow.addColorStop(0, '#FFD700')
+      sunGlow.addColorStop(1, 'rgba(255, 215, 0, 0)')
+      ctx.fillStyle = sunGlow
+      ctx.fillRect(115, 10, 40, 40)
+      ctx.restore()
+
+      ctx.fillStyle = '#FFED4E'
+      ctx.beginPath()
+      ctx.arc(135, 30, 10, 0, Math.PI * 2)
+      ctx.fill()
+
+      // Rayons du soleil
+      ctx.strokeStyle = '#FFD700'
+      ctx.lineWidth = 1.5
+      for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * Math.PI * 2
+        const x1 = 135 + Math.cos(angle) * 13
+        const y1 = 30 + Math.sin(angle) * 13
+        const x2 = 135 + Math.cos(angle) * 18
+        const y2 = 30 + Math.sin(angle) * 18
         ctx.beginPath()
-        ctx.arc(80, 180, 60 + i * 8, Math.PI, 0)
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+        ctx.stroke()
+      }
+
+      // Arc-en-ciel magnifique
+      const rainbowColors = [
+        '#FF0000', '#FF7F00', '#FFFF00',
+        '#00FF00', '#0000FF', '#4B0082', '#9400D3'
+      ]
+      ctx.globalAlpha = 0.85
+      rainbowColors.forEach((color, i) => {
+        const radius = 120 - i * 8
+        ctx.strokeStyle = color
+        ctx.lineWidth = 9
+        ctx.beginPath()
+        ctx.arc(80, 160, radius, Math.PI, 0, false)
         ctx.stroke()
       })
+      ctx.globalAlpha = 1
+
+      // Nuages moelleux
+      const drawCloud = (x: number, y: number, scale: number): void => {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+        ctx.beginPath()
+        ctx.arc(x, y, 12 * scale, 0, Math.PI * 2)
+        ctx.arc(x + 10 * scale, y - 3 * scale, 10 * scale, 0, Math.PI * 2)
+        ctx.arc(x + 18 * scale, y, 11 * scale, 0, Math.PI * 2)
+        ctx.arc(x + 10 * scale, y + 4 * scale, 13 * scale, 0, Math.PI * 2)
+        ctx.fill()
+
+        // Ombre douce du nuage
+        ctx.fillStyle = 'rgba(220, 220, 220, 0.3)'
+        ctx.beginPath()
+        ctx.ellipse(x + 9 * scale, y + 8 * scale, 15 * scale, 5 * scale, 0, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      drawCloud(25, 35, 0.8)
+      drawCloud(110, 45, 1)
+      drawCloud(70, 28, 0.6)
+
+      break
+    }
+
+    case 'bg-clouds': {
+      // Ciel avec nuages
+      const skyGradient = ctx.createRadialGradient(80, 80, 0, 80, 80, 120)
+      skyGradient.addColorStop(0, '#B0E0E6')
+      skyGradient.addColorStop(1, '#87CEEB')
+      ctx.fillStyle = skyGradient
+      ctx.fillRect(0, 0, 160, 160)
+
+      // Fonction pour dessiner un nuage détaillé
+      const drawFluffyCloud = (x: number, y: number, scale: number, drift: number): void => {
+        const offsetX = Math.sin(frame * 0.01 + drift) * 2
+
+        const cloudGradient = ctx.createRadialGradient(
+          x + offsetX, y, 0,
+          x + offsetX, y, 20 * scale
+        )
+        cloudGradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
+        cloudGradient.addColorStop(1, 'rgba(240, 240, 240, 0.85)')
+
+        ctx.fillStyle = cloudGradient
+        ctx.beginPath()
+        ctx.arc(x + offsetX, y, 13 * scale, 0, Math.PI * 2)
+        ctx.arc(x + 12 * scale + offsetX, y - 2 * scale, 11 * scale, 0, Math.PI * 2)
+        ctx.arc(x + 22 * scale + offsetX, y, 12 * scale, 0, Math.PI * 2)
+        ctx.arc(x + 12 * scale + offsetX, y + 4 * scale, 14 * scale, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      drawFluffyCloud(15, 30, 0.9, 0)
+      drawFluffyCloud(90, 25, 1.1, 1)
+      drawFluffyCloud(40, 70, 0.7, 2)
+      drawFluffyCloud(110, 80, 0.95, 3)
+      drawFluffyCloud(25, 115, 0.85, 4)
+      drawFluffyCloud(100, 130, 1, 5)
+
+      break
+    }
+
+    case 'bg-sunset': {
+      // Dégradé de coucher de soleil
+      const sunsetGradient = ctx.createLinearGradient(0, 0, 0, 160)
+      sunsetGradient.addColorStop(0, '#FF6B35')
+      sunsetGradient.addColorStop(0.25, '#FF8C42')
+      sunsetGradient.addColorStop(0.5, '#FFA07A')
+      sunsetGradient.addColorStop(0.75, '#FFB6C1')
+      sunsetGradient.addColorStop(1, '#DDA0DD')
+      ctx.fillStyle = sunsetGradient
+      ctx.fillRect(0, 0, 160, 160)
+
+      // Soleil couchant avec halos
+      ctx.save()
+      ctx.globalAlpha = 0.3
+      const sunHalo1 = ctx.createRadialGradient(80, 120, 0, 80, 120, 35)
+      sunHalo1.addColorStop(0, '#FFD700')
+      sunHalo1.addColorStop(1, 'rgba(255, 215, 0, 0)')
+      ctx.fillStyle = sunHalo1
+      ctx.fillRect(45, 85, 70, 70)
+      ctx.restore()
+
+      ctx.fillStyle = '#FF8C00'
+      ctx.globalAlpha = 0.9
+      ctx.beginPath()
+      ctx.arc(80, 120, 22, 0, Math.PI * 2)
+      ctx.fill()
+
+      ctx.fillStyle = '#FF6347'
+      ctx.beginPath()
+      ctx.arc(80, 120, 18, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.globalAlpha = 1
+
+      // Reflets sur l'eau
+      ctx.fillStyle = 'rgba(255, 140, 0, 0.4)'
+      ctx.beginPath()
+      ctx.ellipse(80, 135, 45, 8, 0, 0, Math.PI * 2)
+      ctx.fill()
+
+      ctx.fillStyle = 'rgba(255, 140, 0, 0.3)'
+      ctx.beginPath()
+      ctx.ellipse(80, 145, 30, 6, 0, 0, Math.PI * 2)
+      ctx.fill()
+
+      // Oiseaux en vol
+      const drawBird = (x: number, y: number, scale: number): void => {
+        ctx.strokeStyle = '#2C2C2C'
+        ctx.lineWidth = 1.2 * scale
+        ctx.lineCap = 'round'
+        ctx.beginPath()
+        ctx.moveTo(x - 6 * scale, y)
+        ctx.quadraticCurveTo(x - 3 * scale, y - 2 * scale, x, y)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.moveTo(x, y)
+        ctx.quadraticCurveTo(x + 3 * scale, y - 2 * scale, x + 6 * scale, y)
+        ctx.stroke()
+      }
+
+      drawBird(40, 50, 1)
+      drawBird(115, 42, 0.8)
+      drawBird(95, 60, 0.9)
+
+      break
+    }
+
+    case 'bg-galaxy': {
+      // Espace profond
+      ctx.fillStyle = '#0a0a2e'
+      ctx.fillRect(0, 0, 160, 160)
+
+      // Nébuleuses colorées
+      const nebulas = [
+        { x: 50, y: 60, rx: 40, ry: 30, color: '#8B00FF' },
+        { x: 115, y: 100, rx: 48, ry: 35, color: '#FF00FF' },
+        { x: 80, y: 40, rx: 32, ry: 24, color: '#00BFFF' }
+      ]
+
+      nebulas.forEach(nebula => {
+        const nebulaGradient = ctx.createRadialGradient(
+          nebula.x, nebula.y, 0,
+          nebula.x, nebula.y, nebula.rx
+        )
+        nebulaGradient.addColorStop(0, `${nebula.color}99`)
+        nebulaGradient.addColorStop(1, `${nebula.color}00`)
+        ctx.fillStyle = nebulaGradient
+        ctx.beginPath()
+        ctx.ellipse(nebula.x, nebula.y, nebula.rx, nebula.ry, 0, 0, Math.PI * 2)
+        ctx.fill()
+      })
+
+      // Étoiles de la galaxie
+      for (let i = 0; i < 60; i++) {
+        const x = Math.random() * 160
+        const y = Math.random() * 160
+        const size = 0.5 + Math.random() * 1.5
+        const opacity = 0.3 + Math.random() * 0.7
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
+        ctx.beginPath()
+        ctx.arc(x, y, size, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // Galaxie spirale centrale
+      ctx.save()
+      ctx.translate(80, 80)
+      ctx.rotate(Math.PI / 6)
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
+      ctx.beginPath()
+      ctx.ellipse(0, 0, 32, 12, 0, 0, Math.PI * 2)
+      ctx.fill()
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
+      ctx.beginPath()
+      ctx.ellipse(0, 0, 25, 9, 0, 0, Math.PI * 2)
+      ctx.fill()
+
+      ctx.fillStyle = '#FFD700'
+      ctx.globalAlpha = 0.8
+      ctx.beginPath()
+      ctx.arc(0, 0, 6, 0, Math.PI * 2)
+      ctx.fill()
+
+      ctx.restore()
+
+      break
+    }
+
+    case 'bg-aurora': {
+      // Ciel nocturne arctique
+      ctx.fillStyle = '#001a33'
+      ctx.fillRect(0, 0, 160, 160)
+
+      // Étoiles arctiques
+      for (let i = 0; i < 30; i++) {
+        const x = Math.random() * 160
+        const y = Math.random() * 120
+        const size = 0.5 + Math.random() * 1.2
+        const opacity = 0.5 + Math.random() * 0.5
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
+        ctx.beginPath()
+        ctx.arc(x, y, size, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // Aurores boréales ondulantes
+      const auroraColors = [
+        { color: '#00FF88', offset: 0 },
+        { color: '#00FFFF', offset: 20 },
+        { color: '#00AAFF', offset: 40 }
+      ]
+
+      auroraColors.forEach(({ color, offset }) => {
+        const waveOffset = Math.sin(frame * 0.02 + offset * 0.1) * 5
+
+        ctx.fillStyle = color + 'AA'
+        ctx.beginPath()
+        ctx.moveTo(0, 65 + offset + waveOffset)
+        ctx.quadraticCurveTo(40, 50 + offset + waveOffset, 80, 58 + offset + waveOffset)
+        ctx.quadraticCurveTo(120, 65 + offset + waveOffset, 160, 55 + offset + waveOffset)
+        ctx.lineTo(160, 85 + offset + waveOffset)
+        ctx.quadraticCurveTo(120, 75 + offset + waveOffset, 80, 82 + offset + waveOffset)
+        ctx.quadraticCurveTo(40, 90 + offset + waveOffset, 0, 75 + offset + waveOffset)
+        ctx.closePath()
+        ctx.fill()
+      })
+
+      // Rideaux verticaux d'aurore
+      for (let i = 0; i < 6; i++) {
+        const x = i * 25 + 10
+        const wave = Math.sin(frame * 0.03 + i) * 3
+
+        const gradient = ctx.createLinearGradient(x, 50, x, 140)
+        gradient.addColorStop(0, 'rgba(0, 255, 136, 0)')
+        gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.3)')
+        gradient.addColorStop(1, 'rgba(0, 170, 255, 0)')
+
+        ctx.fillStyle = gradient
+        ctx.fillRect(x + wave, 50, 3, 90)
+      }
+
+      // Horizon montagneux
+      ctx.fillStyle = 'rgba(0, 10, 26, 0.8)'
+      ctx.beginPath()
+      ctx.moveTo(0, 145)
+      ctx.lineTo(30, 130)
+      ctx.lineTo(60, 138)
+      ctx.lineTo(95, 125)
+      ctx.lineTo(125, 135)
+      ctx.lineTo(160, 128)
+      ctx.lineTo(160, 160)
+      ctx.lineTo(0, 160)
+      ctx.closePath()
+      ctx.fill()
+
       break
     }
   }
