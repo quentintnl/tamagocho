@@ -375,14 +375,14 @@ export function OwnedAccessoriesManager ({
                   if (accessory === null) return null
 
                   return (
-                    <OwnedAccessoryCard
-                      key={ownedAccessory._id}
-                      ownedAccessory={ownedAccessory}
-                      accessory={accessory}
-                      isEquipped={isAccessoryEquipped(ownedAccessory._id)}
-                      onToggleEquip={(ownedAccessoryId) => { void handleToggleEquip(ownedAccessoryId) }}
-                      isProcessing={processingId === ownedAccessory._id}
-                    />
+                  <OwnedAccessoryCard
+                    key={ownedAccessory._id}
+                    ownedAccessory={ownedAccessory}
+                    accessory={accessory}
+                    isEquipped={isAccessoryEquipped(ownedAccessory._id)}
+                    onToggleEquip={(ownedAccessoryId, shouldEquip) => { void handleToggleEquip(ownedAccessoryId, shouldEquip) }}
+                    isProcessing={processingId === ownedAccessory._id}
+                  />
                   )
                 })}
               </AccessoriesGrid>

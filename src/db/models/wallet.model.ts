@@ -1,8 +1,21 @@
-import mongoose from 'mongoose'
+import mongoose, { type Model } from 'mongoose'
 
 const { Schema } = mongoose
 
-const walletSchema = new Schema({
+/**
+ * Interface pour le document Wallet
+ */
+export interface IWallet {
+  ownerId: string
+  coin: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+/**
+ * Schema Mongoose pour Wallet
+ */
+const walletSchema = new Schema<IWallet>({
   ownerId: {
     type: String,
     required: true,
@@ -17,6 +30,15 @@ const walletSchema = new Schema({
   timestamps: true
 })
 
-const Wallet = (mongoose.models.Wallet !== undefined && mongoose.models.Wallet !== null) ? mongoose.models.Wallet : mongoose.model('Wallet', walletSchema)
+/**
+ * Type du modèle Mongoose
+ */
+type WalletModelType = Model<IWallet>
+
+/**
+ * Modèle Mongoose pour Wallet
+ * Utilise le pattern singleton pour éviter la redéfinition en développement
+ */
+const Wallet: WalletModelType = (mongoose.models.Wallet as WalletModelType) ?? mongoose.model<IWallet>('Wallet', walletSchema)
 
 export default Wallet
