@@ -223,15 +223,17 @@ export function OwnedAccessoriesManager ({
 
   /**
    * Gère l'équipement/déséquipement d'un accessoire
+   *
+   * Optimisé pour éviter les doubles chargements :
+   * - Le rafraîchissement est délégué au composant parent via onAccessoryChange
+   * - Pas d'appel à refresh() ici pour éviter la duplication
    */
   const handleToggleEquip = async (ownedAccessoryId: string, shouldEquip: boolean): Promise<void> => {
     const success = await toggleEquip(ownedAccessoryId, shouldEquip, monsterId)
 
-    if (success) {
-      await refresh()
-      if (onAccessoryChange !== undefined) {
-        onAccessoryChange()
-      }
+    if (success && onAccessoryChange !== undefined) {
+      // Le parent gère le rafraîchissement de manière optimisée
+      onAccessoryChange()
     }
   }
 

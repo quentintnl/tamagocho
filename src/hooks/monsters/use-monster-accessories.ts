@@ -18,7 +18,7 @@
 
 import { useState, useEffect } from 'react'
 import type { OwnedAccessory } from '@/types/accessory'
-import { getMonsterAccessories, getUserOwnedAccessoryIds } from '@/actions/accessory.actions'
+import { getMonsterAccessories } from '@/actions/accessory.actions'
 
 /**
  * Interface de retour du hook useMonsterAccessories
@@ -26,30 +26,38 @@ import { getMonsterAccessories, getUserOwnedAccessoryIds } from '@/actions/acces
 interface UseMonsterAccessoriesReturn {
   /** Accessoires équipés sur le monstre */
   equippedAccessories: OwnedAccessory[]
-  /** IDs des accessoires possédés par l'utilisateur */
-  ownedAccessoryIds: string[]
   /** Fonction pour rafraîchir les accessoires */
   refreshAccessories: () => Promise<void>
+  /** Indique si le chargement est en cours */
+  loading: boolean
 }
 
 /**
  * Hook personnalisé pour gérer les accessoires d'un monstre
  *
- * Encapsule la logique de récupération des accessoires équipés
- * et des accessoires possédés par l'utilisateur.
+ * Encapsule la logique de récupération des accessoires équipés sur le monstre.
  *
  * @param {string} monsterId - ID du monstre
+ * @param {number} [refreshTrigger] - Trigger optionnel pour forcer le rafraîchissement
  * @returns {UseMonsterAccessoriesReturn} État et fonctions de gestion des accessoires
  *
  * @example
- * const { equippedAccessories, ownedAccessoryIds, refreshAccessories } = useMonsterAccessories('monster-123')
+ * const { equippedAccessories, refreshAccessories, loading } = useMonsterAccessories('monster-123')
  *
  * // Rafraîchir après un achat
  * await refreshAccessories()
+ *
+ * // Ou avec trigger externe
+ * const [trigger, setTrigger] = useState(0)
+ * const { equippedAccessories } = useMonsterAccessories('monster-123', trigger)
+ * setTrigger(t => t + 1) // Force le rafraîchissement
  */
-export function useMonsterAccessories (monsterId: string): UseMonsterAccessoriesReturn {
+export function useMonsterAccessories (
+  monsterId: string,
+  refreshTrigger?: number
+): UseMonsterAccessoriesReturn {
   const [equippedAccessories, setEquippedAccessories] = useState<OwnedAccessory[]>([])
-  const [ownedAccessoryIds, setOwnedAccessoryIds] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
 
   /**
    * Récupère les accessoires équipés sur le monstre
@@ -64,35 +72,25 @@ export function useMonsterAccessories (monsterId: string): UseMonsterAccessories
   }
 
   /**
-   * Récupère les IDs des accessoires possédés par l'utilisateur
+   * Rafraîchit les accessoires équipés
    */
-  const fetchOwnedAccessoryIds = async (): Promise<void> => {
+  const refreshAccessories = async (): Promise<void> => {
+    setLoading(true)
     try {
-      const ids = await getUserOwnedAccessoryIds()
-      setOwnedAccessoryIds(ids)
-    } catch (error) {
-      console.error('Erreur lors de la récupération des accessoires possédés :', error)
+      await fetchEquippedAccessories()
+    } finally {
+      setLoading(false)
     }
   }
 
-  /**
-   * Rafraîchit tous les accessoires (équipés et possédés)
-   */
-  const refreshAccessories = async (): Promise<void> => {
-    await Promise.all([
-      fetchEquippedAccessories(),
-      fetchOwnedAccessoryIds()
-    ])
-  }
-
-  // Chargement initial
+  // Chargement initial et rafraîchissement sur changement de monsterId ou trigger
   useEffect(() => {
     void refreshAccessories()
-  }, [monsterId])
+  }, [monsterId, refreshTrigger])
 
   return {
     equippedAccessories,
-    ownedAccessoryIds,
-    refreshAccessories
+    refreshAccessories,
+    loading
   }
 }

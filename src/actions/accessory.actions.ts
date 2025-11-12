@@ -329,8 +329,8 @@ export async function equipAccessory (
       console.warn('Failed to track quest progress:', questError)
     }
 
-    revalidatePath('/creature')
-    revalidatePath('/monster')
+    // Pas de revalidatePath ici - le rafraîchissement est géré côté client
+    // pour une meilleure performance et éviter les doubles chargements
 
     return {
       success: true,
@@ -375,8 +375,8 @@ export async function removeAccessory (
       }
     }
 
-    revalidatePath('/creature')
-    revalidatePath('/monster')
+    // Pas de revalidatePath ici - le rafraîchissement est géré côté client
+    // pour une meilleure performance et éviter les doubles chargements
 
     return {
       success: true,

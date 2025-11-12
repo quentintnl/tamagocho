@@ -42,7 +42,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
 
   // Hooks personnalisés pour la gestion de l'état
   const { currentMonster, xpToNextLevel, refreshMonster } = useMonsterData(monster)
-  const { equippedAccessories, ownedAccessoryIds, refreshAccessories } = useMonsterAccessories(monster._id)
+  const { equippedAccessories, refreshAccessories, loading: accessoriesLoading } = useMonsterAccessories(monster._id, refreshTrigger)
 
   // Hook pour le changement automatique d'état toutes les 10 secondes
   useAutoStateChange(monster._id, refreshMonster)
@@ -71,22 +71,25 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
   }
 
   /**
-     * Rafraîchit toutes les données après une action
-     * Combine le rafraîchissement du monstre et des accessoires
+     * Rafraîchit les données du monstre après une action (feed, hug, etc.)
+     *
+     * Optimisé : ne rafraîchit que le monstre, pas les accessoires
+     * car les actions sur le monstre ne modifient pas les accessoires équipés
      */
   const handleActionComplete = async (): Promise<void> => {
-    await Promise.all([
-      refreshMonster(),
-      refreshAccessories()
-    ])
+    await refreshMonster()
   }
 
   /**
      * Rafraîchit les accessoires après un achat ou un changement
-     * Incrémente le trigger pour forcer le rafraîchissement du OwnedAccessoriesManager
+     *
+     * Optimisé pour éviter les doubles chargements :
+     * - Utilise le trigger pour forcer un seul rafraîchissement
+     * - Le useMonsterAccessories se chargera automatiquement du reste
+     * Optimisé pour éviter les doubles chargements :
+  const handleAccessoriesRefresh = (): void => {
      */
-  const handleAccessoriesRefresh = async (): Promise<void> => {
-    await refreshAccessories()
+  const handleAccessoriesRefresh = (): void => {
     setRefreshTrigger(prev => prev + 1)
   }
 
