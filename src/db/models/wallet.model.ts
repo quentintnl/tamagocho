@@ -17,6 +17,6 @@ const walletSchema = new Schema({
   timestamps: true
 })
 
-const Wallet = mongoose.models.Wallet || mongoose.model('Wallet', walletSchema)
+const Wallet = (mongoose.models.Wallet !== undefined && mongoose.models.Wallet !== null) ? mongoose.models.Wallet : mongoose.model('Wallet', walletSchema)
 
 export default Wallet

@@ -92,7 +92,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
 
     if (result.success && result.quest != null) {
       // Update quest in list
-      const updatedQuests = quests.map(q => (q._id === questId ? result.quest! : q))
+      const updatedQuests = quests.map(q => (q._id === questId && result.quest !== undefined ? result.quest : q))
 
       // Re-trier les quêtes : non complétées en premier
       const sortedQuests = [...updatedQuests].sort((a, b) => {
@@ -156,7 +156,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
           <h3 className='text-2xl font-black text-forest-800'>Oups, une erreur !</h3>
           <p className='text-forest-600 font-medium'>{error}</p>
           <div className='pt-2'>
-            <Button onClick={loadQuests} size='lg' variant='primary'>
+            <Button onClick={() => { void loadQuests() }} size='lg' variant='primary'>
               🔄 Réessayer
             </Button>
           </div>
@@ -170,7 +170,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
       {/* Header avec skeleton */}
       <QuestsHeader
         title={loading ? null : 'Quêtes du Jour'}
-        onRefresh={loadQuests}
+        onRefresh={() => { void loadQuests() }}
         isLoading={loading}
       />
 
@@ -317,7 +317,7 @@ export default function DailyQuests ({ onQuestComplete }: DailyQuestsProps): Rea
 
                           {canClaim && (
                             <Button
-                              onClick={async () => { await handleClaimReward(quest._id) }}
+                              onClick={() => { void handleClaimReward(quest._id) }}
                               size='lg'
                               variant='primary'
                               disabled={claimingQuestId === quest._id}

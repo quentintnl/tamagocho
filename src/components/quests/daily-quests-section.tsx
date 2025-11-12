@@ -213,7 +213,7 @@ export function DailyQuestsSection ({ onRewardClaimed }: DailyQuestsSectionProps
             </div>
           </div>
           <button
-            onClick={loadQuests}
+            onClick={() => { void loadQuests() }}
             className='mt-3 w-full rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 active:scale-95 transition-all duration-200'
           >
             Réessayer

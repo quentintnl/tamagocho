@@ -67,7 +67,7 @@ export function AddCoinsPanel ({
             {presetAmounts.map((amount) => (
               <Button
                 key={amount}
-                onClick={async () => { await onAmountClick(amount) }}
+                onClick={() => { void onAmountClick(amount) }}
                 disabled={isProcessing}
                 variant='outline'
                 size='md'

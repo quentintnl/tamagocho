@@ -262,7 +262,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
 
           {/* Sidebar : Quêtes + Mood */}
           <aside className='order-1 lg:order-2 flex flex-col gap-6'>
-            <DailyQuestsSection onRewardClaimed={handleRewardClaimed} />
+            <DailyQuestsSection onRewardClaimed={() => { void handleRewardClaimed() }} />
             <MoodTipSection message={favoriteMoodMessage} />
           </aside>
         </div>
@@ -272,7 +272,7 @@ function DashboardContent ({ session, monsters: initialMonsters }: { session: Se
       <CreateMonsterModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        onSubmit={handleMonsterSubmit}
+        onSubmit={(data) => { void handleMonsterSubmit(data) }}
       />
     </div>
   )

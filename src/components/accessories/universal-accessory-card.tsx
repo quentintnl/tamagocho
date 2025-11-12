@@ -142,18 +142,20 @@ export function UniversalAccessoryCard ({
           {/* Petit effet de brillance */}
           <div className='absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
 
-          {hasSVGSupport && svgContent !== null ? (
-            // Affichage SVG
-            <div
-              className='relative w-32 h-32 transition-transform duration-300 group-hover:scale-110'
-              dangerouslySetInnerHTML={{ __html: svgContent }}
-            />
-          ) : (
-            // Fallback sur emoji
-            <span className='relative text-6xl transition-transform duration-300 group-hover:scale-110' aria-label={accessory.name}>
-              {accessory.icon}
-            </span>
-          )}
+          {hasSVGSupport && svgContent !== null
+            ? (
+              // Affichage SVG
+              <div
+                className='relative w-32 h-32 transition-transform duration-300 group-hover:scale-110'
+                dangerouslySetInnerHTML={{ __html: svgContent }}
+              />
+              )
+            : (
+          // Fallback sur emoji
+              <span className='relative text-6xl transition-transform duration-300 group-hover:scale-110' aria-label={accessory.name}>
+                {accessory.icon}
+              </span>
+              )}
 
           {/* Badge de rareté */}
           <span

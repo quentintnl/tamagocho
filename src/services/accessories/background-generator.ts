@@ -216,7 +216,7 @@ export function generateRainbowBackground (config: RainbowBackgroundConfig = {
   hasClouds: true,
   arcHeight: 0.6
 }): string {
-  const { colors, hasClouds, arcHeight } = config
+  const { colors, hasClouds } = config
 
   return `
     <svg 

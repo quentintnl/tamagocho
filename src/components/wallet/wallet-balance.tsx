@@ -56,49 +56,51 @@ export function WalletBalance ({ wallet, session, isLoading }: WalletBalanceProp
         Solde actuel
       </h2>
 
-      {isLoading ? (
-        <div className='animate-pulse'>
-          <div className='h-20 bg-gray-200 rounded-lg mb-4' />
-          <div className='h-4 bg-gray-200 rounded w-3/4' />
-        </div>
-      ) : (
-        <>
-          {/* Affichage du solde */}
-          <div className='mb-6'>
-            <div className='flex items-center justify-center gap-4 p-6 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl border-2 border-yellow-300 shadow-inner'>
-              <div className='flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg'>
-                <TomatokenIcon size='3xl' />
-              </div>
-              <div className='text-center'>
-                <p className='text-5xl font-bold text-gray-800'>
-                  {wallet?.coin.toLocaleString() ?? 0}
-                </p>
-                <p className='text-sm text-gray-600 mt-1'>pièces</p>
+      {isLoading
+        ? (
+          <div className='animate-pulse'>
+            <div className='h-20 bg-gray-200 rounded-lg mb-4' />
+            <div className='h-4 bg-gray-200 rounded w-3/4' />
+          </div>
+          )
+        : (
+          <>
+            {/* Affichage du solde */}
+            <div className='mb-6'>
+              <div className='flex items-center justify-center gap-4 p-6 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl border-2 border-yellow-300 shadow-inner'>
+                <div className='flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-lg'>
+                  <TomatokenIcon size='3xl' />
+                </div>
+                <div className='text-center'>
+                  <p className='text-5xl font-bold text-gray-800'>
+                    {wallet?.coin.toLocaleString() ?? 0}
+                  </p>
+                  <p className='text-sm text-gray-600 mt-1'>pièces</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Informations utilisateur */}
-          <div className='space-y-2 text-sm text-gray-600'>
-            <p>
-              <span className='font-medium'>Compte :</span>{' '}
-              {session.user.name ?? session.user.email}
-            </p>
-            <p>
-              <span className='font-medium'>Dernière mise à jour :</span>{' '}
-              {wallet?.updatedAt
-                ? new Date(wallet.updatedAt).toLocaleDateString('fr-FR', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })
-                : 'N/A'}
-            </p>
-          </div>
-        </>
-      )}
+            {/* Informations utilisateur */}
+            <div className='space-y-2 text-sm text-gray-600'>
+              <p>
+                <span className='font-medium'>Compte :</span>{' '}
+                {session.user.name ?? session.user.email}
+              </p>
+              <p>
+                <span className='font-medium'>Dernière mise à jour :</span>{' '}
+                {wallet?.updatedAt !== undefined
+                  ? new Date(wallet.updatedAt).toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })
+                  : 'N/A'}
+              </p>
+            </div>
+          </>
+          )}
     </div>
   )
 }

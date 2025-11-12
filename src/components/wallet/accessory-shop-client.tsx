@@ -195,7 +195,7 @@ export default function AccessoryShopClient ({ session }: AccessoryShopClientPro
           : (
             <AccessoriesList
               accessories={filteredAccessories}
-              onPurchase={handlePurchase}
+              onPurchase={(accessoryId) => { void handlePurchase(accessoryId) }}
               ownedAccessoryIds={ownedAccessoryIds}
             />
             )}

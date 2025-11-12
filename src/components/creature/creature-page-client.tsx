@@ -42,7 +42,7 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
 
   // Hooks personnalisés pour la gestion de l'état
   const { currentMonster, xpToNextLevel, refreshMonster } = useMonsterData(monster)
-  const { equippedAccessories, refreshAccessories, loading: accessoriesLoading } = useMonsterAccessories(monster._id, refreshTrigger)
+  const { equippedAccessories } = useMonsterAccessories(monster._id, refreshTrigger)
 
   // Hook pour le changement automatique d'état toutes les 10 secondes
   useAutoStateChange(monster._id, refreshMonster)
@@ -116,9 +116,9 @@ export function CreaturePageClient ({ monster }: CreaturePageClientProps): React
                 state={currentMonster.state}
                 level={currentMonster.level_id?.level ?? 1}
                 currentAction={currentAction}
-                onAction={handleAction}
+                onAction={(action) => { void handleAction(action) }}
                 monsterId={currentMonster._id}
-                onActionComplete={handleActionComplete}
+                onActionComplete={() => { void handleActionComplete() }}
                 equippedAccessories={equippedAccessories}
               />
               <PublicStatusToggle

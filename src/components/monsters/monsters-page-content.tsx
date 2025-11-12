@@ -1,7 +1,6 @@
 'use client'
 
-import { useMemo, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useMemo } from 'react'
 import { authClient } from '@/lib/auth-client'
 import type { PopulatedMonster } from '@/types/monster'
 import PageHeaderWithWallet from '@/components/page-header-with-wallet'
@@ -9,7 +8,6 @@ import { MonstersAutoUpdater } from '@/components/monsters/auto-updater'
 import { MonsterCard } from '@/components/monsters/monster-card'
 import { EmptyMonstersState } from '@/components/monsters/empty-monsters-state'
 import { useMonsterRefresh } from '@/hooks/dashboard'
-import Button from '@/components/button'
 
 type Session = typeof authClient.$Infer.Session
 
@@ -44,18 +42,8 @@ export default function MonstersPageContent ({
   session,
   monsters: initialMonsters
 }: MonstersPageContentProps): React.ReactNode {
-  const router = useRouter()
-
-  // Hook pour le rafraîchissement automatique des monstres (toutes les minutes)
+  // Hook pour le rafraîchissement automatique des monstres (toutes les minute)
   const { monsters } = useMonsterRefresh(initialMonsters, 60000)
-
-  /**
-   * Redirige vers la page de création de monstre avec ouverture automatique du modal
-   * Mémorisée avec useCallback pour éviter les re-créations inutiles
-   */
-  const handleCreateMonster = useCallback((): void => {
-    router.push('/dashboard?openModal=true') // Redirige vers dashboard et ouvre le modal de création
-  }, [router])
 
   /**
    * Grille de monstres mémorisée pour éviter les re-rendus inutiles

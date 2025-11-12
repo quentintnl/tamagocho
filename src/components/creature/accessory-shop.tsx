@@ -147,7 +147,7 @@ export function AccessoryShop ({ accessories, monsterId, ownedAccessoryIds = [],
             key={accessory.id}
             accessory={accessory}
             userCoins={wallet?.coin ?? 0}
-            onPurchase={handleAccessoryPurchase}
+            onPurchase={(accessoryId) => { void handleAccessoryPurchase(accessoryId) }}
             isPurchasing={purchasingId === accessory.id}
             isOwned={ownedAccessoryIds.includes(accessory.id)}
           />

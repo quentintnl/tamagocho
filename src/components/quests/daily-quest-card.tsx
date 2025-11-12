@@ -72,7 +72,7 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
   const progress = Math.min((quest.currentProgress / quest.targetCount) * 100, 100)
   const isCompleted = quest.status === 'completed' || quest.status === 'claimed'
   const isExpired = quest.status === 'expired'
-  const { icon, color, bgColor } = getQuestIcon(quest.type)
+  const { icon, bgColor } = getQuestIcon(quest.type)
   const difficultyStyle = getDifficultyStyle(quest.difficulty)
 
   /**
@@ -202,7 +202,7 @@ export function DailyQuestCard ({ quest, onClaimReward }: DailyQuestCardProps): 
         {/* Bouton réclamer - seulement pour les quêtes 'completed', pas 'claimed' */}
         {quest.status === 'completed' && (
           <button
-            onClick={handleClaimReward}
+            onClick={() => { void handleClaimReward() }}
             disabled={isClaiming}
             className={`rounded-lg px-3 py-1 font-semibold text-xs shadow-md transition-all duration-200 ${
               isClaiming
