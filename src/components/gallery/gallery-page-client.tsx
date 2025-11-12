@@ -48,6 +48,10 @@ export function GalleryPageClient ({ initialData }: GalleryPageClientProps): Rea
   const [data, setData] = useState<GalleryResult>(initialData)
   const [isPending, startTransition] = useTransition()
 
+  console.log('[GalleryPageClient] Initial data:', initialData)
+  console.log('[GalleryPageClient] Current data state:', data)
+  console.log('[GalleryPageClient] Monsters count:', data.monsters.length)
+
   // État des filtres
   const [filters, setFilters] = useState<GalleryFilters>({
     level: undefined,

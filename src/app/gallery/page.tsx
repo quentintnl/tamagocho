@@ -25,6 +25,9 @@ export default async function GalleryPage (): Promise<React.ReactNode> {
     { page: 1, limit: 12 }
   )
 
+  console.log('[GalleryPage] Initial data fetched:', initialData)
+  console.log('[GalleryPage] Monsters count:', initialData.monsters.length)
+
   return (
     <div className='relative min-h-screen overflow-hidden bg-gradient-to-br from-meadow-50 via-sky-50 to-lavender-100'>
       {/* Header avec wallet */}

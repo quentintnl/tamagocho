@@ -105,13 +105,21 @@ export async function getPublicMonsters (
     const totalCount = await Monster.countDocuments(query)
     const totalPages = Math.ceil(totalCount / limit)
 
+    console.log('[getPublicMonsters] Total public monsters found:', totalCount)
+    console.log('[getPublicMonsters] Total pages:', totalPages)
+
     // Récupération des monstres avec population du niveau uniquement
+    // Utilisation de .lean() pour obtenir des objets JavaScript purs
     const monsters = await Monster.find(query)
       .populate('level_id')
       .sort(sort)
       .skip(skip)
       .limit(limit)
+      .lean()
       .exec()
+
+    console.log('[getPublicMonsters] Monsters fetched:', monsters.length)
+    console.log('[getPublicMonsters] First monster (if any):', monsters.length > 0 ? JSON.stringify(monsters[0], null, 2) : 'none')
 
     // Transformation des données avec anonymisation du créateur
     // Pour l'instant, on anonymise tous les créateurs car nous n'avons pas accès aux données utilisateur
@@ -131,6 +139,9 @@ export async function getPublicMonsters (
         ownerId: ownerIdStr
       }
     })
+
+    console.log('[getPublicMonsters] Public monsters transformed:', publicMonsters.length)
+    console.log('[getPublicMonsters] First public monster:', publicMonsters.length > 0 ? JSON.stringify(publicMonsters[0], null, 2) : 'none')
 
     // Sérialisation JSON pour éviter les problèmes de typage Next.js
     const serializedMonsters = JSON.parse(JSON.stringify(publicMonsters))
