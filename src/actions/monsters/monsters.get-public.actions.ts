@@ -4,8 +4,10 @@ import { connectMongooseToDatabase } from '@/db'
 import Monster from '@/db/models/monster.model'
 import '@/db/models/xp-level.model'
 import type { MonsterDocument, PopulatedMonster } from '@/types/monster'
+import type { OwnedAccessory } from '@/types/accessory'
 import { getXpLevelByNumber } from '@/services/xp-level.service'
 import { FilterQuery, SortOrder } from 'mongoose'
+import { getOwnedAccessoriesByMonster } from '@/services/owned-accessory.service'
 
 /**
  * Filtres pour la galerie communautaire
@@ -121,24 +123,37 @@ export async function getPublicMonsters (
     console.log('[getPublicMonsters] Monsters fetched:', monsters.length)
     console.log('[getPublicMonsters] First monster (if any):', monsters.length > 0 ? JSON.stringify(monsters[0], null, 2) : 'none')
 
-    // Transformation des données avec anonymisation du créateur
+    // Transformation des données avec anonymisation du créateur et récupération des accessoires
     // Pour l'instant, on anonymise tous les créateurs car nous n'avons pas accès aux données utilisateur
-    const publicMonsters: PublicMonsterWithOwner[] = (monsters as unknown as PopulatedMonster[]).map((monster) => {
-      // Anonymisation du propriétaire (on pourrait récupérer le vrai nom via better-auth si nécessaire)
-      // Pour l'instant, on génère un nom anonymisé basé sur l'ID
-      const ownerIdStr = String(monster.ownerId)
-      const ownerName = `Dresseur-${ownerIdStr.slice(-6)}`
+    const publicMonsters: PublicMonsterWithOwner[] = await Promise.all(
+      (monsters as unknown as PopulatedMonster[]).map(async (monster) => {
+        // Anonymisation du propriétaire (on pourrait récupérer le vrai nom via better-auth si nécessaire)
+        // Pour l'instant, on génère un nom anonymisé basé sur l'ID
+        const ownerIdStr = String(monster.ownerId)
+        const ownerName = `Dresseur-${ownerIdStr.slice(-6)}`
 
-      // S'assurer que level_id est présent et valide
-      const levelId = monster.level_id ?? { level: 1, xpRequired: 0, isMaxLevel: false, _id: '', createdAt: new Date(), updatedAt: new Date() }
+        // S'assurer que level_id est présent et valide
+        const levelId = monster.level_id ?? { level: 1, xpRequired: 0, isMaxLevel: false, _id: '', createdAt: new Date(), updatedAt: new Date() }
 
-      return {
-        ...monster,
-        level_id: levelId,
-        ownerName,
-        ownerId: ownerIdStr
-      }
-    })
+        // Récupération des accessoires équipés
+        const equippedAccessories: OwnedAccessory[] = await (async (): Promise<OwnedAccessory[]> => {
+          try {
+            return await getOwnedAccessoriesByMonster(String(monster._id))
+          } catch (error) {
+            console.error(`Error fetching accessories for public monster ${String(monster._id)}:`, error)
+            return []
+          }
+        })()
+
+        return {
+          ...monster,
+          level_id: levelId,
+          ownerName,
+          ownerId: ownerIdStr,
+          equippedAccessories: JSON.parse(JSON.stringify(equippedAccessories)) as OwnedAccessory[]
+        }
+      })
+    )
 
     console.log('[getPublicMonsters] Public monsters transformed:', publicMonsters.length)
     console.log('[getPublicMonsters] First public monster:', publicMonsters.length > 0 ? JSON.stringify(publicMonsters[0], null, 2) : 'none')

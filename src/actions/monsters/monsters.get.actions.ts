@@ -8,6 +8,7 @@ import { auth } from '@/lib/auth'
 import type { PopulatedMonster } from '@/types/monster'
 import { Types } from 'mongoose'
 import { headers } from 'next/headers'
+import { getOwnedAccessoriesByMonster } from '@/services/owned-accessory.service'
 
 /**
  * Récupère tous les monstres de l'utilisateur authentifié
@@ -53,7 +54,23 @@ export async function getMonsters (): Promise<PopulatedMonster[]> {
         const monsters = await Monster.find({ ownerId: userId }).populate('level_id').exec()
 
         // Sérialisation JSON pour éviter les problèmes de typage Next.js
-        return JSON.parse(JSON.stringify(monsters))
+        const serializedMonsters = JSON.parse(JSON.stringify(monsters)) as PopulatedMonster[]
+
+        // Enrichissement avec les accessoires équipés
+        return await Promise.all(
+          serializedMonsters.map(async (monster) => {
+            try {
+              const equippedAccessories = await getOwnedAccessoriesByMonster(monster._id)
+              return {
+                ...monster,
+                equippedAccessories: JSON.parse(JSON.stringify(equippedAccessories))
+              }
+            } catch (error) {
+              console.error(`Error fetching accessories for monster ${monster._id}:`, error)
+              return monster
+            }
+          })
+        )
       },
       [`monsters-${user.id}`], // Cache key unique par utilisateur
       {
@@ -127,8 +144,24 @@ export async function getMonsterById (id: string): Promise<PopulatedMonster | nu
         // Récupération du monstre avec vérification de propriété et population du level_id
         const monster = await Monster.findOne({ ownerId: userId, _id: monsterId }).populate('level_id').exec()
 
+        if (monster === null) {
+          return null
+        }
+
         // Sérialisation JSON pour éviter les problèmes de typage Next.js
-        return JSON.parse(JSON.stringify(monster))
+        const serializedMonster = JSON.parse(JSON.stringify(monster)) as PopulatedMonster
+
+        // Enrichissement avec les accessoires équipés
+        try {
+          const equippedAccessories = await getOwnedAccessoriesByMonster(monsterId)
+          return {
+            ...serializedMonster,
+            equippedAccessories: JSON.parse(JSON.stringify(equippedAccessories))
+          }
+        } catch (error) {
+          console.error(`Error fetching accessories for monster ${monsterId}:`, error)
+          return serializedMonster
+        }
       },
       [`monster-${_id}-${user.id}`], // Cache key unique par monstre et utilisateur
       {

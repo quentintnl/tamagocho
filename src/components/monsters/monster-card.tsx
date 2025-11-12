@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { PixelMonster } from '@/components/monsters'
 import { MonsterStateBadge, isMonsterState } from './monster-state-badge'
 import type { MonsterState } from '@/types/monster'
+import type { OwnedAccessory } from '@/types/accessory'
 import { parseMonsterTraits, formatAdoptionDate } from '@/lib/utils'
 
 /**
@@ -25,6 +26,8 @@ interface MonsterCardProps {
   updatedAt: string | undefined
   /** Statut de visibilité publique du monstre */
   isPublic?: boolean
+  /** Accessoires équipés sur le monstre */
+  equippedAccessories?: OwnedAccessory[]
 }
 
 /**
@@ -64,7 +67,8 @@ export const MonsterCard = memo(function MonsterCard ({
   level,
   createdAt,
   updatedAt,
-  isPublic = false
+  isPublic = false,
+  equippedAccessories = []
 }: MonsterCardProps): React.ReactNode {
   // Parsing des traits et normalisation des données
   const traits = parseMonsterTraits(rawTraits)
@@ -118,6 +122,7 @@ export const MonsterCard = memo(function MonsterCard ({
                   traits={traits}
                   state={isMonsterState(state) ? state : 'happy'}
                   level={levelLabel}
+                  equippedAccessories={equippedAccessories}
                 />
               </div>
             )}

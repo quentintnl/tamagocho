@@ -52,6 +52,7 @@ function MonstersList ({ monsters, className }: MonstersListProps): React.ReactN
             createdAt={String(monster.createdAt)}
             updatedAt={String(monster.updatedAt)}
             isPublic={monster.isPublic ?? false}
+            equippedAccessories={monster.equippedAccessories ?? []}
           />
         )
       })}

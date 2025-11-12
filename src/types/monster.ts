@@ -56,6 +56,14 @@ export interface XpLevel {
 // Monster with populated level
 export interface PopulatedMonster extends Omit<DBMonster, 'level_id'> {
   level_id: XpLevel
+  equippedAccessories?: Array<{
+    _id: string
+    ownerId: string
+    accessoryId: string
+    monsterId?: string
+    purchasedAt: Date | string
+    isEquipped: boolean
+  }>
 }
 
 // Mongoose document type for Monster (for internal use in queries)

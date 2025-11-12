@@ -49,6 +49,7 @@ export function PublicMonsterCard ({ monster }: PublicMonsterCardProps): React.R
   const adoptionDate = formatAdoptionDate(String(monster.createdAt))
   const levelLabel = monster.level_id?.level ?? 1
   const state = isMonsterState(monster.state) ? monster.state : 'happy'
+  const equippedAccessories = monster.equippedAccessories ?? []
 
   return (
     <article
@@ -94,6 +95,7 @@ export function PublicMonsterCard ({ monster }: PublicMonsterCardProps): React.R
                 traits={traits}
                 state={state}
                 level={levelLabel}
+                equippedAccessories={equippedAccessories}
               />
             </div>
           )}
