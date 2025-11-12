@@ -40,6 +40,7 @@ export default function ShopPage (): React.ReactNode {
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
   const [activeTab, setActiveTab] = useState<ShopTab>('accessories')
   const [hideOwned, setHideOwned] = useState(false)
+  const [isPurchasing, setIsPurchasing] = useState(false)
   const { wallet, refreshWallet } = useWalletContext()
 
   // Filtrer les accessoires selon l'onglet actif et le statut de possession
@@ -114,6 +115,8 @@ export default function ShopPage (): React.ReactNode {
   const handleConfirmPurchase = async (): Promise<void> => {
     if (selectedAccessory === null) return
 
+    setIsPurchasing(true)
+
     try {
       // Appeler l'action pour acheter l'accessoire SANS l'équiper
       const result = await purchaseAccessoryOnly(selectedAccessory.id)
@@ -134,6 +137,7 @@ export default function ShopPage (): React.ReactNode {
       console.error('Erreur lors de l\'achat:', error)
       showErrorToast('Une erreur est survenue lors de l\'achat. Veuillez réessayer.')
     } finally {
+      setIsPurchasing(false)
       setSelectedAccessory(null)
     }
   }
@@ -211,6 +215,7 @@ export default function ShopPage (): React.ReactNode {
           onConfirm={() => { void handleConfirmPurchase() }}
           onCancel={handleCancelPurchase}
           currentBalance={wallet?.coin ?? 0}
+          isLoading={isPurchasing}
         />
       )}
     </ShopLayout>

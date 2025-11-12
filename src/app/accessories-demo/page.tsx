@@ -20,6 +20,7 @@ export default function AccessoriesDemoPage (): React.ReactNode {
   const [accessories] = useState(getAvailableAccessories())
   const [ownedAccessoryIds, setOwnedAccessoryIds] = useState<string[]>([])
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
+  const [isPurchasing, setIsPurchasing] = useState(false)
   const { wallet, refreshWallet } = useWalletContext()
 
   // Charger les accessoires possédés
@@ -49,6 +50,8 @@ export default function AccessoriesDemoPage (): React.ReactNode {
   const handleConfirmPurchase = async (): Promise<void> => {
     if (selectedAccessory === null) return
 
+    setIsPurchasing(true)
+
     try {
       const result = await purchaseAccessoryOnly(selectedAccessory.id)
 
@@ -72,6 +75,7 @@ export default function AccessoriesDemoPage (): React.ReactNode {
       console.error('Erreur lors de l\'achat:', error)
       toast.error('Une erreur est survenue lors de l\'achat. Veuillez réessayer.')
     } finally {
+      setIsPurchasing(false)
       setSelectedAccessory(null)
     }
   }
@@ -119,6 +123,7 @@ export default function AccessoriesDemoPage (): React.ReactNode {
           onConfirm={() => { void handleConfirmPurchase() }}
           onCancel={handleCancelPurchase}
           currentBalance={wallet?.coin ?? 0}
+          isLoading={isPurchasing}
         />
       )}
     </div>
