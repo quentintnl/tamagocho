@@ -33,6 +33,17 @@ const sidebars: SidebarsConfig = {
       items: [
         'authentication/auth-system'
       ]
+    },
+    {
+      type: 'category',
+      label: 'Système d\'Accessoires',
+      items: [
+        'accessories/overview',
+        'accessories/architecture',
+        'accessories/usage-guide',
+        'accessories/api-reference',
+        'accessories/types'
+      ]
     }
   ]
 }
