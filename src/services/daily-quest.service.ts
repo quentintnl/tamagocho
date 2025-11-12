@@ -164,9 +164,12 @@ export async function updateQuestProgress (data: UpdateQuestProgressDTO): Promis
   }
 
   // Update progress
+  const currentProgress: number = quest.currentProgress ?? 0
+  const targetCount: number = quest.targetCount
+
   quest.currentProgress = Math.min(
-    quest.currentProgress + incrementBy,
-    quest.targetCount
+    currentProgress + incrementBy,
+    targetCount
   )
 
   // Auto-complete if target reached
@@ -250,9 +253,12 @@ export async function trackQuestProgress (
   const updatedQuests: DailyQuestType[] = []
 
   for (const quest of quests) {
+    const currentProgress: number = quest.currentProgress ?? 0
+    const targetCount: number = quest.targetCount
+
     quest.currentProgress = Math.min(
-      quest.currentProgress + incrementBy,
-      quest.targetCount
+      currentProgress + incrementBy,
+      targetCount
     )
 
     // Auto-complete if target reached

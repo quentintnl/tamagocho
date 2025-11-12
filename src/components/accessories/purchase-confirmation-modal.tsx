@@ -153,14 +153,16 @@ export function PurchaseConfirmationModal ({
               size='lg'
               disabled={!canAfford || isLoading}
             >
-              {isLoading ? (
-                <span className='flex items-center gap-2'>
-                  <span className='inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
-                  Achat en cours...
-                </span>
-              ) : (
-                canAfford ? 'Acheter' : 'Solde insuffisant'
-              )}
+              {isLoading
+                ? (
+                  <span className='flex items-center gap-2'>
+                    <span className='inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
+                    Achat en cours...
+                  </span>
+                  )
+                : (
+                    canAfford ? 'Acheter' : 'Solde insuffisant'
+                  )}
             </Button>
           </div>
         </div>

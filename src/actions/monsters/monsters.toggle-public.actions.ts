@@ -63,7 +63,8 @@ export async function toggleMonsterPublicStatus (id: string): Promise<{ success:
     }
 
     // Basculement du statut public
-    monster.isPublic = !(monster.isPublic ?? false)
+    const currentStatus = monster.isPublic ?? false
+    monster.isPublic = !currentStatus
     await monster.save()
 
     // Invalidation du cache des monstres pour cet utilisateur
