@@ -2,6 +2,7 @@ import { headers } from 'next/headers'
 import { stripe } from '@/lib/stripe'
 import Stripe from 'stripe'
 import Wallet from '@/db/models/wallet.model'
+import { connectMongooseToDatabase } from '@/db'
 
 export const runtime = 'nodejs'
 
@@ -14,6 +15,15 @@ export async function POST (req: Request): Promise<Response> {
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'
     return new Response(`Webhook Error: ${errorMessage}`, { status: 400 })
+  }
+
+  // ✅ CONNEXION À LA BASE DE DONNÉES (essentiel en production)
+  try {
+    await connectMongooseToDatabase()
+    console.log('🔌 Database connected for webhook processing')
+  } catch (dbError) {
+    console.error('❌ Database connection failed:', dbError)
+    return new Response('Database connection error', { status: 500 })
   }
 
   switch (event.type) {
@@ -35,18 +45,23 @@ export async function POST (req: Request): Promise<Response> {
         break
       }
 
-      const wallet = await Wallet.findOne({ ownerId: userId })
+      try {
+        const wallet = await Wallet.findOne({ ownerId: userId })
 
-      if (wallet !== null && wallet !== undefined) {
-        const koinsToAdd = Number(coinsAmount)
-        const previousBalance = wallet.coin
-        wallet.coin = Number(wallet.coin) + koinsToAdd
-        wallet.markModified('coin')
-        await wallet.save()
-        console.log(`✅ ${koinsToAdd} coins ajoutés au wallet de l'utilisateur ${String(userId)}`)
-        console.log(`   Balance avant: ${String(previousBalance)}, Balance après: ${String(wallet.coin)}`)
-      } else {
-        console.error(`❌ Wallet non trouvé pour l'utilisateur ${String(userId)}`)
+        if (wallet !== null && wallet !== undefined) {
+          const koinsToAdd = Number(coinsAmount)
+          const previousBalance = wallet.coin
+          wallet.coin = Number(wallet.coin) + koinsToAdd
+          wallet.markModified('coin')
+          await wallet.save()
+          console.log(`✅ ${koinsToAdd} coins ajoutés au wallet de l'utilisateur ${String(userId)}`)
+          console.log(`   Balance avant: ${String(previousBalance)}, Balance après: ${String(wallet.coin)}`)
+        } else {
+          console.error(`❌ Wallet non trouvé pour l'utilisateur ${String(userId)}`)
+        }
+      } catch (walletError) {
+        console.error('❌ Erreur lors de la mise à jour du wallet:', walletError)
+        return new Response('Wallet update error', { status: 500 })
       }
       break
     }
