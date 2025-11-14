@@ -3,12 +3,6 @@ import DashboardContent from '@/components/dashboard/dashboard-content'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Tomatgotchi',
-  description: 'Gérez vos créatures Tomatgotchi'
-}
 
 /**
  * Page principale du tableau de bord utilisateur

@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  title: {
+    default: 'Tomatgotchi',
+    template: '%s | Tomatgotchi'
+  },
+  description: 'Adopte, nourris et fais évoluer ton monstre virtuel Tomatgotchi. Une aventure amusante et interactive !',
   appleWebApp: {
     title: 'Tomatgotchi'
   },
