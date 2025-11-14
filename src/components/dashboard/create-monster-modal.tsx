@@ -53,15 +53,19 @@ function CreateMonsterModal ({ isOpen, onClose, onSubmit }: CreateMonsterModalPr
 
   return (
     <ModalOverlay onClose={onClose}>
-      <div className='w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-moccaccino-100'>
-        <ModalHeader
-          title='Créer une nouvelle créature'
-          onClose={onClose}
-        />
-        <CreateMonsterForm
-          onCancel={onClose}
-          onSubmit={handleSubmit}
-        />
+      <div className='w-full max-w-lg max-h-[95vh] flex flex-col rounded-3xl bg-white shadow-2xl ring-1 ring-moccaccino-100 overflow-hidden'>
+        <div className='flex-shrink-0 p-6 pb-4'>
+          <ModalHeader
+            title='Créer une nouvelle créature'
+            onClose={onClose}
+          />
+        </div>
+        <div className='flex-1 overflow-y-auto px-6 pb-6'>
+          <CreateMonsterForm
+            onCancel={onClose}
+            onSubmit={handleSubmit}
+          />
+        </div>
       </div>
     </ModalOverlay>
   )
