@@ -115,9 +115,11 @@ export const MonsterCard = memo(function MonsterCard ({
 
         <div className='relative flex flex-col gap-5'>
           {/* Zone de rendu du monstre avec effet de relief */}
-          <div className={`relative flex items-center justify-center overflow-hidden rounded-3xl ${hasBackground ? 'bg-transparent' : 'bg-gradient-to-br from-meadow-50 via-white to-sky-50'} p-6 border-3 border-meadow-200/50 shadow-inner group-hover:shadow-lg transition-all`}>
+          <div className={`relative flex items-center justify-center overflow-hidden rounded-3xl ${hasBackground ? 'bg-transparent border-white/30' : 'bg-gradient-to-br from-meadow-50 via-white to-sky-50 border-meadow-200/50'} p-6 border-3 shadow-inner group-hover:shadow-lg transition-all`}>
             {/* Petit effet de brillance */}
-            <div className='absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+            {!hasBackground && (
+              <div className='absolute inset-0 bg-gradient-to-br from-white/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+            )}
 
             {traits !== null && (
               <div className='relative transform group-hover:scale-110 transition-transform duration-300'>
